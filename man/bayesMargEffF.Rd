@@ -9,18 +9,20 @@ Computes bayesian marginal effects on the mean scale along with the probability 
 }
 \usage{
 bayesMargEffF(model,
-              n_draws = 2000,
+              n_draws         = 2000,
               marginal_effect,
               start_value,
               end_value,
-              ci = .95,
-              digits = 3,
-              at = NULL)
+              ci              = .95,
+              hdi_interval    = TRUE,
+              digits          = 4,
+              at              = NULL,
+              at_means        = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{model}{
-A model object of class 'stanreg' or 'brmsfit'
+A model object of class "stanreg."
 }
 \item{n_draws}{
 The number of draws to take from the posterior distribution of the expectation.
@@ -36,13 +38,19 @@ The start value(s) for the marginal effect(s). Must be a list when specifying mu
 The end value(s) for the marginal effect(s). Must be a list when specifying multiple values.
 }
 \item{ci}{
-The level for the HPD credible interval.
+The level for the credible intervals.
+}
+\item{hdi_interval}{
+If TRUE, the default, computes the highest posterior density credible interval. If FALSE, computes the equal-tailed interval.
 }
 \item{digits}{
 The number of digits to report in the summary table.
 }
 \item{at}{
-Optional list of covariate values to estimate the average marginal effect at.
+Optional list of covariate values to estimate the marginal effect at.
+}
+\item{at_means}{
+If FALSE, the default, the marginal effects are averaged across the rows of the model data for each unique combination of "at" values. If TRUE, the covariate values that are not specified in the "at" argument are held at their means.
 }
 }
 \value{

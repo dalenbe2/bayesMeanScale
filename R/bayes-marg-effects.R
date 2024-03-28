@@ -1,5 +1,5 @@
 
-bayesMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end_value, ci=.95, hdi_interval=TRUE, digits=4, at=NULL, at_means=F){
+bayesMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end_value, ci=.95, hdi_interval=TRUE, digits=4, at=NULL, at_means=FALSE){
 
   margErrorCheckF(model           = model,
                   marginal_effect = marginal_effect,
