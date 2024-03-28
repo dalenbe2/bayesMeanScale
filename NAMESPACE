@@ -1,0 +1,4 @@
+exportPattern(bayesPredsF, bayesOrdinalPredsF, bayesMargEffF, bayesCountPredsF, bayesOrdinalAndCountMargEffF, bayesMargCompareF)
+importFrom(bayestestR, hdi, p_direction)
+importFrom(data.table, setDT, data.table, melt, as.data.table, setnames)
+import(rstanarm)

@@ -1,0 +1,434 @@
+---
+title: "testing-prep"
+output: html_document
+date: "2024-03-11"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+map(c('rstanarm', 'margins', 'betareg', 'MASS'), function(x) library(x, character.only=T))
+
+N    <- 5000
+nBig <- 100000
+
+```
+
+# Gaussian model
+
+```{r}
+
+gaussianData <- tibble(
+  a = rnorm(N, mean=10, sd=3),
+  b = rnorm(N, mean=15, sd=5),
+  c = rbinom(N, size=1, prob=.3),
+  y = 5 + 3*a + 4*b + 10*a*b + 4*c + rnorm(N, sd=300)
+) %>%
+  mutate(c = if_else(c==1, 'Y', 'N'))
+
+freqModel <- lm(y ~ a*b + c, data=gaussianData)
+freqPreds <- summary(prediction(freqModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N')))) %>%
+  rename(a = `at(a)`,
+         b = `at(b)`,
+         c = `at(c)`)
+
+freqMarg <- summary(margins(freqModel, variables='c')) %>%
+  mutate(factor = 'c',
+         AME    = round(AME, 4),
+         lower  = round(lower, 4),
+         upper  = round(upper, 4))
+
+bayesModel <- stan_glm(y ~ a*b + c, data=gaussianData)
+
+dirSetF('bayesMeanScale')
+setwd("Testing Models")
+
+saveRDS(bayesModel, file='gaussian-model.RDS')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Predictions")
+
+saveRDS(freqPreds, file='gaussian-freq-preds.RDS')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Marginal Effects")
+
+saveRDS(freqMarg, file='gaussian-freq-marg.RDS')
+
+```
+
+# Big Gaussian model
+
+```{r}
+
+gaussianData <- tibble(
+  a = rnorm(nBig, mean=10, sd=3),
+  b = rnorm(nBig, mean=15, sd=5),
+  c = rbinom(nBig, size=1, prob=.3),
+  y = 5 + 3*a + 4*b + 10*a*b + 4*c + rnorm(nBig, sd=300)
+) %>%
+  mutate(c = if_else(c==1, 'Y', 'N'))
+
+bayesModel <- stan_glm(y ~ a*b + c, data=gaussianData)
+
+dirSetF('bayesMeanScale')
+setwd("Testing Models")
+
+saveRDS(bayesModel, file='big-gaussian-model.RDS')
+
+```
+
+# Logit model
+
+```{r}
+
+logitData <- tibble(
+  a = rnorm(N, mean=10, sd=3),
+  b = rnorm(N, mean=15, sd=5),
+  c = rbinom(N, size=1, prob=.3),
+  logit_y = .02 + .01*a + -.02*b + .01*a*b + .4*c,
+  y = rbinom(N, size=1, prob=exp(logit_y) / (1 + exp(logit_y)))
+) %>%
+  mutate(c = if_else(c==1, 'Y', 'N'))
+
+summary(logitData$y)
+
+freqModel <- glm(y ~ a*b + c, data=logitData, family=binomial(link='logit'))
+freqPreds <- summary(prediction(freqModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N')))) %>%
+  rename(a = `at(a)`,
+         b = `at(b)`,
+         c = `at(c)`)
+
+freqMarg <- summary(margins(freqModel, variables='c', at=list(a=c(9,10,11)))) %>%
+  mutate(factor = 'c',
+         AME    = round(AME, 4),
+         lower  = round(lower, 4),
+         upper  = round(upper, 4))
+
+bayesModel <- stan_glm(y ~ a*b + c, data=logitData, family=binomial(link='logit'))
+
+dirSetF('bayesMeanScale')
+setwd("Testing Models")
+
+saveRDS(bayesModel, file='logit-model.RDS')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Predictions")
+
+saveRDS(freqPreds, file='logit-freq-preds.RDS')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Marginal Effects")
+
+saveRDS(freqMarg, file='logit-freq-marg.RDS')
+
+```
+
+# Weighted logit model
+
+```{r}
+
+logitData <- tibble(
+  a = rnorm(N, mean=10, sd=3),
+  b = rnorm(N, mean=15, sd=5),
+  c = rbinom(N, size=1, prob=.3),
+  logit_y = .02 + .01*a + .02*b + .01*a*b + .05*c,
+  size    = rpois(N, 100),
+  y = rbinom(N, size=size, prob=exp(logit_y) / (1 + exp(logit_y)))/size
+) %>%
+  mutate(c = if_else(c==1, 'Y', 'N'))
+
+summary(logitData$y)
+
+freqModel <- glm(y ~ a*b + c, data=logitData, weights=size, family=binomial(link='logit'))
+freqPreds <- summary(prediction(freqModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N')))) %>%
+  rename(a = `at(a)`,
+         b = `at(b)`,
+         c = `at(c)`)
+
+bayesModel <- stan_glm(y ~ a*b + c, data=logitData, weights=size, family=binomial(link='logit'))
+
+dirSetF('bayesMeanScale')
+setwd("Testing Models")
+
+saveRDS(bayesModel, file='weighted-logit-model.RDS')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Predictions")
+
+saveRDS(freqPreds, file='weighted-logit-freq-preds.RDS')
+
+```
+
+# Probit model
+
+```{r}
+
+probitData <- tibble(
+  a = rnorm(N, mean=10, sd=3),
+  b = rnorm(N, mean=15, sd=5),
+  c = rbinom(N, size=1, prob=.3),
+  probit_y = .02 + .01*a + .02*b + .005*a*b + .02*c,
+  y = rbinom(N, size=1, prob=pnorm(probit_y))
+) %>%
+  mutate(c = if_else(c==1, 'Y', 'N'))
+
+summary(probitData$y)
+
+freqModel <- glm(y ~ a*b + c, data=probitData, family=binomial(link='probit'))
+freqPreds <- summary(prediction(freqModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N')))) %>%
+  rename(a = `at(a)`,
+         b = `at(b)`,
+         c = `at(c)`)
+
+bayesModel <- stan_glm(y ~ a*b + c, data=probitData, family=binomial(link='probit'))
+
+dirSetF('bayesMeanScale')
+setwd("Testing Models")
+
+saveRDS(bayesModel, file='probit-model.RDS')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Predictions")
+
+saveRDS(freqPreds, file='probit-freq-preds.RDS')
+
+```
+
+# Beta model
+
+```{r}
+
+betaData <- tibble(
+  a = rnorm(N, mean=10, sd=3),
+  b = rnorm(N, mean=15, sd=5),
+  c = rbinom(N, size=1, prob=.3),
+  beta_y = .02 + .01*a + .02*b + .01*a*b + .2*c,
+  y = rbinom(N, size=1000, prob=exp(beta_y) / (1 + exp(beta_y)))/1000
+) %>%
+  mutate(c = if_else(c==1, 'Y', 'N'))
+
+summary(betaData$y)
+
+freqModel <- betareg(y ~ a*b + c, data=betaData)
+freqPreds <- summary(prediction(freqModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N')))) %>%
+  rename(a = `at(a)`,
+         b = `at(b)`,
+         c = `at(c)`)
+
+freqMargSmall <- summary(margins(freqModel, variables='c')) %>%
+  mutate(factor = 'c',
+         AME    = round(AME, 4),
+         lower  = round(lower, 4),
+         upper  = round(upper, 4))
+
+bayesModel <- stan_betareg(y ~ a*b + c, data=betaData, link='logit')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Models")
+
+saveRDS(bayesModel, file='beta-model.RDS')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Predictions")
+
+saveRDS(freqPreds, file='beta-freq-preds.RDS')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Marginal Effects")
+
+saveRDS(freqMargSmall, file='beta-freq-marg-small.RDS')
+
+```
+
+# Cloglog model
+
+```{r}
+
+cloglogData <- tibble(
+  a = rnorm(N, mean=10, sd=3),
+  b = rnorm(N, mean=15, sd=5),
+  c = rbinom(N, size=1, prob=.3),
+  cloglog_y = .02 + .01*a + .005*b + .0005*a*b + .05*c,
+  y = rbinom(N, size=1, prob=1 - exp(-exp(cloglog_y)))
+) %>%
+  mutate(c = if_else(c==1, 'Y', 'N'))
+
+summary(cloglogData$y)
+
+freqModel <- glm(y ~ a*b + c, data=cloglogData, family=binomial(link='cloglog'))
+freqPreds <- summary(prediction(freqModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N')))) %>%
+  rename(a = `at(a)`,
+         b = `at(b)`,
+         c = `at(c)`)
+
+bayesModel <- stan_glm(y ~ a*b + c, data=cloglogData, family=binomial(link='cloglog'))
+
+dirSetF('bayesMeanScale')
+setwd("Testing Models")
+
+saveRDS(bayesModel, file='cloglog-model.RDS')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Predictions")
+
+saveRDS(freqPreds, file='cloglog-freq-preds.RDS')
+
+```
+
+# Gamma model
+
+```{r}
+
+gammaData <- tibble(
+  a = rnorm(N, mean=10, sd=3),
+  b = rnorm(N, mean=15, sd=5),
+  c = rbinom(N, size=1, prob=.3),
+  gamma_y = .02 + .01*a + .005*b + .0005*a*b + .05*c,
+  y = rgamma(N, shape=2, rate=gamma_y)
+) %>%
+  mutate(c = if_else(c==1, 'Y', 'N'))
+
+summary(gammaData$y)
+
+freqModel <- glm(y ~ a*b + c, data=gammaData, family=Gamma(link='inverse'))
+freqPreds <- summary(prediction(freqModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N')))) %>%
+  rename(a = `at(a)`,
+         b = `at(b)`,
+         c = `at(c)`)
+
+bayesModel <- stan_glm(y ~ a*b + c, data=gammaData, family=Gamma(link='inverse'))
+
+dirSetF('bayesMeanScale')
+setwd("Testing Models")
+
+saveRDS(bayesModel, file='gamma-model.RDS')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Predictions")
+
+saveRDS(freqPreds, file='gamma-freq-preds.RDS')
+
+```
+
+# Poisson model
+
+```{r}
+
+poissonData <- tibble(
+  a = rnorm(N, mean=10, sd=3),
+  b = rnorm(N, mean=15, sd=5),
+  c = rbinom(N, size=1, prob=.3),
+  poisson_y = .02 + .01*a + .005*b + .0005*a*b + .05*c,
+  y = rpois(N, exp(poisson_y))
+) %>%
+  mutate(c = if_else(c==1, 'Y', 'N'))
+
+summary(poissonData$y)
+
+freqModel <- glm(y ~ a*b + c, data=poissonData, family=poisson(link='log'))
+freqPreds <- summary(prediction(freqModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N')))) %>%
+  rename(a = `at(a)`,
+         b = `at(b)`,
+         c = `at(c)`)
+
+freqMarg <- summary(margins(freqModel, variables='c', at=list(a=c(9,10,11), b=mean(poissonData$b)))) %>%
+  mutate(factor = 'c',
+         AME    = round(AME, 4),
+         lower  = round(lower, 4),
+         upper  = round(upper, 4))
+
+bayesModel <- stan_glm(y ~ a*b + c, data=poissonData, family=poisson(link='log'))
+
+dirSetF('bayesMeanScale')
+setwd("Testing Models")
+
+saveRDS(bayesModel, file='poisson-model.RDS')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Predictions")
+
+saveRDS(freqPreds, file='poisson-freq-preds.RDS')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Marginal Effects")
+
+saveRDS(freqMarg, file='poisson-freq-marg.RDS')
+
+```
+
+# Poisson model with offset term
+
+```{r}
+
+poissonData <- tibble(
+  a = rnorm(N, mean=10, sd=3),
+  b = rnorm(N, mean=15, sd=5),
+  c = rbinom(N, size=1, prob=.3),
+  k = rgamma(N, shape=1),
+  j = rgamma(N, shape=1),
+  w_offset = rgamma(N, shape=1),
+  poisson_y = .02 + .01*a + .005*b + .0005*a*b + .05*c + log(k) + j + w_offset,
+  y = rpois(N, exp(poisson_y))
+) %>%
+  mutate(c = if_else(c==1, 'Y', 'N'))
+
+summary(poissonData$y)
+
+freqModel <- glm(y ~ a*b + c + offset(log(k)) + offset(w_offset), offset=j, data=poissonData, family=poisson(link='log'))
+summary(freqModel)
+
+freqPreds <- summary(prediction(freqModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N')))) %>%
+  rename(a = `at(a)`,
+         b = `at(b)`,
+         c = `at(c)`)
+
+bayesModel <- stan_glm(y ~ a*b + c + offset(log(k)) + offset(w_offset), offset=j, data=poissonData, family=poisson(link='log'))
+
+dirSetF('bayesMeanScale')
+setwd("Testing Models")
+
+saveRDS(bayesModel, file='offset-poisson-model.RDS')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Predictions")
+
+saveRDS(freqPreds, file='offset-poisson-freq-preds.RDS')
+
+```
+
+# Negative Binomial model
+
+```{r}
+
+negbinomData <- tibble(
+  a = rnorm(N, mean=10, sd=3),
+  b = rnorm(N, mean=15, sd=5),
+  c = rbinom(N, size=1, prob=.3),
+  poisson_y = .02 + .01*a + .005*b + .0005*a*b + .05*c,
+  y = rpois(N, exp(poisson_y))
+) %>%
+  mutate(c = if_else(c==1, 'Y', 'N'))
+
+summary(negbinomData$y)
+
+freqModel <- glm.nb(y ~ a*b + c, data=negbinomData)
+freqPreds <- summary(prediction(freqModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N')))) %>%
+  rename(a = `at(a)`,
+         b = `at(b)`,
+         c = `at(c)`)
+
+bayesModel <- stan_glm.nb(y ~ a*b + c, data=negbinomData)
+
+dirSetF('bayesMeanScale')
+setwd("Testing Models")
+
+saveRDS(bayesModel, file='negbinom-model.RDS')
+
+dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Predictions")
+
+saveRDS(freqPreds, file='negbinom-freq-preds.RDS')
+
+```
+

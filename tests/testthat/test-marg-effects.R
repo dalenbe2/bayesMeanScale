@@ -1,0 +1,101 @@
+
+directoryhelp::dirSetF('bayesMeanScale')
+setwd("Testing Models")
+
+betaModel     <- readRDS('beta-model.RDS')
+gaussianModel <- readRDS('gaussian-model.RDS')
+logitModel    <- readRDS('logit-model.RDS')
+poissonModel  <- readRDS('poisson-model.RDS')
+
+directoryhelp::dirSetF('bayesMeanScale')
+setwd("Testing Frequentist Marginal Effects")
+
+betaFreqMargSmall  <- readRDS('beta-freq-marg-small.RDS')
+gaussianFreqMarg   <- readRDS('gaussian-freq-marg.RDS')
+logitFreqMarg      <- readRDS('logit-freq-marg.RDS')
+poissonFreqMarg    <- readRDS('poisson-freq-marg.RDS')
+
+# test on Beta model #
+
+betaMargSmall <- bayesMargEffF(betaModel, marginal_effect='c', start_value='Y', end_value='N', digits=4)$diffTable %>%
+  dplyr::left_join(betaFreqMargSmall, by=c('marg_effect'='factor')) %>%
+  dplyr::mutate(mean_diff   = abs(mean - AME),
+                lower_diff  = abs(hpd_lower - lower),
+                upper_diff  = abs(hpd_upper - upper),
+                mean_bound  = abs(AME*1.05 - AME),
+                lower_bound = abs(lower*1.05 - lower),
+                upper_bound = abs(upper*1.05 - upper))
+
+test_that('make sure bayesMargEffF is working for beta model', {
+
+  for(i in 1:nrow(betaMargSmall)){
+    expect_lt(betaMargSmall$mean_diff[i], betaMargSmall$mean_bound[i])
+    expect_lt(betaMargSmall$lower_diff[i], betaMargSmall$lower_bound[i])
+    expect_lt(betaMargSmall$upper_diff[i], betaMargSmall$upper_bound[i])
+  }
+
+})
+
+# test on Gaussian model #
+
+gaussianMarg <- bayesMargEffF(gaussianModel, marginal_effect='c', start_value='Y', end_value='N', digits=4)$diffTable %>%
+  dplyr::left_join(gaussianFreqMarg, by=c('marg_effect'='factor')) %>%
+  dplyr::mutate(mean_diff   = abs(mean - AME),
+                lower_diff  = abs(hpd_lower - lower),
+                upper_diff  = abs(hpd_upper - upper),
+                mean_bound  = abs(AME*1.05 - AME),
+                lower_bound = abs(lower*1.05 - lower),
+                upper_bound = abs(upper*1.05 - upper))
+
+test_that('make sure bayesMargEffF is working for Gaussian model', {
+
+  for(i in 1:nrow(gaussianMarg)){
+    expect_lt(gaussianMarg$mean_diff[i], gaussianMarg$mean_bound[i])
+    expect_lt(gaussianMarg$lower_diff[i], gaussianMarg$lower_bound[i])
+    expect_lt(gaussianMarg$upper_diff[i], gaussianMarg$upper_bound[i])
+  }
+
+})
+
+# test on logit model #
+
+logitMarg <- bayesMargEffF(logitModel, marginal_effect='c', start_value='Y', end_value='N', digits=4, at=list(a=c(9, 10, 11)))$diffTable %>%
+  dplyr::left_join(logitFreqMarg, by=c('marg_effect'='factor', 'a')) %>%
+  dplyr::mutate(mean_diff   = abs(mean - AME),
+                lower_diff  = abs(hpd_lower - lower),
+                upper_diff  = abs(hpd_upper - upper),
+                mean_bound  = abs(AME*1.05 - AME),
+                lower_bound = abs(lower*1.05 - lower),
+                upper_bound = abs(upper*1.05 - upper))
+
+test_that('make sure bayesMargEffF is working for logit model', {
+
+  for(i in 1:nrow(logitMarg)){
+    expect_lt(logitMarg$mean_diff[i], logitMarg$mean_bound[i])
+    expect_lt(logitMarg$lower_diff[i], logitMarg$lower_bound[i])
+    expect_lt(logitMarg$upper_diff[i], logitMarg$upper_bound[i])
+  }
+
+})
+
+# test on Poisson model #
+
+poissonMarg <- bayesMargEffF(poissonModel, marginal_effect='c', start_value='Y', end_value='N', digits=4, at=list(a=c(9, 10, 11)), at_means=T)$diffTable %>%
+  dplyr::left_join(poissonFreqMarg, by=c('marg_effect'='factor', 'a')) %>%
+  dplyr::mutate(mean_diff   = abs(mean - AME),
+                lower_diff  = abs(hpd_lower - lower),
+                upper_diff  = abs(hpd_upper - upper),
+                mean_bound  = abs(AME*1.05 - AME),
+                lower_bound = abs(lower*1.05 - lower),
+                upper_bound = abs(upper*1.05 - upper))
+
+test_that('make sure bayesMargEffF is working for Poisson model', {
+
+  for(i in 1:nrow(poissonMarg)){
+    expect_lt(poissonMarg$mean_diff[i], poissonMarg$mean_bound[i])
+    expect_lt(poissonMarg$lower_diff[i], poissonMarg$lower_bound[i])
+    expect_lt(poissonMarg$upper_diff[i], poissonMarg$upper_bound[i])
+  }
+
+})
+
