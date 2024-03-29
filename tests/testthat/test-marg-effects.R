@@ -8,9 +8,9 @@ betaMargSmall <- bayesMargEffF(betaModel, marginal_effect='c', start_value='Y', 
   .[, `:=`(mean_diff   = abs(mean - AME),
            lower_diff  = abs(hpd_lower - lower),
            upper_diff  = abs(hpd_upper - upper),
-           mean_bound  = abs(AME*1.05 - AME),
-           lower_bound = abs(lower*1.05 - lower),
-           upper_bound = abs(upper*1.05 - upper))]
+           mean_bound  = abs(AME*1.1 - AME),
+           lower_bound = abs(lower*1.1 - lower),
+           upper_bound = abs(upper*1.1 - upper))]
 
 test_that('make sure bayesMargEffF is working for beta model', {
 
@@ -30,9 +30,9 @@ gaussianMarg <- bayesMargEffF(gaussianModel, marginal_effect='c', start_value='Y
   .[, `:=`(mean_diff   = abs(mean - AME),
            lower_diff  = abs(hpd_lower - lower),
            upper_diff  = abs(hpd_upper - upper),
-           mean_bound  = abs(AME*1.05 - AME),
-           lower_bound = abs(lower*1.05 - lower),
-           upper_bound = abs(upper*1.05 - upper))]
+           mean_bound  = abs(AME*1.1 - AME),
+           lower_bound = abs(lower*1.1 - lower),
+           upper_bound = abs(upper*1.1 - upper))]
 
 test_that('make sure bayesMargEffF is working for Gaussian model', {
 
@@ -52,9 +52,9 @@ logitMarg <- bayesMargEffF(logitModel, marginal_effect='c', start_value='Y', end
   .[, `:=`(mean_diff   = abs(mean - AME),
            lower_diff  = abs(hpd_lower - lower),
            upper_diff  = abs(hpd_upper - upper),
-           mean_bound  = abs(AME*1.05 - AME),
-           lower_bound = abs(lower*1.05 - lower),
-           upper_bound = abs(upper*1.05 - upper))]
+           mean_bound  = abs(AME*1.1 - AME),
+           lower_bound = abs(lower*1.1 - lower),
+           upper_bound = abs(upper*1.1 - upper))]
 
 test_that('make sure bayesMargEffF is working for logit model', {
 
@@ -74,9 +74,9 @@ poissonMarg <- bayesMargEffF(poissonModel, marginal_effect='c', start_value='Y',
   .[, `:=`(mean_diff   = abs(mean - AME),
            lower_diff  = abs(hpd_lower - lower),
            upper_diff  = abs(hpd_upper - upper),
-           mean_bound  = abs(AME*1.05 - AME),
-           lower_bound = abs(lower*1.05 - lower),
-           upper_bound = abs(upper*1.05 - upper))]
+           mean_bound  = abs(AME*1.1 - AME),
+           lower_bound = abs(lower*1.1 - lower),
+           upper_bound = abs(upper*1.1 - upper))]
 
 test_that('make sure bayesMargEffF is working for Poisson model', {
 

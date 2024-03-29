@@ -1,7 +1,7 @@
 
 margCompareErrorCheckF <- function(marg_list){
 
-  if(class(marg_list)!='bayes.marg'){
+  if(!inherits(marg_list, 'bayes.marg')){
     stop("The 'marg_list' argument must have class 'bayes.marg'!")
   }
 

@@ -1,13 +1,13 @@
 
 newValueF <- function(data, marg_effect, new_value, at=NULL, original_data=NULL){
 
-  if(class(data[[marg_effect]])=='factor'){
+  if(inherits(data[[marg_effect]], 'factor')){
 
     data[[marg_effect]] <- factor(new_value, levels=levels(data[[marg_effect]]))
 
   } else{
 
-  if(class(data[[marg_effect]])=='character'){
+  if(inherits(data[[marg_effect]], 'character')){
 
     data[[marg_effect]] <- factor(new_value, levels=sort(unique(data[[marg_effect]])))
 

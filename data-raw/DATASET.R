@@ -60,7 +60,7 @@ gammaData <- tibble(
   b = rnorm(N, mean=15, sd=5),
   c = rbinom(N, size=1, prob=.3),
   gamma_y = .02 + .01*a + .005*b + .0005*a*b + .05*c,
-  y = rgamma(N, shape=.5, rate=gamma_y)
+  y = rgamma(N, shape=5, rate=1/gamma_y)
 ) %>%
   mutate(c = if_else(c==1, 'Y', 'N'))
 
@@ -155,7 +155,7 @@ gaussianData <- tibble(
   a = rnorm(N, mean=10, sd=3),
   b = rnorm(N, mean=15, sd=5),
   c = rbinom(N, size=1, prob=.3),
-  y = 5 + 3*a + 4*b + 10*a*b + 4*c + rnorm(N, sd=300)
+  y = 5 + 3*a + 4*b + 10*a*b + 4*c + rnorm(N, sd=50)
 ) %>%
   mutate(c = if_else(c==1, 'Y', 'N'))
 

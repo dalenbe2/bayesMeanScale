@@ -1,3 +1,6 @@
 exportPattern(bayesPredsF, bayesOrdinalPredsF, bayesMargEffF, bayesCountPredsF, bayesOrdinalAndCountMargEffF, bayesMargCompareF)
 importFrom(bayestestR, hdi, p_direction)
 importFrom(data.table, setDT, data.table, melt, as.data.table, setnames)
+importFrom(magrittr, `%>%`)
+importFrom(stats, as.formula, formula, median, model.frame, model.matrix, pnorm, quantile)
+import(rstanarm)

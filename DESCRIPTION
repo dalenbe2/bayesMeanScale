@@ -5,9 +5,9 @@ Version: 0.1.0
 Author: David Dalenberg
 Maintainer: David Dalenberg <dalenbe2@gmail.com>
 Description: Compute Bayesian posterior distributions of predictions, marginal effects, and differences of marginal effects.
-License: GPL (>=3)
+License: GPL (>= 3)
 Encoding: UTF-8
-Imports: bayestestR, data.table
+Imports: bayestestR, data.table, rstanarm, magrittr
 Depends: R (>= 3.5.0)
 Suggests: 
     testthat (>= 3.0.0)

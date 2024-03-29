@@ -1,8 +1,4 @@
 
-directoryhelp::dirSetF('bayesMeanScale')
-setwd("Testing Models")
-
-betaModel <- readRDS('beta-model.RDS')
 
 testData <- data.frame(
   y = rnorm(10),
