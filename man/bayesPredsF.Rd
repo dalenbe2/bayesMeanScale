@@ -14,7 +14,7 @@ bayesPredsF(model,
             hdi_interval = TRUE,
             digits       = 4,
             at           = NULL,
-            at_means     = F)
+            at_means     = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

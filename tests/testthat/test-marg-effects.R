@@ -1,30 +1,16 @@
 
-directoryhelp::dirSetF('bayesMeanScale')
-setwd("Testing Models")
-
-betaModel     <- readRDS('beta-model.RDS')
-gaussianModel <- readRDS('gaussian-model.RDS')
-logitModel    <- readRDS('logit-model.RDS')
-poissonModel  <- readRDS('poisson-model.RDS')
-
-directoryhelp::dirSetF('bayesMeanScale')
-setwd("Testing Frequentist Marginal Effects")
-
-betaFreqMargSmall  <- readRDS('beta-freq-marg-small.RDS')
-gaussianFreqMarg   <- readRDS('gaussian-freq-marg.RDS')
-logitFreqMarg      <- readRDS('logit-freq-marg.RDS')
-poissonFreqMarg    <- readRDS('poisson-freq-marg.RDS')
 
 # test on Beta model #
 
 betaMargSmall <- bayesMargEffF(betaModel, marginal_effect='c', start_value='Y', end_value='N', digits=4)$diffTable %>%
-  dplyr::left_join(betaFreqMargSmall, by=c('marg_effect'='factor')) %>%
-  dplyr::mutate(mean_diff   = abs(mean - AME),
-                lower_diff  = abs(hpd_lower - lower),
-                upper_diff  = abs(hpd_upper - upper),
-                mean_bound  = abs(AME*1.05 - AME),
-                lower_bound = abs(lower*1.05 - lower),
-                upper_bound = abs(upper*1.05 - upper))
+  merge(., betaFreqMargSmall, by.x='marg_effect', by.y='factor') %>%
+  setDT() %>%
+  .[, `:=`(mean_diff   = abs(mean - AME),
+           lower_diff  = abs(hpd_lower - lower),
+           upper_diff  = abs(hpd_upper - upper),
+           mean_bound  = abs(AME*1.05 - AME),
+           lower_bound = abs(lower*1.05 - lower),
+           upper_bound = abs(upper*1.05 - upper))]
 
 test_that('make sure bayesMargEffF is working for beta model', {
 
@@ -39,13 +25,14 @@ test_that('make sure bayesMargEffF is working for beta model', {
 # test on Gaussian model #
 
 gaussianMarg <- bayesMargEffF(gaussianModel, marginal_effect='c', start_value='Y', end_value='N', digits=4)$diffTable %>%
-  dplyr::left_join(gaussianFreqMarg, by=c('marg_effect'='factor')) %>%
-  dplyr::mutate(mean_diff   = abs(mean - AME),
-                lower_diff  = abs(hpd_lower - lower),
-                upper_diff  = abs(hpd_upper - upper),
-                mean_bound  = abs(AME*1.05 - AME),
-                lower_bound = abs(lower*1.05 - lower),
-                upper_bound = abs(upper*1.05 - upper))
+  merge(., gaussianFreqMarg, by.x='marg_effect', by.y='factor') %>%
+  setDT() %>%
+  .[, `:=`(mean_diff   = abs(mean - AME),
+           lower_diff  = abs(hpd_lower - lower),
+           upper_diff  = abs(hpd_upper - upper),
+           mean_bound  = abs(AME*1.05 - AME),
+           lower_bound = abs(lower*1.05 - lower),
+           upper_bound = abs(upper*1.05 - upper))]
 
 test_that('make sure bayesMargEffF is working for Gaussian model', {
 
@@ -60,13 +47,14 @@ test_that('make sure bayesMargEffF is working for Gaussian model', {
 # test on logit model #
 
 logitMarg <- bayesMargEffF(logitModel, marginal_effect='c', start_value='Y', end_value='N', digits=4, at=list(a=c(9, 10, 11)))$diffTable %>%
-  dplyr::left_join(logitFreqMarg, by=c('marg_effect'='factor', 'a')) %>%
-  dplyr::mutate(mean_diff   = abs(mean - AME),
-                lower_diff  = abs(hpd_lower - lower),
-                upper_diff  = abs(hpd_upper - upper),
-                mean_bound  = abs(AME*1.05 - AME),
-                lower_bound = abs(lower*1.05 - lower),
-                upper_bound = abs(upper*1.05 - upper))
+  merge(., logitFreqMarg, by.x=c('marg_effect', 'a'), by.y=c('factor', 'a')) %>%
+  setDT() %>%
+  .[, `:=`(mean_diff   = abs(mean - AME),
+           lower_diff  = abs(hpd_lower - lower),
+           upper_diff  = abs(hpd_upper - upper),
+           mean_bound  = abs(AME*1.05 - AME),
+           lower_bound = abs(lower*1.05 - lower),
+           upper_bound = abs(upper*1.05 - upper))]
 
 test_that('make sure bayesMargEffF is working for logit model', {
 
@@ -81,13 +69,14 @@ test_that('make sure bayesMargEffF is working for logit model', {
 # test on Poisson model #
 
 poissonMarg <- bayesMargEffF(poissonModel, marginal_effect='c', start_value='Y', end_value='N', digits=4, at=list(a=c(9, 10, 11)), at_means=T)$diffTable %>%
-  dplyr::left_join(poissonFreqMarg, by=c('marg_effect'='factor', 'a')) %>%
-  dplyr::mutate(mean_diff   = abs(mean - AME),
-                lower_diff  = abs(hpd_lower - lower),
-                upper_diff  = abs(hpd_upper - upper),
-                mean_bound  = abs(AME*1.05 - AME),
-                lower_bound = abs(lower*1.05 - lower),
-                upper_bound = abs(upper*1.05 - upper))
+  merge(., poissonFreqMarg, by.x=c('marg_effect', 'a'), by.y=c('factor', 'a')) %>%
+  setDT() %>%
+  .[, `:=`(mean_diff   = abs(mean - AME),
+           lower_diff  = abs(hpd_lower - lower),
+           upper_diff  = abs(hpd_upper - upper),
+           mean_bound  = abs(AME*1.05 - AME),
+           lower_bound = abs(lower*1.05 - lower),
+           upper_bound = abs(upper*1.05 - upper))]
 
 test_that('make sure bayesMargEffF is working for Poisson model', {
 

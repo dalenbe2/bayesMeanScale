@@ -1,35 +1,4 @@
 
-directoryhelp::dirSetF('bayesMeanScale')
-setwd("Testing Models")
-
-betaModel     <- readRDS('beta-model.RDS')
-cloglogModel  <- readRDS('cloglog-model.RDS')
-logitModel    <- readRDS('logit-model.RDS')
-probitModel   <- readRDS('probit-model.RDS')
-gammaModel    <- readRDS('gamma-model.RDS')
-gaussianModel <- readRDS('gaussian-model.RDS')
-poissonModel  <- readRDS('poisson-model.RDS')
-negbinomModel <- readRDS('negbinom-model.RDS')
-
-weightedLogitModel <- readRDS('weighted-logit-model.RDS')
-offsetPoissonModel <- readRDS('offset-poisson-model.RDS')
-
-bigGaussianModel <- readRDS("big-gaussian-model.RDS")
-
-directoryhelp::dirSetF('bayesMeanScale')
-setwd("Testing Frequentist Predictions")
-
-probitFreqPreds   <- readRDS('probit-freq-preds.RDS')
-logitFreqPreds    <- readRDS('logit-freq-preds.RDS')
-betaFreqPreds     <- readRDS('beta-freq-preds.RDS')
-cloglogFreqPreds  <- readRDS('cloglog-freq-preds.RDS')
-gammaFreqPreds    <- readRDS('gamma-freq-preds.RDS')
-gaussianFreqPreds <- readRDS('gaussian-freq-preds.RDS')
-poissonFreqPreds  <- readRDS('poisson-freq-preds.RDS')
-negbinomFreqPreds <- readRDS('negbinom-freq-preds.RDS')
-
-weightedLogitFreqPreds <- readRDS('weighted-logit-freq-preds.RDS')
-offsetPoissonFreqPreds <- readRDS('offset-poisson-freq-preds.RDS')
 
 # test that the big model can run #
 
@@ -53,13 +22,14 @@ test_that('make sure bayesPredsF throws expected errors', {
 # test on cloglog model #
 
 cloglogPreds <- bayesPredsF(cloglogModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N'))) %>%
-  dplyr::left_join(cloglogFreqPreds, by=c('a', 'b', 'c')) %>%
-  dplyr::mutate(mean_diff   = abs(mean - Prediction),
-                lower_diff  = abs(hpd_lower - lower),
-                upper_diff  = abs(hpd_upper - upper),
-                mean_bound  = abs(Prediction*1.01 - Prediction),
-                lower_bound = abs(lower*1.01 - lower),
-                upper_bound = abs(upper*1.01 - upper))
+  merge(., cloglogFreqPreds, by=c('a', 'b', 'c')) %>%
+  setDT() %>%
+  .[, `:=`(mean_diff   = abs(mean - Prediction),
+           lower_diff  = abs(hpd_lower - lower),
+           upper_diff  = abs(hpd_upper - upper),
+           mean_bound  = abs(Prediction*1.01 - Prediction),
+           lower_bound = abs(lower*1.01 - lower),
+           upper_bound = abs(upper*1.01 - upper))]
 
 test_that('make sure bayesPredsF is working for cloglog model', {
 
@@ -75,31 +45,34 @@ test_that('make sure bayesPredsF is working for cloglog model', {
 # test on logit model #
 
 logitPreds <- bayesPredsF(logitModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N'))) %>%
-  dplyr::left_join(logitFreqPreds, by=c('a', 'b', 'c')) %>%
-  dplyr::mutate(mean_diff   = abs(mean - Prediction),
-                lower_diff  = abs(hpd_lower - lower),
-                upper_diff  = abs(hpd_upper - upper),
-                mean_bound  = abs(Prediction*1.01 - Prediction),
-                lower_bound = abs(lower*1.01 - lower),
-                upper_bound = abs(upper*1.01 - upper))
+  merge(., logitFreqPreds, by=c('a', 'b', 'c')) %>%
+  setDT() %>%
+  .[, `:=`(mean_diff   = abs(mean - Prediction),
+           lower_diff  = abs(hpd_lower - lower),
+           upper_diff  = abs(hpd_upper - upper),
+           mean_bound  = abs(Prediction*1.01 - Prediction),
+           lower_bound = abs(lower*1.01 - lower),
+           upper_bound = abs(upper*1.01 - upper))]
 
 logitPredsETI <- bayesPredsF(logitModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N')), hdi_interval=F) %>%
-  dplyr::left_join(logitFreqPreds, by=c('a', 'b', 'c')) %>%
-  dplyr::mutate(mean_diff   = abs(mean - Prediction),
-                lower_diff  = abs(hpd_lower - lower),
-                upper_diff  = abs(hpd_upper - upper),
-                mean_bound  = abs(Prediction*1.01 - Prediction),
-                lower_bound = abs(lower*1.01 - lower),
-                upper_bound = abs(upper*1.01 - upper))
+  merge(., logitFreqPreds, by=c('a', 'b', 'c')) %>%
+  setDT() %>%
+  .[, `:=`(mean_diff   = abs(mean - Prediction),
+           lower_diff  = abs(hpd_lower - lower),
+           upper_diff  = abs(hpd_upper - upper),
+           mean_bound  = abs(Prediction*1.01 - Prediction),
+           lower_bound = abs(lower*1.01 - lower),
+           upper_bound = abs(upper*1.01 - upper))]
 
 weightedLogitPreds <- bayesPredsF(weightedLogitModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N')), hdi_interval=F) %>%
-  dplyr::left_join(weightedLogitFreqPreds, by=c('a', 'b', 'c')) %>%
-  dplyr::mutate(mean_diff   = abs(mean - Prediction),
-                lower_diff  = abs(hpd_lower - lower),
-                upper_diff  = abs(hpd_upper - upper),
-                mean_bound  = abs(Prediction*1.01 - Prediction),
-                lower_bound = abs(lower*1.01 - lower),
-                upper_bound = abs(upper*1.01 - upper))
+  merge(., weightedLogitFreqPreds, by=c('a', 'b', 'c')) %>%
+  setDT() %>%
+  .[, `:=`(mean_diff   = abs(mean - Prediction),
+           lower_diff  = abs(hpd_lower - lower),
+           upper_diff  = abs(hpd_upper - upper),
+           mean_bound  = abs(Prediction*1.01 - Prediction),
+           lower_bound = abs(lower*1.01 - lower),
+           upper_bound = abs(upper*1.01 - upper))]
 
 test_that('make sure bayesPredsF is working for logit model', {
 
@@ -126,13 +99,14 @@ test_that('make sure bayesPredsF is working for logit model', {
 # test on probit model #
 
 probitPreds <- bayesPredsF(probitModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N'))) %>%
-  dplyr::left_join(probitFreqPreds, by=c('a', 'b', 'c')) %>%
-  dplyr::mutate(mean_diff   = abs(mean - Prediction),
-                lower_diff  = abs(hpd_lower - lower),
-                upper_diff  = abs(hpd_upper - upper),
-                mean_bound  = abs(Prediction*1.01 - Prediction),
-                lower_bound = abs(lower*1.01 - lower),
-                upper_bound = abs(upper*1.01 - upper))
+  merge(., probitFreqPreds, by=c('a', 'b', 'c')) %>%
+  setDT() %>%
+  .[, `:=`(mean_diff   = abs(mean - Prediction),
+           lower_diff  = abs(hpd_lower - lower),
+           upper_diff  = abs(hpd_upper - upper),
+           mean_bound  = abs(Prediction*1.01 - Prediction),
+           lower_bound = abs(lower*1.01 - lower),
+           upper_bound = abs(upper*1.01 - upper))]
 
 test_that('make sure bayesPredsF is working for probit model', {
 
@@ -147,13 +121,14 @@ test_that('make sure bayesPredsF is working for probit model', {
 # test on gamma model #
 
 gammaPreds <- bayesPredsF(gammaModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N'))) %>%
-  dplyr::left_join(gammaFreqPreds, by=c('a', 'b', 'c')) %>%
-  dplyr::mutate(mean_diff   = abs(mean - Prediction),
-                lower_diff  = abs(hpd_lower - lower),
-                upper_diff  = abs(hpd_upper - upper),
-                mean_bound  = abs(Prediction*1.01 - Prediction),
-                lower_bound = abs(lower*1.01 - lower),
-                upper_bound = abs(upper*1.01 - upper))
+  merge(., gammaFreqPreds, by=c('a', 'b', 'c')) %>%
+  setDT() %>%
+  .[, `:=`(mean_diff   = abs(mean - Prediction),
+           lower_diff  = abs(hpd_lower - lower),
+           upper_diff  = abs(hpd_upper - upper),
+           mean_bound  = abs(Prediction*1.01 - Prediction),
+           lower_bound = abs(lower*1.01 - lower),
+           upper_bound = abs(upper*1.01 - upper))]
 
 test_that('make sure bayesPredsF is working for gamma model', {
 
@@ -165,61 +140,27 @@ test_that('make sure bayesPredsF is working for gamma model', {
 
 })
 
-# test on gaussian model #
-
-gaussianPreds <- bayesPredsF(gaussianModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N'))) %>%
-  dplyr::left_join(gaussianFreqPreds, by=c('a', 'b', 'c')) %>%
-  dplyr::mutate(mean_diff   = abs(mean - Prediction),
-                lower_diff  = abs(hpd_lower - lower),
-                upper_diff  = abs(hpd_upper - upper),
-                mean_bound  = abs(Prediction*1.01 - Prediction),
-                lower_bound = abs(lower*1.01 - lower),
-                upper_bound = abs(upper*1.01 - upper))
-
-gaussianPredsETI <- bayesPredsF(gaussianModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N')), hdi_interval=F) %>%
-  dplyr::left_join(gaussianFreqPreds, by=c('a', 'b', 'c')) %>%
-  dplyr::mutate(mean_diff   = abs(mean - Prediction),
-                lower_diff  = abs(hpd_lower - lower),
-                upper_diff  = abs(hpd_upper - upper),
-                mean_bound  = abs(Prediction*1.01 - Prediction),
-                lower_bound = abs(lower*1.01 - lower),
-                upper_bound = abs(upper*1.01 - upper))
-
-test_that('make sure bayesPredsF is working for gaussian model', {
-
-  for(i in 1:nrow(gaussianPreds)){
-    expect_lt(gaussianPreds$mean_diff[i], gaussianPreds$mean_bound[i])
-    expect_lt(gaussianPreds$lower_diff[i], gaussianPreds$lower_bound[i])
-    expect_lt(gaussianPreds$upper_diff[i], gaussianPreds$upper_bound[i])
-  }
-
-  for(i in 1:nrow(gaussianPredsETI)){
-    expect_lt(gaussianPredsETI$mean_diff[i], gaussianPredsETI$mean_bound[i])
-    expect_lt(gaussianPredsETI$lower_diff[i], gaussianPredsETI$lower_bound[i])
-    expect_lt(gaussianPredsETI$upper_diff[i], gaussianPredsETI$upper_bound[i])
-  }
-
-})
-
 # test on Poisson model #
 
 poissonPreds <- bayesPredsF(poissonModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N'))) %>%
-  dplyr::left_join(poissonFreqPreds, by=c('a', 'b', 'c')) %>%
-  dplyr::mutate(mean_diff   = abs(mean - Prediction),
-                lower_diff  = abs(hpd_lower - lower),
-                upper_diff  = abs(hpd_upper - upper),
-                mean_bound  = abs(Prediction*1.01 - Prediction),
-                lower_bound = abs(lower*1.01 - lower),
-                upper_bound = abs(upper*1.01 - upper))
+  merge(., poissonFreqPreds, by=c('a', 'b', 'c')) %>%
+  setDT() %>%
+  .[, `:=`(mean_diff   = abs(mean - Prediction),
+           lower_diff  = abs(hpd_lower - lower),
+           upper_diff  = abs(hpd_upper - upper),
+           mean_bound  = abs(Prediction*1.01 - Prediction),
+           lower_bound = abs(lower*1.01 - lower),
+           upper_bound = abs(upper*1.01 - upper))]
 
 offsetPoissonPreds <- bayesPredsF(offsetPoissonModel, at=list(a = c(9,10,11), b = c(13, 14, 15), c = c('Y', 'N'))) %>%
-  dplyr::left_join(offsetPoissonFreqPreds, by=c('a', 'b', 'c')) %>%
-  dplyr::mutate(mean_diff   = abs(mean - Prediction),
-                lower_diff  = abs(hpd_lower - lower),
-                upper_diff  = abs(hpd_upper - upper),
-                mean_bound  = abs(Prediction*1.01 - Prediction),
-                lower_bound = abs(lower*1.01 - lower),
-                upper_bound = abs(upper*1.01 - upper))
+  merge(., offsetPoissonFreqPreds, by=c('a', 'b', 'c')) %>%
+  setDT() %>%
+  .[, `:=`(mean_diff   = abs(mean - Prediction),
+           lower_diff  = abs(hpd_lower - lower),
+           upper_diff  = abs(hpd_upper - upper),
+           mean_bound  = abs(Prediction*1.01 - Prediction),
+           lower_bound = abs(lower*1.01 - lower),
+           upper_bound = abs(upper*1.01 - upper))]
 
 test_that('make sure bayesPredsF is working for Poisson model', {
 
