@@ -1,4 +1,4 @@
-exportPattern(bayesPredsF, bayesOrdinalPredsF, bayesMargEffF, bayesCountPredsF, bayesOrdinalAndCountMargEffF, bayesMargCompareF)
+exportPattern(bayesPredsF, bayesMargEffF, bayesMargCompareF)
 importFrom(bayestestR, hdi, p_direction)
 importFrom(data.table, setDT, data.table, melt, as.data.table, setnames)
 importFrom(magrittr, `%>%`)

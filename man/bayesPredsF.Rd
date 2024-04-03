@@ -46,6 +46,27 @@ Returns a summary table of the predictions.
 \author{
 David Dalenberg
 }
+\examples{
 
+library(rstanarm)
+library(tibble)
+
+logitData <- tibble(
+  a = rnorm(200, mean=10, sd=3),
+  b = rnorm(200, mean=15, sd=5),
+  c = rbinom(200, size=1, prob=.3),
+  logit_y = .02 + .01*a + -.02*b + .01*a*b + .4*c,
+  y = rbinom(200, size=1, prob=exp(logit_y) / (1 + exp(logit_y)))
+)
+
+## Logit model ##
+
+m2 <- stan_glm(y ~ a*b + c, data=logitData)
+
+# average marginal prediction #
+
+bayesPredsF(m2, at=list(a = c(7, 10, 13)))
+
+}
 
 

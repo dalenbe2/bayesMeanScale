@@ -5,7 +5,7 @@ margCompareErrorCheckF <- function(marg_list){
     stop("The 'marg_list' argument must have class 'bayes.marg'!")
   }
 
-  if(nrow(unique(subset(marg_list$drawData, select=-diff)))==1){
+  if(nrow(unique(subset(marg_list$diffDraws, select=-diff)))==1){
     stop("There is only 1 marginal effect, so nothing to compare to!")
   }
 
