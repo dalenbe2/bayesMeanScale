@@ -1,6 +1,12 @@
 ---
 title: "Introduction to 'bayesMeanScale'"
-output: rmarkdown::html_vignette
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    toc_depth: 3
 vignette: >
   %\VignetteIndexEntry{Introduction to 'bayesMeanScale'}
   %\VignetteEngine{knitr::rmarkdown}
@@ -10,13 +16,58 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  echo     = T,
+  eval     = T,
   comment = "#>"
 )
 ```
 
+This vignette provides an overview of the **bayesMeanScale** package, which is designed to compute model predictions, marginal effects, and comparisons of marginal effects for several different fixed-effect generalized linear models fit using the **rstanarm** package. In particular, these statistics are computed on the *mean* scale rather than the *link* scale for easier interpretation.
+
+Predictions are estimated by holding one or more explanatory variables fixed at particular values and either averaging over the rows of the data (average marginal predictions, or AMP) or holding all other covariates at their means (marginal predictions at the mean, or MPM). Marginal effects can also be calculated by averaging over the data (average marginal effect, or AME) or holding covariates at their means (marginal effect at the mean, or MEM). Currently, the effects are specified only in terms of *discrete* changes. For a continuous variable, this might mean looking at the difference between the mean and the mean plus 1 standard deviation. In statistical applications, this sort of strategy is often very useful for summarizing a model. The third workhorse function of the package compares marginal effects against each other. This is particularly useful for testing non-linear interaction effects, such as one in a logistic regression.
+
+## Predictions
+
+### Average marginal predictions
+
+
 ```{r setup}
-library(bayesMeanScale)
+
+lapply(c('bayesMeanScale', 'dplyr', 'rstanarm'), function(x) library(x, character.only=T))
+
+# Simulate the data #
+
+set.seed(500)
+
+N <- 5000
+
+logitData <- tibble(
+  a = rnorm(N, mean=10, sd=3),
+  b = rnorm(N, mean=15, sd=5),
+  c = rbinom(N, size=1, prob=.3),
+  logit_y = -10 - 4*a + 5*b + 2*c,
+  y = rbinom(N, size=1, prob=exp(logit_y) / (1 + exp(logit_y)))
+) %>%
+  mutate(c = if_else(c==1, 'Y', 'N'))
+
+summary(logitData$y)
+
+m1 <- stan_glm(y ~ a + b + c, data=logitData, family=binomial, refresh=0)
+
+describe_posterior(m1)
+
 ```
+
+### Marginal predictions at the mean
+
+## Marginal effects
+
+### Average marginal effects
+
+### Marginal effects at the mean
+
+## Comparing marginal effects
 
 ## References
 
+Mize, Trenton D. 2019. "Best Practices for Estimating, Interpreting, and Presenting Non-linear Interaction Effects." *Sociological Science* 6: 81-117. 
