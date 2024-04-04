@@ -5,7 +5,7 @@
 Bayesian predictions on the mean scale.
 }
 \description{
-Computes bayesian predictions on the mean scale along with the HPD intervals.
+Computes Bayesian predictions on the mean scale for models fit using the package "rstanarm". Predictions can be averaged over the values of the covariates in the data (average marginal predictions), or the covariates can be held at their means (marginal predictions at the means). Also, "at" values must be specified to fix certain covariates at particular values.
 }
 \usage{
 bayesPredsF(model,
@@ -61,11 +61,15 @@ logitData <- tibble(
 
 ## Logit model ##
 
-m2 <- stan_glm(y ~ a*b + c, data=logitData)
+m2 <- stan_glm(y ~ a*b + c, data=logitData, family=binomial, refresh=0)
 
-# average marginal prediction #
+# marginal predictions averaging over sample values of covariates #
 
 bayesPredsF(m2, at=list(a = c(7, 10, 13)))
+
+# marginal predictions holding covariates at means #
+
+bayesPredsF(m2, at=list(a = c(7, 10, 13)), at_means=TRUE)
 
 }
 

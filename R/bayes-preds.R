@@ -1,5 +1,5 @@
 
-bayesPredsF <- function(model, n_draws=2000, ci=.95, hdi_interval=TRUE, digits=4, at=NULL, at_means=F){
+bayesPredsF <- function(model, n_draws=2000, ci=.95, hdi_interval=TRUE, digits=4, at=NULL, at_means=FALSE){
 
   predsErrorCheckF(model = model,
                    at    = at)
