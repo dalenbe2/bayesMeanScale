@@ -70,26 +70,19 @@ David Dalenberg
 \examples{
 
 library(rstanarm)
-library(tibble)
 
-logitData <- tibble(
-  a = rnorm(200, mean=10, sd=3),
-  b = rnorm(200, mean=15, sd=5),
-  c = rbinom(200, size=1, prob=.3),
-  logit_y = .02 + .01*a + -.02*b + .01*a*b + .4*c,
-  y = rbinom(200, size=1, prob=exp(logit_y) / (1 + exp(logit_y)))
-)
+data(wells)
 
 ## Logit model ##
 
-m2 <- stan_glm(y ~ a*b + c, data=logitData, family=binomial, refresh=0)
+m1 <- stan_glm(switch ~ dist + educ + arsenic + assoc, data=wells, family=binomial, refresh=0)
 
 # marginal effect averaging over sample values of covariates #
 
-bayesMargEffF(m2, marginal_effect="a", start_value=7, end_value=13)$diffTable
+bayesMargEffF(m1, marginal_effect = 'arsenic', start_value = 2.2, end_value = .82)$diffTable
 
 # marginal effect holding covariates at their means #
 
-bayesMargEffF(m2, marginal_effect="a", start_value=7, end_value=13, at_means=TRUE)$diffTable
+bayesMargEffF(m1, marginal_effect = 'arsenic', start_value = 2.2, end_value = .82, at_means=T)$diffTable
 
 }

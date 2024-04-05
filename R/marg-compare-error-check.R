@@ -1,8 +1,16 @@
 
-margCompareErrorCheckF <- function(marg_list){
+margCompareErrorCheckF <- function(marg_list, ci, hdi_interval){
 
   if(!inherits(marg_list, 'bayes.marg')){
     stop("The 'marg_list' argument must have class 'bayes.marg'!")
+  }
+  
+  if(!(hdi_interval %in% c(T, F))){
+    stop("This is a logical argument!")
+  }
+  
+  if(ci > 1 | ci < 0){
+    stop("The credible interval level must be between 0 and 1!")
   }
 
   if(nrow(unique(subset(marg_list$diffDraws, select=-diff)))==1){

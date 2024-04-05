@@ -1,6 +1,12 @@
 
 margErrorCheckF <- function(model, marginal_effect, at, start_value, end_value){
 
+  # make sure model is supported #
+  
+  if(any(c('aov', 'lmerMod', 'gamm4', 'stanmvreg', 'stanjm', 'nlmerMod', 'polr', 'clogit') %in% class(model))){
+    stop("This model is not currently supported!")
+  }
+  
   # make sure model is a stanreg object and of a supported exponential family #
 
   if(!('stanreg' %in% class(model))){

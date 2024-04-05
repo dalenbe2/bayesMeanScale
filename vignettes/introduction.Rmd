@@ -31,10 +31,15 @@ Predictions are estimated by holding one or more explanatory variables fixed at 
 
 ### Average marginal predictions
 
+For average marginal predictions, the goal is to get predictions at important settings of one or more of the model explanatory variables. These predictions are then averaged over the rows of the data. 
 
-```{r}
+```{r, results='hide', message=F}
 
 lapply(c('bayesMeanScale', 'dplyr', 'rstanarm', 'bayestestR'), function(x) library(x, character.only=T))
+
+```
+
+```{r}
 
 # Simulate the data #
 
@@ -47,43 +52,37 @@ summary(modelData)
 
 m1 <- stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc, data=modelData, family=binomial, refresh=0)
 
-describe_posterior(m1)
-
 ```
 
 ```{r}
 
-start <- Sys.time()
-
 bayesPredsF(m1, 
-            at = list(arsenic = c(.82, 1.3, 2.2)))
+            at = list(arsenic = c(.82, 1.3, 2.2), assoc=c("Y", "N")))
 
-end <- Sys.time()
-
-end - start
 
 ```
 
+The output contains the unique values for the "at" variables, the posterior means and medians, and the lower and upper bounds of the credible interval. 
 
 ### Marginal predictions at the mean
 
-```{r}
+For marginal predictions at the mean, the goal is essentially the same except that we want to hold the covariates at their means. In the example below, all explanatory variables except for "arsenic" are held at their means for the computation. Since "assoc" is a discrete variable, we hold it at the proportion of cases that equaled "Y".
 
-start <- Sys.time()
+```{r}
 
 bayesPredsF(m1, 
             at       = list(arsenic = c(.82, 1.3, 2.2)), 
             at_means = T)
 
-end <- Sys.time()
-
-end - start
-
 ```
+
+The results are slightly different than the average marginal predictions. From a computational standpoint, setting "at_means" to "TRUE" makes for a substantially faster computation. For relatively small models, this speed advantage is likely trivial, but it can make a noticeable difference when working with big data models.
 
 ## Marginal effects
 
 ### Average marginal effects
+
+The concept of average marginal effects builds off the concept of average marginal predictions. We simply take two posterior distributions of average marginal predictions and subtract one from the other. In the example below, we see that the average expected probability of switching wells for families that had an arsenic level of 2.2 is roughly 27 percentage points greater than for a family that had an arsenic level of .82. Also, notice that the output contains the column "pd", which is the probability of direction. 
 
 ```{r}
 
@@ -97,6 +96,8 @@ head(m1AME$diffDraws)
 
 ```
 
+We can also compute multiple marginal effects. When doing so, it is necessary to specify the start and end values in a list.
+
 ```{r}
 
 m1AMEMultiple <- bayesMargEffF(m1,
@@ -107,6 +108,8 @@ m1AMEMultiple <- bayesMargEffF(m1,
 m1AMEMultiple$diffTable
 
 ```
+
+The "at" argument allows the user to specify particular values for one or more covariates, and they must be specified in a list. The example below specifies at values for "educ" given that we have an interaction between "dist" and "educ" in the model. If there is an interaction effect on the mean (probability) scale, we would expect the marginal effect of "dist" to be different at various levels of "educ." The final section will cover how to test these marginal effects against each other.
 
 ```{r}
 
@@ -121,6 +124,8 @@ m1AMEInteraction$diffTable
 ```
 
 ### Marginal effects at the mean
+
+Marginal effects at the mean compute the differences while holding the covariates at their means. Like the marginal predictions at the mean, specifying "at_means=T" allows for a much faster computation than specifying "at_means=F". 
 
 ```{r}
 
@@ -137,6 +142,8 @@ m1MEMInteraction$diffTable
 
 
 ## Comparing marginal effects
+
+After computing multiple marginal effects for a model, you might like to compare them against one another. The "bayesMargCompareF" function calculates tests for all the unique pairs of marginal effects that you computed with "bayesMargEffF". In the example below, we are able to investigate the interaction effect between "dist" and "educ". We see that the marginal effect of "dist" is meaningfully different at different levels of "educ".
 
 ```{r}
 

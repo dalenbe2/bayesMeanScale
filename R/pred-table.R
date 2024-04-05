@@ -18,20 +18,18 @@ predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, digi
     if(hdi_interval==TRUE){
 
       predTable <- predsNew %>%
-        .[, .(mean      = round(mean(pred), digits=digits),
-              median    = round(median(pred), digits=digits),
-              ci_level  = paste(paste(ci*100, "%", sep="")),
-              hpd_lower = round(hdi(pred, ci=ci)$CI_low, digits=digits),
-              hpd_upper = round(hdi(pred, ci=ci)$CI_high, digits=digits)), by=at_vars]
+        .[, .(mean   = round(mean(pred), digits=digits),
+              median = round(median(pred), digits=digits),
+              lower  = round(hdi(pred, ci=ci)$CI_low, digits=digits),
+              upper  = round(hdi(pred, ci=ci)$CI_high, digits=digits)), by=at_vars]
 
     } else{
 
       predTable <- predsNew %>%
-        .[, .(mean      = round(mean(pred), digits=digits),
-              median    = round(median(pred), digits=digits),
-              ci_level  = paste(paste(ci*100, "%", sep="")),
-              hpd_lower = round(quantile(pred, probs=(1-ci)/2), digits=digits),
-              hpd_upper = round(quantile(pred, probs=1-(1-ci)/2), digits=digits)), by=at_vars]
+        .[, .(mean   = round(mean(pred), digits=digits),
+              median = round(median(pred), digits=digits),
+              lower  = round(quantile(pred, probs=(1-ci)/2), digits=digits),
+              upper  = round(quantile(pred, probs=1-(1-ci)/2), digits=digits)), by=at_vars]
 
     }
 
@@ -51,20 +49,18 @@ predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, digi
     if(hdi_interval==TRUE){
 
       predTable <- predsNew %>%
-        .[, .(mean      = round(mean(pred), digits=digits),
-              median    = round(median(pred), digits=digits),
-              ci_level  = paste(paste(ci*100, "%", sep="")),
-              hpd_lower = round(hdi(pred, ci=ci)$CI_low, digits=digits),
-              hpd_upper = round(hdi(pred, ci=ci)$CI_high, digits=digits)), by=at_vars]
+        .[, .(mean   = round(mean(pred), digits=digits),
+              median = round(median(pred), digits=digits),
+              lower  = round(hdi(pred, ci=ci)$CI_low, digits=digits),
+              upper  = round(hdi(pred, ci=ci)$CI_high, digits=digits)), by=at_vars]
 
     } else{
 
       predTable <- predsNew %>%
-        .[, .(mean      = round(mean(pred), digits=digits),
-              median    = round(median(pred), digits=digits),
-              ci_level  = paste(paste(ci*100, "%", sep="")),
-              hpd_lower = round(quantile(pred, probs=(1-ci)/2), digits=digits),
-              hpd_upper = round(quantile(pred, probs=1-(1-ci)/2), digits=digits)), by=at_vars]
+        .[, .(mean   = round(mean(pred), digits=digits),
+              median = round(median(pred), digits=digits),
+              lower  = round(quantile(pred, probs=(1-ci)/2), digits=digits),
+              upper  = round(quantile(pred, probs=1-(1-ci)/2), digits=digits)), by=at_vars]
 
     }
 

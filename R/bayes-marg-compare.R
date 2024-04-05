@@ -1,7 +1,7 @@
 
-bayesMargCompareF <- function(marg_list, ci=.95, digits=4){
+bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, digits=4){
 
-  margCompareErrorCheckF(marg_list)
+  margCompareErrorCheckF(marg_list, ci, hdi_interval)
 
   # get the MCMC draws #
 
@@ -41,14 +41,27 @@ bayesMargCompareF <- function(marg_list, ci=.95, digits=4){
 
         # make the table
 
-        tempTable <- data.frame(
-          mean        = round(mean(drawDiffs), digits=digits),
-          median      = round(median(drawDiffs), digits=digits),
-          ci_level    = paste(ci*100, "%", sep=""),
-          hpd_lower   = round(hdi(drawDiffs, ci=ci)$CI_low, digits=digits),
-          hpd_upper   = round(hdi(drawDiffs, ci=ci)$CI_high, digits=digits),
-          pd          = round(as.numeric(p_direction(drawDiffs)), digits=digits)
-        )
+        if(hdi_interval==T){
+        
+          tempTable <- data.frame(
+            mean    = round(mean(drawDiffs), digits=digits),
+            median  = round(median(drawDiffs), digits=digits),
+            lower   = round(hdi(drawDiffs, ci=ci)$CI_low, digits=digits),
+            upper   = round(hdi(drawDiffs, ci=ci)$CI_high, digits=digits),
+            pd      = round(as.numeric(p_direction(drawDiffs)), digits=digits)
+          )
+        
+        } else{
+          
+          tempTable <- data.frame(
+            mean    = round(mean(drawDiffs), digits=digits),
+            median  = round(median(drawDiffs), digits=digits),
+            lower   = round(hdi(drawDiffs, ci=ci)$CI_low, digits=digits),
+            upper   = round(hdi(drawDiffs, ci=ci)$CI_high, digits=digits),
+            pd      = round(as.numeric(p_direction(drawDiffs)), digits=digits)
+          )
+          
+        }
 
         drawDiffTable    <- cbind(comboTemp1, comboTemp2, tempTable)
         drawDiffTableBig <- rbind(drawDiffTableBig, drawDiffTable)

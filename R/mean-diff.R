@@ -49,7 +49,7 @@ meanDiffF <- function(pred_start, pred_end, model_data, marg_list, at, at_means,
   
   if(is.null(at) & at_means==T){
     
-    predDiff <- data.table(diff        = pred_start - pred_end,
+    predDiff <- data.table(diff        = colMeans(pred_start - pred_end),
                            comparison  = paste0(marg_list$start[[i]], " vs. ", marg_list$end[[i]]),
                            marg_effect = marg_list$marg[[i]])
     
