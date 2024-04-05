@@ -55,6 +55,7 @@ bayesMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end
                           model_data = modData$modelData,
                           marg_list  = margList,
                           at         = at,
+                          at_means   = at_means,
                           i          = i)
 
     # make the marginal effects tables #

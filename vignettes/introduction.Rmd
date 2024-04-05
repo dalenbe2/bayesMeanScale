@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   echo     = T,
   eval     = T,
+  include  = T,
   comment = "#>"
 )
 ```
@@ -31,42 +32,118 @@ Predictions are estimated by holding one or more explanatory variables fixed at 
 ### Average marginal predictions
 
 
-```{r setup}
+```{r}
 
-lapply(c('bayesMeanScale', 'dplyr', 'rstanarm'), function(x) library(x, character.only=T))
+lapply(c('bayesMeanScale', 'dplyr', 'rstanarm', 'bayestestR'), function(x) library(x, character.only=T))
 
 # Simulate the data #
 
-set.seed(500)
+data(wells)
 
-N <- 5000
+modelData <- wells %>%
+  mutate(assoc = if_else(assoc==1, 'Y', 'N'))
 
-logitData <- tibble(
-  a = rnorm(N, mean=10, sd=3),
-  b = rnorm(N, mean=15, sd=5),
-  c = rbinom(N, size=1, prob=.3),
-  logit_y = -10 - 4*a + 5*b + 2*c,
-  y = rbinom(N, size=1, prob=exp(logit_y) / (1 + exp(logit_y)))
-) %>%
-  mutate(c = if_else(c==1, 'Y', 'N'))
+summary(modelData)
 
-summary(logitData$y)
-
-m1 <- stan_glm(y ~ a + b + c, data=logitData, family=binomial, refresh=0)
+m1 <- stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc, data=modelData, family=binomial, refresh=0)
 
 describe_posterior(m1)
 
 ```
 
+```{r}
+
+start <- Sys.time()
+
+bayesPredsF(m1, 
+            at = list(arsenic = c(.82, 1.3, 2.2)))
+
+end <- Sys.time()
+
+end - start
+
+```
+
+
 ### Marginal predictions at the mean
+
+```{r}
+
+start <- Sys.time()
+
+bayesPredsF(m1, 
+            at       = list(arsenic = c(.82, 1.3, 2.2)), 
+            at_means = T)
+
+end <- Sys.time()
+
+end - start
+
+```
 
 ## Marginal effects
 
 ### Average marginal effects
 
+```{r}
+
+m1AME <- bayesMargEffF(m1,
+                       marginal_effect = 'arsenic',
+                       start_value     = 2.2,
+                       end_value       = .82)
+
+m1AME$diffTable
+head(m1AME$diffDraws)
+
+```
+
+```{r}
+
+m1AMEMultiple <- bayesMargEffF(m1,
+                          marginal_effect = c('arsenic', 'dist'),
+                          start_value     = list(2.2, 64.041),
+                          end_value       = list(.82, 21.117))
+
+m1AMEMultiple$diffTable
+
+```
+
+```{r}
+
+m1AMEInteraction <- bayesMargEffF(m1,
+                                  marginal_effect = 'dist',
+                                  start_value     = 64.041,
+                                  end_value       = 21.117,
+                                  at              = list(educ=c(0, 5, 8)))
+
+m1AMEInteraction$diffTable
+
+```
+
 ### Marginal effects at the mean
 
+```{r}
+
+m1MEMInteraction <- bayesMargEffF(m1,
+                                  marginal_effect = 'dist',
+                                  start_value     = 64.041,
+                                  end_value       = 21.117,
+                                  at              = list(educ=c(0, 5, 8)),
+                                  at_means        = T)
+
+m1MEMInteraction$diffTable
+
+```
+
+
 ## Comparing marginal effects
+
+```{r}
+
+bayesMargCompareF(m1AMEInteraction)
+
+```
+
 
 ## References
 

@@ -31,13 +31,13 @@ meanPredF <- function(model, new_data, at, draws, new_formula, at_means){
 
   if(at_means==F){
 
-    modelMatrix <- modelMatrix %>%
+    modelMatrixNew <- modelMatrix %>%
       as.data.table() %>%
       .[, .SD, .SDcols = dimnames(betaDraws)[[2]]] %>%
       as.matrix()
 
   }
-
+  
   if(at_means==T & !is.null(at)){
 
     atVars <- names(expand.grid(at))
@@ -45,11 +45,11 @@ meanPredF <- function(model, new_data, at, draws, new_formula, at_means){
     atVarsNew <- paste0(atVars, "_new")
     setnames(new_data, old=names(new_data[, ..atVars]), new=atVarsNew)
 
-    modelMatrix <- modelMatrix %>%
+    modelMatrixNew <- modelMatrix %>%
       as.data.table() %>%
       .[, .SD, .SDcols = dimnames(betaDraws)[[2]]] %>%
       cbind(new_data[, ..atVarsNew]) %>%
-      .[, lapply(.SD, mean), by=atVarsNew, .SDcols=!atVarsNew] %>%
+      .[, lapply(.SD, mean), by=atVarsNew] %>%
       .[, !..atVarsNew] %>%
       as.matrix()
 
@@ -59,13 +59,15 @@ meanPredF <- function(model, new_data, at, draws, new_formula, at_means){
 
   if(at_means==T & is.null(at)){
 
-    modelMatrix <- modelMatrix %>%
+    modelMatrixNew <- modelMatrix %>%
       as.data.table() %>%
       .[, .SD, .SDcols = dimnames(betaDraws)[[2]]] %>%
       .[, lapply(.SD, mean)] %>%
       as.matrix()
 
   }
+  
+  
 
   # get a sample from the joint posterior #
 
@@ -77,11 +79,11 @@ meanPredF <- function(model, new_data, at, draws, new_formula, at_means){
 
   if(!is.null(model$offset)){
 
-    Z <- (modelMatrix %*% t(betaDraws[betaSamples,])) + modelOffset
+    Z <- (modelMatrixNew %*% t(betaDraws[betaSamples,])) + modelOffset
 
   } else{
 
-    Z <- modelMatrix %*% t(betaDraws[betaSamples,])
+    Z <- modelMatrixNew %*% t(betaDraws[betaSamples,])
 
   }
 
