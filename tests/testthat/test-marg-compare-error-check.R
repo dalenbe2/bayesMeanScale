@@ -1,7 +1,7 @@
 
 
-margTestError   <- bayesMargEffF(gaussianModel, marginal_effect='c', start_value='Y', end_value='N', digits=4)
-margTestNoError <- bayesMargEffF(gaussianModel, marginal_effect='c', start_value='Y', end_value='N', digits=4, at=list(a=c(9, 10, 11)))
+margTestError   <- bayesMargEffF(logitModel, marginal_effect='educ', start_value=5, end_value=0, digits=4)
+margTestNoError <- bayesMargEffF(logitModel, marginal_effect='educ', start_value=5, end_value=0, digits=4, at=list(dist=c(20, 30)))
 
 test_that("make sure margCompareErrorCheckF is catching errors", {
   

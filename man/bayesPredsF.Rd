@@ -54,7 +54,12 @@ data(wells)
 
 ## Logit model ##
 
-m1 <- stan_glm(switch ~ dist + educ + arsenic + assoc, data=wells, family=binomial, refresh=0)
+m1 <- stan_glm(switch ~ dist + educ + arsenic + assoc, 
+               data    = wells, 
+               family  = binomial, 
+               refresh = 0, 
+               iter    = 1000, 
+               chains  = 1)
 
 # marginal predictions averaging over sample values of covariates #
 
@@ -64,7 +69,8 @@ bayesPredsF(m1,
 # marginal predictions holding covariates at means #
 
 bayesPredsF(m1, 
-            at = list(arsenic = c(.82, 1.3, 2.2)), at_means=T)
+            at       = list(arsenic = c(.82, 1.3, 2.2)), 
+            at_means = TRUE)
 
 }
 

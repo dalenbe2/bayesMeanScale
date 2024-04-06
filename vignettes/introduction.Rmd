@@ -82,7 +82,7 @@ The results are slightly different than the average marginal predictions. From a
 
 ### Average marginal effects
 
-The concept of average marginal effects builds off the concept of average marginal predictions. We simply take two posterior distributions of average marginal predictions and subtract one from the other. In the example below, we see that the average expected probability of switching wells for families that had an arsenic level of 2.2 is roughly 27 percentage points greater than for a family that had an arsenic level of .82. Also, notice that the output contains the column "pd", which is the probability of direction. 
+The concept of average marginal effects is straightforward. We simply take two posterior distributions of average marginal predictions and subtract one from the other. In the example below, we see that the average expected probability of switching wells for families that had an arsenic level of 2.2 is roughly 27 percentage points greater than for a family that had an arsenic level of .82. 
 
 ```{r}
 

@@ -15,8 +15,7 @@ margTableF <- function(pred_diff, marg_list, at, digits, ci, hdi_interval, at_me
             mean        = round(mean(diff), digits=digits),
             median      = round(median(diff), digits=digits),
             lower       = round(hdi(diff, ci=ci)$CI_low, digits=digits),
-            upper       = round(hdi(diff, ci=ci)$CI_high, digits=digits),
-            pd          = round(as.numeric(p_direction(diff)), digits=digits)), by=atVars]
+            upper       = round(hdi(diff, ci=ci)$CI_high, digits=digits)), by=atVars]
 
     } else{
 
@@ -27,8 +26,7 @@ margTableF <- function(pred_diff, marg_list, at, digits, ci, hdi_interval, at_me
               mean        = round(mean(diff), digits=digits),
               median      = round(median(diff), digits=digits),
               lower       = round(quantile(diff, probs=(1-ci)/2), digits=digits),
-              upper       = round(quantile(diff, probs=1-(1-ci)/2), digits=digits),
-              pd          = round(as.numeric(p_direction(diff)), digits=digits)), by=atVars]
+              upper       = round(quantile(diff, probs=1-(1-ci)/2), digits=digits)), by=atVars]
 
     }
 
@@ -42,8 +40,7 @@ margTableF <- function(pred_diff, marg_list, at, digits, ci, hdi_interval, at_me
                                   mean        = round(mean(pred_diff$diff), digits=digits),
                                   median      = round(median(pred_diff$diff), digits=digits),
                                   lower       = round(hdi(pred_diff$diff, ci=ci)$CI_low, digits=digits),
-                                  upper       = round(hdi(pred_diff$diff, ci=ci)$CI_high, digits=digits),
-                                  pd          = round(as.numeric(p_direction(pred_diff$diff)), digits=digits))
+                                  upper       = round(hdi(pred_diff$diff, ci=ci)$CI_high, digits=digits))
 
     } else{
 
@@ -53,8 +50,7 @@ margTableF <- function(pred_diff, marg_list, at, digits, ci, hdi_interval, at_me
                                   mean        = round(mean(pred_diff$diff), digits=digits),
                                   median      = round(median(pred_diff$diff), digits=digits),
                                   lower       = round(quantile(pred_diff$diff, probs=(1-ci)/2), digits=digits),
-                                  upper       = round(quantile(pred_diff$diff, probs=1-(1-ci)/2), digits=digits),
-                                  pd          = round(as.numeric(p_direction(pred_diff$diff)), digits=digits))
+                                  upper       = round(quantile(pred_diff$diff, probs=1-(1-ci)/2), digits=digits))
 
     }
 

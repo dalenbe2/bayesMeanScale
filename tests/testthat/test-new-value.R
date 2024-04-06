@@ -1,5 +1,5 @@
 
 
 test_that('make sure that factor levels line up with original data', {
-  expect_identical(levels(newValueF(betaModel$model, marg_effect='which_gpa', new_value='first_year')$which_gpa), sort(unique(betaModel$model$which_gpa)))
+   expect_identical(levels(newValueF(logitModel$model, marg_effect='assoc', new_value='Y')$assoc), sort(unique(logitModel$model$assoc)))
 })
