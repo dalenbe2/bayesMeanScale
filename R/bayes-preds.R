@@ -9,18 +9,16 @@ bayesPredsF <- function(model, n_draws=2000, ci=.95, hdi_interval=TRUE, digits=4
   formulaNoOffsets <- modifyFormulaF(model=model)
 
   # get the model data #
-
+  
   if(!is.null(model$offset)){
-
-    modelDataOrg <- model.frame(formula = formulaNoOffsets,
-                                data    = model$data) %>%
+    
+    modelDataOrg <- model$data %>%
       cbind(offset=model$offset)
-
+    
   } else{
-
-    modelDataOrg <- model.frame(formula = formulaNoOffsets,
-                                data    = model$data)
-
+    
+    modelDataOrg <- model$data
+    
   }
 
   # tack on the grouping variables #
@@ -29,6 +27,7 @@ bayesPredsF <- function(model, n_draws=2000, ci=.95, hdi_interval=TRUE, digits=4
   atVars    <- names(atValues)
 
   modelData <- modelDataOrg %>%
+    na.omit() %>%
     .[, !(colnames(.) %in% atVars), drop=F] %>%
     merge(atValues, all=T) %>%
     setDT()
