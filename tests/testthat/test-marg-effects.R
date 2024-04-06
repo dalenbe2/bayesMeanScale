@@ -2,6 +2,7 @@
 
 test_that("make sure all configurations of bayesMargEffF run without error", {
   
+  expect_no_error(bayesMargEffF(logitModel2, marginal_effect='log(dist)', start_value=4, end_value=3, at=list(educ=c(0, 12))))
   expect_no_error(bayesMargEffF(logitModel, marginal_effect='dist', start_value=50, end_value=20, at=list(educ=c(0, 12))))
   expect_no_error(bayesMargEffF(logitModel, marginal_effect='dist', start_value=50, end_value=20, at=list(educ=c(0, 12)), hdi_interval=F))
   expect_no_error(bayesMargEffF(logitModel, marginal_effect='dist', start_value=50, end_value=20, at=list(educ=c(0, 12)), at_means=T))
