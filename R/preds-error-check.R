@@ -1,5 +1,5 @@
 
-predsErrorCheckF <- function(model, at){
+predsErrorCheckF <- function(model, at, centrality){
 
   # check that the 'at' argument is specified #
 
@@ -27,6 +27,12 @@ predsErrorCheckF <- function(model, at){
 
   if(!all(names(at) %in% names(model$model))){
     stop("The names for the at values don't match up with the names in the model data!")
+  }
+  
+  # check that the centrality measure is supported #
+  
+  if(!(centrality %in% c('mean', 'median'))){
+    stop("Centrality options are 'mean' or 'median'!")
   }
 
 }
