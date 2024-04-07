@@ -1,5 +1,5 @@
 
-margCompareErrorCheckF <- function(marg_list, ci, hdi_interval){
+margCompareErrorCheckF <- function(marg_list, ci, hdi_interval, centrality){
 
   if(!inherits(marg_list, 'bayes.marg')){
     stop("The 'marg_list' argument must have class 'bayes.marg'!")
@@ -15,6 +15,12 @@ margCompareErrorCheckF <- function(marg_list, ci, hdi_interval){
 
   if(nrow(unique(subset(marg_list$diffDraws, select=-diff)))==1){
     stop("There is only 1 marginal effect, so nothing to compare to!")
+  }
+  
+  # check that the centrality measure is supported #
+  
+  if(!(centrality %in% c('mean', 'median'))){
+    stop("Centrality options are 'mean' or 'median'!")
   }
 
 }
