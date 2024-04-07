@@ -1,5 +1,5 @@
 
-margErrorCheckF <- function(model, marginal_effect, at, start_value, end_value){
+margErrorCheckF <- function(model, marginal_effect, at, start_value, end_value, centrality){
 
   # make sure model is supported #
   
@@ -49,6 +49,12 @@ margErrorCheckF <- function(model, marginal_effect, at, start_value, end_value){
 
   if(length(end_value) > 1 & !is.list(end_value)){
     stop("When specifying multiple end values, they must be contained in a list to preserve data type!")
+  }
+  
+  # check that the centrality measure is supported #
+  
+  if(!(centrality %in% c('mean', 'median'))){
+    stop("Centrality options are 'mean' or 'median'!")
   }
 
 }
