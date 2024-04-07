@@ -1,8 +1,9 @@
 
-bayesPredsF <- function(model, n_draws=2000, ci=.95, hdi_interval=TRUE, digits=4, at=NULL, at_means=FALSE){
+bayesPredsF <- function(model, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE){
 
-  predsErrorCheckF(model = model,
-                   at    = at)
+  predsErrorCheckF(model      = model,
+                   at         = at,
+                   centrality = centrality)
 
   # modify the model formula if there's an offset #
 
@@ -57,6 +58,7 @@ bayesPredsF <- function(model, n_draws=2000, ci=.95, hdi_interval=TRUE, digits=4
                           at_vars      = atVars,
                           at_values    = atValues,
                           hdi_interval = hdi_interval,
+                          centrality   = centrality,
                           digits       = digits,
                           ci           = ci,
                           at_means     = at_means)
