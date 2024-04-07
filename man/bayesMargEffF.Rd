@@ -15,6 +15,7 @@ bayesMargEffF(model,
               end_value,
               ci              = .95,
               hdi_interval    = TRUE,
+              centrality      = 'mean',
               digits          = 4,
               at              = NULL,
               at_means        = FALSE)
@@ -41,7 +42,10 @@ The end value(s) for the marginal effect(s). Must be a list when specifying mult
 The level for the credible intervals.
 }
 \item{hdi_interval}{
-If TRUE, the default, computes the highest posterior density credible interval. If FALSE, computes the equal-tailed interval.
+If TRUE, the default, computes the highest density credible interval. If FALSE, computes the equal-tailed interval.
+}
+\item{centrality}{
+Centrality measure for the posterior distribution. Options are "mean" or "median".
 }
 \item{digits}{
 The number of digits to report in the summary table.
