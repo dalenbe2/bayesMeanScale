@@ -12,6 +12,7 @@ bayesPredsF(model,
             n_draws      = 2000,
             ci           = .95,
             hdi_interval = TRUE,
+            centrality   = 'mean',
             digits       = 4,
             at           = NULL,
             at_means     = FALSE)
@@ -28,7 +29,10 @@ The number of draws to take from the posterior distribution of the expectation.
 The level for the credible intervals.
 }
 \item{hdi_interval}{
-If TRUE, the default, computes the highest posterior density credible interval. If FALSE, computes the equal-tailed interval.
+If TRUE, the default, computes the highest density credible interval. If FALSE, computes the equal-tailed interval.
+}
+\item{centrality}{
+Centrality measure for the posterior distribution. Options are "mean" or "median".
 }
 \item{digits}{
 The number of digits to report in the summary table.
