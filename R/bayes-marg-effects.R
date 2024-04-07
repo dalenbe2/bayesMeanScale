@@ -1,11 +1,12 @@
 
-bayesMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end_value, ci=.95, hdi_interval=TRUE, digits=4, at=NULL, at_means=FALSE){
+bayesMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end_value, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE){
 
   margErrorCheckF(model           = model,
                   marginal_effect = marginal_effect,
                   at              = at,
                   start_value     = start_value,
-                  end_value       = end_value)
+                  end_value       = end_value,
+                  centrality      = centrality)
 
   # initialize the model table and diff matrices list #
 
@@ -66,6 +67,7 @@ bayesMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end
                                 digits       = digits,
                                 ci           = ci,
                                 hdi_interval = hdi_interval,
+                                centrality   = centrality,
                                 at_means     = at_means,
                                 i            = i)
 
