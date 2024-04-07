@@ -1,7 +1,10 @@
 
-bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, digits=4){
+bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4){
 
-  margCompareErrorCheckF(marg_list, ci, hdi_interval)
+  margCompareErrorCheckF(marg_list   = marg_list, 
+                         ci          = ci,
+                         hdi_interval = hdi_interval,
+                         centrality   = centrality)
 
   # get the MCMC draws #
 
@@ -41,27 +44,31 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, digits=4){
 
         # make the table
 
+        if(centrality=='map'){
+          centrality <- "map_estimate"
+        }
+        
+        centralityF <- eval(parse(text=centrality))
+        
         if(hdi_interval==T){
         
           tempTable <- data.frame(
-            mean    = round(mean(drawDiffs), digits=digits),
-            median  = round(median(drawDiffs), digits=digits),
-            lower   = round(hdi(drawDiffs, ci=ci)$CI_low, digits=digits),
-            upper   = round(hdi(drawDiffs, ci=ci)$CI_high, digits=digits),
-            pd      = round(as.numeric(p_direction(drawDiffs)), digits=digits)
+            centrality = round(centralityF(drawDiffs), digits=digits),
+            lower      = round(hdi(drawDiffs, ci=ci)$CI_low, digits=digits),
+            upper      = round(hdi(drawDiffs, ci=ci)$CI_high, digits=digits)
           )
         
         } else{
           
           tempTable <- data.frame(
-            mean    = round(mean(drawDiffs), digits=digits),
-            median  = round(median(drawDiffs), digits=digits),
-            lower   = round(hdi(drawDiffs, ci=ci)$CI_low, digits=digits),
-            upper   = round(hdi(drawDiffs, ci=ci)$CI_high, digits=digits),
-            pd      = round(as.numeric(p_direction(drawDiffs)), digits=digits)
+            centrality = round(centralityF(drawDiffs), digits=digits),
+            lower      = round(hdi(drawDiffs, ci=ci)$CI_low, digits=digits),
+            upper      = round(hdi(drawDiffs, ci=ci)$CI_high, digits=digits)
           )
           
         }
+        
+        names(tempTable) <- c(centrality, 'lower', 'upper')
 
         drawDiffTable    <- cbind(comboTemp1, comboTemp2, tempTable)
         drawDiffTableBig <- rbind(drawDiffTableBig, drawDiffTable)
