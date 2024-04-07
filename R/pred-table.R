@@ -1,6 +1,13 @@
 
-predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, digits, ci, at_means){
+predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, centrality, digits, ci, at_means){
 
+  if(centrality=='map'){
+    centrality <- "map_estimate"
+  }
+  
+  centralityF <- eval(parse(text=centrality))
+  tableNames  <- c(at_vars, centrality, 'lower', 'upper')
+  
   if(at_means==F){
 
     # tack on the grouping values and get the means #
@@ -18,18 +25,16 @@ predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, digi
     if(hdi_interval==TRUE){
 
       predTable <- predsNew %>%
-        .[, .(mean   = round(mean(pred), digits=digits),
-              median = round(median(pred), digits=digits),
-              lower  = round(hdi(pred, ci=ci)$CI_low, digits=digits),
-              upper  = round(hdi(pred, ci=ci)$CI_high, digits=digits)), by=at_vars]
+        .[, .(centrality = round(centralityF(pred), digits=digits),
+              lower      = round(hdi(pred, ci=ci)$CI_low, digits=digits),
+              upper      = round(hdi(pred, ci=ci)$CI_high, digits=digits)), by=at_vars]
 
     } else{
 
       predTable <- predsNew %>%
-        .[, .(mean   = round(mean(pred), digits=digits),
-              median = round(median(pred), digits=digits),
-              lower  = round(quantile(pred, probs=(1-ci)/2), digits=digits),
-              upper  = round(quantile(pred, probs=1-(1-ci)/2), digits=digits)), by=at_vars]
+        .[, .(centrality = round(centralityF(pred), digits=digits),
+              lower      = round(quantile(pred, probs=(1-ci)/2), digits=digits),
+              upper      = round(quantile(pred, probs=1-(1-ci)/2), digits=digits)), by=at_vars]
 
     }
 
@@ -49,22 +54,22 @@ predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, digi
     if(hdi_interval==TRUE){
 
       predTable <- predsNew %>%
-        .[, .(mean   = round(mean(pred), digits=digits),
-              median = round(median(pred), digits=digits),
-              lower  = round(hdi(pred, ci=ci)$CI_low, digits=digits),
-              upper  = round(hdi(pred, ci=ci)$CI_high, digits=digits)), by=at_vars]
+        .[, .(centrality = round(centralityF(pred), digits=digits),
+              lower      = round(hdi(pred, ci=ci)$CI_low, digits=digits),
+              upper      = round(hdi(pred, ci=ci)$CI_high, digits=digits)), by=at_vars]
 
     } else{
 
       predTable <- predsNew %>%
-        .[, .(mean   = round(mean(pred), digits=digits),
-              median = round(median(pred), digits=digits),
-              lower  = round(quantile(pred, probs=(1-ci)/2), digits=digits),
-              upper  = round(quantile(pred, probs=1-(1-ci)/2), digits=digits)), by=at_vars]
+        .[, .(centrality = round(centralityF(pred), digits=digits),
+              lower      = round(quantile(pred, probs=(1-ci)/2), digits=digits),
+              upper      = round(quantile(pred, probs=1-(1-ci)/2), digits=digits)), by=at_vars]
 
     }
 
   }
+  
+  names(predTable) <- tableNames
 
   return(predTable)
 
