@@ -58,7 +58,7 @@ If FALSE, the default, the marginal effects are averaged across the rows of the 
 }
 }
 \value{
-A list of class "bayes.marg" with the following components: 
+A list of class "bayes_mean_scale_marg" with the following components: 
 
 \item{diffTable}{
 summary table of the marginal effects
