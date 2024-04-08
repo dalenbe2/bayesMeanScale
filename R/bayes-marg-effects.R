@@ -80,10 +80,10 @@ bayesMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end
 
     # output #
 
-    diffList <- list(diffDraws = diffDraws,
-                     diffTable = as.data.frame(diffTable))
+    diffList <- structure(list(diffDraws = diffDraws,
+                               diffTable = as.data.frame(diffTable)),
+                          class = "bayes_mean_scale_marg")
 
-    attr(diffList, 'class') <- 'bayes.marg'
 
     return(diffList)
 
