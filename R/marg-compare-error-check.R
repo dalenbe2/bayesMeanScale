@@ -1,8 +1,8 @@
 
 margCompareErrorCheckF <- function(marg_list, ci, hdi_interval, centrality){
 
-  if(!inherits(marg_list, 'bayes.marg')){
-    stop("The 'marg_list' argument must have class 'bayes.marg'!")
+  if(!inherits(marg_list, 'bayes_mean_scale_marg')){
+    stop("The 'marg_list' argument must have class 'bayes_mean_scale_marg'!")
   }
   
   if(!(hdi_interval %in% c(T, F))){
