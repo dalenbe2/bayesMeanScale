@@ -17,7 +17,7 @@ bayesMargCompareF(marg_list,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{marg_list}{
-An object of class "bayes-marg."
+An object of class "bayes_mean_scale_marg."
 }
   \item{ci}{
 The level of the credible interval.
