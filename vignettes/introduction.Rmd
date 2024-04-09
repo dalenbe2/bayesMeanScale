@@ -18,8 +18,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   echo     = T,
   eval     = T,
-  include  = T,
-  comment = "#>"
+  include  = T
 )
 ```
 
