@@ -65,7 +65,12 @@ bayesPredsF <- function(model, n_draws=2000, ci=.95, hdi_interval=TRUE, centrali
 
   # output #
 
-  return(as.data.frame(predTable))
-
+  predList <- structure(list(predDraws = preds,
+                             predTable = as.data.frame(predTable)),
+                        class = c("bayes_mean_scale_pred", "list"))
+  
+  
+  return(predList)
+  
 }
 
