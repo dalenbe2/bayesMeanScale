@@ -91,7 +91,7 @@ m1 <- stan_glm(switch ~ dist + educ + arsenic + assoc,
 bayesMargEffF(m1, 
               marginal_effect = 'arsenic', 
               start_value     = 2.2, 
-              end_value       = .82)$diffTable
+              end_value       = .82)
 
 # marginal effect holding covariates at their means #
 
@@ -99,6 +99,6 @@ bayesMargEffF(m1,
               marginal_effect = 'arsenic', 
               start_value     = 2.2, 
               end_value       = .82, 
-              at_means        = TRUE)$diffTable
+              at_means        = TRUE)
 
 }
