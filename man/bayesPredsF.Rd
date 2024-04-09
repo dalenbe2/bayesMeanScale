@@ -45,7 +45,15 @@ If FALSE, the default, the predictions are averaged across the rows of the model
 }
 }
 \value{
-Returns a summary table of the predictions.
+A list of class "bayes_mean_scale_pred" with the following components: 
+
+\item{predTable}{
+summary table of the predictions
+}
+\item{predDraws}{
+posterior draws of the predictions
+}
+
 }
 \author{
 David Dalenberg
