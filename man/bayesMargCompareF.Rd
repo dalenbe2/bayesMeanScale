@@ -33,7 +33,7 @@ The number of digits to report in the summary table.
 }
 }
 \value{
-Returns a summary table with the comparisons of marginal effects. These are sometimes called "second differences."
+Returns a summary data frame with class "bayes_mean_scale_marg_compare" with the comparisons of marginal effects. These are sometimes called "second differences."
 }
 \author{
 David Dalenberg
