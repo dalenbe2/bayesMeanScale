@@ -48,8 +48,6 @@ data(wells)
 modelData <- wells %>%
   mutate(assoc = if_else(assoc==1, 'Y', 'N'))
 
-summary(modelData)
-
 m1 <- stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc, data=modelData, family=binomial, refresh=0)
 
 ```
@@ -62,7 +60,7 @@ bayesPredsF(m1,
 
 ```
 
-The output contains the unique values for the "at" variables, the posterior means and medians, and the lower and upper bounds of the credible interval. 
+The output contains the unique values for the "at" variables, the posterior means, and the lower and upper bounds of the credible interval. 
 
 ### Marginal predictions at the mean
 
@@ -71,7 +69,7 @@ For marginal predictions at the mean, the goal is essentially the same except th
 ```{r}
 
 bayesPredsF(m1, 
-            at       = list(arsenic = c(.82, 1.3, 2.2)), 
+            at       = list(arsenic = c(.82, 1.3, 2.2), assoc=c("Y", "N")), 
             at_means = T)
 
 ```
@@ -91,21 +89,21 @@ m1AME <- bayesMargEffF(m1,
                        start_value     = 2.2,
                        end_value       = .82)
 
-m1AME$diffTable
+m1AME
 head(m1AME$diffDraws)
 
 ```
+
+Also note that we can access the posterior distribution of the marginal effects. This can be useful for graphing purposes and to describe the marginal effect distributions in alternative ways.
 
 We can also compute multiple marginal effects. When doing so, it is necessary to specify the start and end values in a list.
 
 ```{r}
 
-m1AMEMultiple <- bayesMargEffF(m1,
-                          marginal_effect = c('arsenic', 'dist'),
-                          start_value     = list(2.2, 64.041),
-                          end_value       = list(.82, 21.117))
-
-m1AMEMultiple$diffTable
+bayesMargEffF(m1,
+              marginal_effect = c('arsenic', 'dist'),
+              start_value     = list(2.2, 64.041),
+              end_value       = list(.82, 21.117))
 
 ```
 
@@ -119,7 +117,7 @@ m1AMEInteraction <- bayesMargEffF(m1,
                                   end_value       = 21.117,
                                   at              = list(educ=c(0, 5, 8)))
 
-m1AMEInteraction$diffTable
+m1AMEInteraction
 
 ```
 
@@ -136,7 +134,7 @@ m1MEMInteraction <- bayesMargEffF(m1,
                                   at              = list(educ=c(0, 5, 8)),
                                   at_means        = T)
 
-m1MEMInteraction$diffTable
+m1MEMInteraction
 
 ```
 
