@@ -77,6 +77,9 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='
 
   # output #
 
-  return(as.data.frame(drawDiffTableBig))
+  drawDiff <- structure(as.data.frame(drawDiffTableBig),
+                        class = c("bayes_mean_scale_marg_compare", "data.frame"))
+  
+  return(drawDiff)
 
 }
