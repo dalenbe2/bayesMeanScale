@@ -5,7 +5,7 @@
 Bayesian predictions on the mean scale.
 }
 \description{
-Computes Bayesian predictions on the mean scale for models fit using the package "rstanarm". Predictions can be averaged over the values of the covariates in the data (average marginal predictions), or the covariates can be held at their means (marginal predictions at the means). Also, "at" values must be specified to fix certain covariates at particular values.
+Computes Bayesian predictions on the mean scale for models fit using the package "rstanarm". Predictions can be averaged over the values of the covariates in the data (average marginal predictions), or the covariates can be held at their means (marginal predictions at the means). Also, "at" values must be specified to fix at least one covariate at particular values.
 }
 \usage{
 bayesPredsF(model,
@@ -55,8 +55,18 @@ posterior draws of the predictions
 }
 
 }
+\details{
+Currently, the following families of fixed-effect models fit using "rstanarm" are supported: 'beta', 'binomial', 'Gamma', 'gaussian', 'neg_binomial_2', and 'poisson.' Future versions of the package will contain support for additional models.
+}
 \author{
 David Dalenberg
+}
+\references{
+Agresti, Alan. 2013. \emph{Categorical Data Analysis}. Third Edition. New York: Wiley
+
+Long, J. Scott and Sarah A. Mustillo. 2018. "Using Predictions and Marginal Effects to Compare Groups in Regression Models for Binary Outcomes." \emph{Sociological Methods & Research} 50(3): 1284-1320.
+
+Mize, Trenton D. 2019. "Best Practices for Estimating, Interpreting, and Presenting Non-linear Interaction Effects." \emph{Sociological Science} 6: 81-117. 
 }
 \examples{
 
