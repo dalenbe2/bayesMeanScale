@@ -5,7 +5,7 @@
 Comparison of Bayesian marginal effects 
 }
 \description{
-Tests the differences between all marginal effects in the "bayes-marg" object that is passed to it.
+Tests the differences between all marginal effects in the "bayes_mean_scale_marg" object that is passed to it. This is particularly useful for testing non-linear interaction effects.
 }
 \usage{
 bayesMargCompareF(marg_list,
@@ -33,10 +33,24 @@ The number of digits to report in the summary table.
 }
 }
 \value{
-Returns a summary data frame with class "bayes_mean_scale_marg_compare" with the comparisons of marginal effects. These are sometimes called "second differences."
+A list of class "bayes_mean_scale_marg_compare" with the following components: 
+
+\item{diffTable}{
+summary table of the differences of the marginal effects
+}
+\item{diffDraws}{
+posterior draws of the differences of the marginal effects
+}
+
+}
+\details{
+All possible differences of marginal effects contained in the "bayes_mean_scale_marg" object are computed.
 }
 \author{
 David Dalenberg
+}
+\references{
+Mize, Trenton D. 2019. "Best Practices for Estimating, Interpreting, and Presenting Non-linear Interaction Effects." \emph{Sociological Science} 6: 81-117. 
 }
 \examples{
 
@@ -46,9 +60,16 @@ data(wells)
 
 ## Logit model ##
 
-m1 <- stan_glm(switch ~ dist + educ + arsenic + assoc, data=wells, family=binomial, refresh=0)
+m1 <- stan_glm(switch ~ dist + educ + arsenic + assoc, 
+               data    = wells, 
+               family  = binomial, 
+               refresh = 0)
 
-m1Marg <- bayesMargEffF(m1, marginal_effect='arsenic', start_value=2.2, end_value=.82, at=list(educ=c(0, 5, 10)))
+m1Marg <- bayesMargEffF(m1, 
+                        marginal_effect = 'arsenic', 
+                        start_value     = 2.2, 
+                        end_value       = .82, 
+                        at              = list(educ=c(0, 5, 10)))
 
 # compare marginal effects of 'a' between different values of 'b' #
 
