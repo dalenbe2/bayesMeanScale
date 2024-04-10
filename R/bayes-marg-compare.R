@@ -17,6 +17,7 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='
   # initialize the diff table
 
   drawDiffTableBig <- data.frame()
+  drawDistribution <- data.frame()
 
   for(i in 1:nrow(comboData)){
     for(j in 1:nrow(comboData)){
@@ -70,6 +71,7 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='
         
         names(tempTable) <- c(centrality, 'lower', 'upper')
 
+        drawDistribution <- rbind(drawDistribution, drawDiffs)
         drawDiffTable    <- cbind(comboTemp1, comboTemp2, tempTable)
         drawDiffTableBig <- rbind(drawDiffTableBig, drawDiffTable)
 
@@ -77,8 +79,9 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='
 
   # output #
 
-  drawDiff <- structure(as.data.frame(drawDiffTableBig),
-                        class = c("bayes_mean_scale_marg_compare", "data.frame"))
+  drawDiff <- structure(list(diffDraws = drawDistribution,
+                             diffTable = as.data.frame(drawDiffTableBig)),
+                        class = c("bayes_mean_scale_marg_compare", "list"))
   
   return(drawDiff)
 
