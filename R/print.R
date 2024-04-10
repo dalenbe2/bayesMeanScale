@@ -13,7 +13,6 @@ print.bayes_mean_scale_marg <- function(x, ...){
 
 print.bayes_mean_scale_marg_compare <- function(x, ...){
   
-  xNew <- as.data.frame(x)
-  print(xNew, row.names=F, ...)
+  print(x$diffTable, row.names=F, ...)
   
 }
