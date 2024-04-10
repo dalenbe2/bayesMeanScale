@@ -11,7 +11,8 @@ License: GPL (>= 3)
 Encoding: UTF-8
 Imports: bayestestR, data.table, rstanarm, magrittr
 Depends: R (>= 3.5.0)
-Suggests: 
+Suggests:
+    flextable,
     knitr,
     rmarkdown,
     tibble,
