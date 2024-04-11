@@ -15,7 +15,6 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
   echo     = T,
   eval     = T,
   include  = T
@@ -53,13 +52,16 @@ data(wells)
 modelData <- wells %>%
   mutate(assoc = if_else(assoc==1, 'Y', 'N'))
 
-m1 <- stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc, data=modelData, family=binomial, refresh=0)
+binomialModel <- stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc, 
+                          data    = modelData, 
+                          family  = binomial, 
+                          refresh = 0)
 
 ```
 
 ```{r}
 
-bayesPredsF(m1, 
+bayesPredsF(binomialModel, 
             at = list(arsenic = c(.82, 1.3, 2.2), assoc=c("Y", "N")))
 
 
@@ -73,7 +75,7 @@ For marginal predictions at the mean, the goal is essentially the same except th
 
 ```{r}
 
-bayesPredsF(m1, 
+bayesPredsF(binomialModel, 
             at       = list(arsenic = c(.82, 1.3, 2.2), assoc=c("Y", "N")), 
             at_means = T)
 
@@ -81,13 +83,18 @@ bayesPredsF(m1,
 
 The results are slightly different than the average marginal predictions. From a computational standpoint, setting "at_means" to "TRUE" makes for a substantially faster computation. For relatively small models, this speed advantage is likely trivial, but it can make a noticeable difference when working with big data models.
 
-## Average marginal predictions for count probabilities
+### Average marginal predictions for count probabilities
+
+You can also get the predictions for the count probabilities from a poisson or negative binomial model. Here, rather than looking at the rate, or mean, parameter, we investigate the probabilities of particular counts. This is an effective approach for summarizing count models in more depth. 
 
 ```{r}
 
 crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", header=T)
 
-poissonModel  <- stan_glm(sat ~ weight + width, data=crabs, family=poisson, refresh=0)
+poissonModel  <- stan_glm(sat ~ weight + width, 
+                          data    = crabs, 
+                          family  = poisson, 
+                          refresh = 0)
 
 bayesCountPredsF(poissonModel,
                  counts = c(0,1,2),
@@ -104,13 +111,13 @@ The concept of average marginal effects is straightforward. We simply take two p
 
 ```{r}
 
-m1AME <- bayesMargEffF(m1,
-                       marginal_effect = 'arsenic',
-                       start_value     = 2.2,
-                       end_value       = .82)
+binomialAME <- bayesMargEffF(binomialModel,
+                             marginal_effect = 'arsenic',
+                             start_value     = 2.2,
+                             end_value       = .82)
 
-m1AME
-head(m1AME$diffDraws)
+binomialAME
+head(binomialAME$diffDraws)
 
 ```
 
@@ -120,7 +127,7 @@ We can also compute multiple marginal effects. When doing so, it is necessary to
 
 ```{r}
 
-bayesMargEffF(m1,
+bayesMargEffF(binomialModel,
               marginal_effect = c('arsenic', 'dist'),
               start_value     = list(2.2, 64.041),
               end_value       = list(.82, 21.117))
@@ -131,15 +138,33 @@ The "at" argument allows the user to specify particular values for one or more c
 
 ```{r}
 
-m1AMEInteraction <- bayesMargEffF(m1,
-                                  marginal_effect = 'dist',
-                                  start_value     = 64.041,
-                                  end_value       = 21.117,
-                                  at              = list(educ=c(0, 5, 8)))
+binomialAMEInteraction <- bayesMargEffF(binomialModel,
+                                        marginal_effect = 'dist',
+                                        start_value     = 64.041,
+                                        end_value       = 21.117,
+                                        at              = list(educ=c(0, 5, 8)))
 
-m1AMEInteraction
+binomialAMEInteraction
 
 ```
+
+### Average marginal effects for count probabilities
+
+You can also get the marginal effects for the count probabilities from a poisson or negative binomial model. 
+
+```{r}
+
+countMarg <- bayesCountMargEffF(poissonModel,
+                                counts          = c(0,1,2),
+                                marginal_effect = 'width',
+                                start_value     = 25,
+                                end_value       = 20,
+                                at              = list(weight=c(2,3,4)))
+
+countMarg
+
+```
+
 
 ### Marginal effects at the mean
 
@@ -147,14 +172,14 @@ Marginal effects at the mean compute the differences while holding the covariate
 
 ```{r}
 
-m1MEMInteraction <- bayesMargEffF(m1,
-                                  marginal_effect = 'dist',
-                                  start_value     = 64.041,
-                                  end_value       = 21.117,
-                                  at              = list(educ=c(0, 5, 8)),
-                                  at_means        = T)
+binomialMEMInteraction <- bayesMargEffF(binomialModel,
+                                        marginal_effect = 'dist',
+                                        start_value     = 64.041,
+                                        end_value       = 21.117,
+                                        at              = list(educ=c(0, 5, 8)),
+                                        at_means        = T)
 
-m1MEMInteraction
+binomialMEMInteraction
 
 ```
 
@@ -165,9 +190,18 @@ After computing multiple marginal effects for a model, you might like to compare
 
 ```{r}
 
-bayesMargCompareF(m1AMEInteraction)
+bayesMargCompareF(binomialAMEInteraction)
 
 ```
+
+You can also compare the marginal effects on count probabilities, shown in the example below. 
+
+```{r}
+
+bayesMargCompareF(countMarg)
+
+```
+
 
 ## List of models currently supported
 
@@ -185,6 +219,8 @@ data.frame(Class  = rep("stanreg", 6),
 ## References
 
 Agresti, Alan. 2013. *Categorical Data Analysis*. Third Edition. New York: Wiley
+
+Long, J. Scott and Jeremy Freese. 2001. "Predicted Probabilities for Count Models." *Stata Journal* 1(1): 51-57.
 
 Long, J. Scott and Sarah A. Mustillo. 2018. "Using Predictions and Marginal Effects to Compare Groups in Regression Models for Binary Outcomes." *Sociological Methods & Research* 50(3): 1284-1320.
 
