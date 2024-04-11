@@ -81,6 +81,21 @@ bayesPredsF(m1,
 
 The results are slightly different than the average marginal predictions. From a computational standpoint, setting "at_means" to "TRUE" makes for a substantially faster computation. For relatively small models, this speed advantage is likely trivial, but it can make a noticeable difference when working with big data models.
 
+## Average marginal predictions for count probabilities
+
+```{r}
+
+crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", header=T)
+
+poissonModel  <- stan_glm(sat ~ weight + width, data=crabs, family=poisson, refresh=0)
+
+bayesCountPredsF(poissonModel,
+                 counts = c(0,1,2),
+                 at     = list(weight=c(2,3,4)))
+
+```
+
+
 ## Marginal effects
 
 ### Average marginal effects
@@ -162,7 +177,7 @@ bayesMargCompareF(m1AMEInteraction)
 
 data.frame(Class  = rep("stanreg", 6),
            Family = c('beta', 'binomial', 'Gamma', 'gaussian', 'neg_binomial_2', 'poisson'),
-           Links  = c("logit; probit; cloglog", "logit; probit; cloglog", "inverse; log; identity", "identity", "identity; log", "identity; log")) %>%
+           Links  = c("logit; probit; cloglog", "logit; probit; cloglog", "inverse; log; identity", "identity", "identity; log; sqrt", "identity; log; sqrt")) %>%
   qflextable()
 
 ```
