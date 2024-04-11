@@ -1,6 +1,7 @@
 export(bayesPredsF)
 export(bayesMargEffF)
 export(bayesMargCompareF)
+export(bayesCountPredsF)
 S3method(print, bayes_mean_scale_pred)
 S3method(print, bayes_mean_scale_marg)
 S3method(print, bayes_mean_scale_marg_compare)
