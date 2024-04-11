@@ -1,12 +1,6 @@
 
 predsErrorCheckF <- function(model, at, centrality){
 
-  # check that the 'at' argument is specified #
-
-  if(is.null(at)){
-    stop("You have to specify 'at' values!")
-  }
-
   # make sure model is supported #
   
   if(any(c('aov', 'lmerMod', 'gamm4', 'stanmvreg', 'stanjm', 'nlmerMod', 'polr', 'clogit') %in% class(model))){
@@ -21,6 +15,12 @@ predsErrorCheckF <- function(model, at, centrality){
 
   if(!(model$family$family %in% c('beta', 'binomial', 'gaussian', 'Gamma', 'poisson', 'neg_binomial_2'))){
     stop("The model must be in a supported exponential family!")
+  }
+  
+  # make sure the link function is supported #
+  
+  if(!model$family$link %in% c('logit', 'identity', 'inverse', 'log', 'cloglog', 'probit', 'sqrt')){
+    stop('The link function of your model is not supported!')
   }
 
   # check that the names for the at values are correct #
