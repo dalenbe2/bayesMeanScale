@@ -1,21 +1,13 @@
 
 countPredsErrorCheckF <- function(model, counts, at, centrality){
-
-  # check that the 'at' argument is specified #
-
-  if(is.null(at)){
-    stop("You have to specify 'at' values!")
-  }
-  
-  # check that the 'counts' argument is specified #
-  
-  if(is.null(counts)){
-    stop("You have to specify 'counts' values!")
-  }
   
   # check that the counts values are integers #
   
-  if(any(!(is.numeric(counts) & floor(counts)==counts))){
+  if(any(!(is.numeric(counts)))){
+    stop("Counts values must be integers!")
+  }
+  
+  if(any(floor(counts)!=counts)){
     stop("Counts values must be integers!")
   }
   
@@ -39,6 +31,12 @@ countPredsErrorCheckF <- function(model, counts, at, centrality){
 
   if(!(model$family$family %in% c('poisson', 'neg_binomial_2'))){
     stop("The model must be poisson or negative binomial!")
+  }
+  
+  # make sure the link function is supported #
+  
+  if(!model$family$link %in% c('log', 'identity', 'sqrt')){
+    stop('The link function of your model is not supported!')
   }
 
   # check that the names for the at values are correct #
