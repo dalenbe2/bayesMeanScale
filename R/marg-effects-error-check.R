@@ -19,7 +19,7 @@ margErrorCheckF <- function(model, marginal_effect, at, start_value, end_value, 
 
   # make sure the link function is supported #
 
-  if(!model$family$link %in% c('logit', 'identity', 'inverse', 'log', 'cloglog', 'probit')){
+  if(!model$family$link %in% c('logit', 'identity', 'inverse', 'log', 'cloglog', 'probit', 'sqrt')){
     stop('The link function of your model is not supported!')
   }
 
