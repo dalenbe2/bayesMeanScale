@@ -1,5 +1,5 @@
 
-bayesPredsF <- function(model, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE){
+bayesPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at_means=FALSE){
 
   predsErrorCheckF(model      = model,
                    at         = at,
@@ -67,7 +67,8 @@ bayesPredsF <- function(model, n_draws=2000, ci=.95, hdi_interval=TRUE, centrali
 
   predList <- structure(list(predDraws = preds,
                              predTable = as.data.frame(predTable)),
-                        class = c("bayes_mean_scale_pred", "list"))
+                        class = c("bayes_mean_scale_pred", "list"),
+                        scale = "mean")
   
   
   return(predList)
