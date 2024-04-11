@@ -9,18 +9,21 @@ Computes Bayesian predictions on the mean scale for models fit using the package
 }
 \usage{
 bayesPredsF(model,
+            at,
             n_draws      = 2000,
             ci           = .95,
             hdi_interval = TRUE,
             centrality   = 'mean',
             digits       = 4,
-            at           = NULL,
             at_means     = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{model}{
 A model object of class "stanreg."
+}
+\item{at}{
+List of covariate values to estimate the predictions at.
 }
 \item{n_draws}{
 The number of draws to take from the posterior distribution of the expectation.
@@ -36,9 +39,6 @@ Centrality measure for the posterior distribution. Options are "mean" or "median
 }
 \item{digits}{
 The number of digits to report in the summary table.
-}
-\item{at}{
-List of covariate values to estimate the predictions at.
 }
 \item{at_means}{
 If FALSE, the default, the predictions are averaged across the rows of the model data for each unique combination of "at" values. If TRUE, the covariate values that are not specified in the "at" argument are held at their means.
