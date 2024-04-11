@@ -110,6 +110,10 @@ meanPredF <- function(model, new_data, at, draws, new_formula, at_means){
   if(model$family$link=="inverse"){
     meanPreds <- 1/Z
   }
+  
+  if(model$family$link=='sqrt'){
+    meanPreds <- Z^2
+  }
 
   # output #
 
