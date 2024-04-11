@@ -1,5 +1,5 @@
 
-bayesCountPredsF <- function(model, counts, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE){
+bayesCountPredsF <- function(model, counts, at, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at_means=FALSE){
 
   countPredsErrorCheckF(model      = model,
                         counts     = counts,
@@ -70,7 +70,8 @@ bayesCountPredsF <- function(model, counts, n_draws=2000, ci=.95, hdi_interval=T
 
   predList <- structure(list(predDraws = preds,
                              predTable = as.data.frame(predTable)),
-                        class = c("bayes_mean_scale_pred", "list"))
+                        class = c("bayes_mean_scale_pred", "list"),
+                        scale = "count_probs")
   
   
   return(predList)
