@@ -20,6 +20,11 @@ summary(modelData)
 logitModel  <- stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc, data=modelData, family=binomial, refresh=0)
 logitModel2 <- stan_glm(switch ~ log(dist) + educ + arsenic + I(arsenic^2) + as.factor(assoc), data=modelData, family=binomial, refresh=0)
 
+crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", header=T)
+
+poissonModel  <- stan_glm(sat ~ weight + width, data=crabs, family=poisson, refresh=0)
+negBinomModel <- stan_glm(sat ~ weight + width, data=crabs, family=neg_binomial_2, refresh=0)
+
 ## save the data for internal use ##
 
-usethis::use_data(logitModel, logitModel2, internal=T, overwrite=T)
+usethis::use_data(logitModel, logitModel2, poissonModel, negBinomModel, internal=T, overwrite=T)
