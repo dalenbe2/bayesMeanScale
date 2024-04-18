@@ -27,7 +27,9 @@ To get to the mean scale, `bayesMeanScale` takes a random sample with replacemen
 
 Predictions are computed by holding one or more explanatory variables fixed at particular values and either averaging over the rows of the data (average marginal predictions) or holding all other covariates at their means (marginal predictions at the mean). Marginal effects can also be calculated by averaging over the data (average marginal effect) or holding covariates at their means (marginal effect at the mean). 
 
-Currently, the effects can only be specified in terms of *discrete* changes. For a continuous variable, this might mean looking at the difference between the mean and the mean plus 1 standard deviation. In statistical applications, this sort of strategy is often very useful for summarizing a model. The third workhorse function of the package compares marginal effects against each other. This is particularly useful for testing non-linear interaction effects such as those that appear in generalized linear models that do not use the *identity* link.
+Currently, the effects can only be specified in terms of *discrete* changes. For a continuous variable, this might mean looking at the difference between the mean and the mean plus 1 standard deviation. In statistical applications, this sort of strategy is often very useful for summarizing a model. 
+
+The third workhorse function of the package compares marginal effects against each other. This is particularly useful for testing non-linear interaction effects such as those that appear in generalized linear models that do not use the *identity* link.
 
 ## Predictions
 
@@ -67,7 +69,7 @@ bayesPredsF(binomialModel,
 
 ```
 
-The output contains the unique values for the "at" variables, the posterior means, and the lower and upper bounds of the credible interval. 
+The output contains the unique values for the "at" variables, the posterior means, and the lower and upper bounds of the credible intervals. 
 
 ### Marginal predictions at the mean
 
@@ -121,7 +123,7 @@ head(binomialAME$diffDraws)
 
 ```
 
-Also note that we can access the posterior distribution of the marginal effects. This can be useful for graphing purposes and to describe the marginal effect distributions in alternative ways.
+Also note that we can access the posterior distribution of the marginal effects. This can be useful for graphing purposes and to describe the marginal effect distributions in more detail.
 
 We can also compute multiple marginal effects. When doing so, it is necessary to specify the start and end values in a list.
 
@@ -168,7 +170,7 @@ countMarg
 
 ### Marginal effects at the mean
 
-Marginal effects at the mean compute the differences while holding the covariates at their means. Like the marginal predictions at the mean, specifying "at_means=T" allows for a much faster computation than specifying "at_means=F". 
+Marginal effects at the mean compute the differences while holding the covariates at their means. Like the marginal predictions at the mean, specifying "at_means=TRUE" allows for a much faster computation than specifying "at_means=F". 
 
 ```{r}
 
