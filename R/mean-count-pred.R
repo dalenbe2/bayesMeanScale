@@ -89,8 +89,8 @@ meanCountPredF <- function(model, new_data, counts, at, draws, new_formula, at_m
   
   if(model$family$family=="neg_binomial_2"){
     
-    dispersion <- 1 / modelDrawsOrg[betaSamples,]$reciprocal_dispersion
-    dispersionMatrix <- as.matrix(t(replicate(draws, dispersion)))
+    dispersion       <- modelDrawsOrg[betaSamples,]$reciprocal_dispersion
+    dispersionMatrix <- as.matrix(t(replicate(nrow(modelMatrix), dispersion)))
     
   }
 
