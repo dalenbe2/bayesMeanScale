@@ -10,8 +10,8 @@ bayesMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end
 
   # initialize the model table and diff matrices list #
 
-  diffTable <- data.table()
-  diffDraws <- data.table()
+  diffTable <- data.table::data.table()
+  diffDraws <- data.table::data.table()
 
   # make the list of marginal effects, start values, and end values #
 
