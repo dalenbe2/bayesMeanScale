@@ -13,10 +13,10 @@ predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, cent
     # tack on the grouping values and get the means #
 
     predsNew <- preds %>%
-      as.data.table() %>%
+      data.table::as.data.table() %>%
       cbind(model_data[, ..at_vars]) %>%
       .[, lapply(.SD, mean), by=at_vars, .SDcols=!at_vars] %>%
-      melt(id.vars       = at_vars,
+      data.table::melt(id.vars       = at_vars,
            variable.name = 'which_pred',
            value.name    = 'pred')
 
@@ -26,8 +26,8 @@ predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, cent
 
       predTable <- predsNew %>%
         .[, .(centrality = round(centralityF(pred), digits=digits),
-              lower      = round(hdi(pred, ci=ci)$CI_low, digits=digits),
-              upper      = round(hdi(pred, ci=ci)$CI_high, digits=digits)), by=at_vars]
+              lower      = round(bayestestR::hdi(pred, ci=ci)$CI_low, digits=digits),
+              upper      = round(bayestestR::hdi(pred, ci=ci)$CI_high, digits=digits)), by=at_vars]
 
     } else{
 
@@ -43,9 +43,9 @@ predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, cent
     # tack on the grouping values and get the means #
 
     predsNew <- preds %>%
-      as.data.table() %>%
+      data.table::as.data.table() %>%
       cbind(at_values) %>%
-      melt(id.vars       = at_vars,
+      data.table::melt(id.vars       = at_vars,
            variable.name = 'which_pred',
            value.name    = 'pred')
 
@@ -55,8 +55,8 @@ predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, cent
 
       predTable <- predsNew %>%
         .[, .(centrality = round(centralityF(pred), digits=digits),
-              lower      = round(hdi(pred, ci=ci)$CI_low, digits=digits),
-              upper      = round(hdi(pred, ci=ci)$CI_high, digits=digits)), by=at_vars]
+              lower      = round(bayestestR::hdi(pred, ci=ci)$CI_low, digits=digits),
+              upper      = round(bayestestR::hdi(pred, ci=ci)$CI_high, digits=digits)), by=at_vars]
 
     } else{
 
