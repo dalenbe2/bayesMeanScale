@@ -31,8 +31,8 @@ countMargTableF <- function(pred_diff, marg_list, counts, at, digits, ci, hdi_in
             start_val   = marg_list$start[[i]],
             end_val     = marg_list$end[[i]],
             centrality  = round(centralityF(diff), digits=digits),
-            lower       = round(hdi(diff, ci=ci)$CI_low, digits=digits),
-            upper       = round(hdi(diff, ci=ci)$CI_high, digits=digits)), by=groupVars]
+            lower       = round(bayestestR::hdi(diff, ci=ci)$CI_low, digits=digits),
+            upper       = round(bayestestR::hdi(diff, ci=ci)$CI_high, digits=digits)), by=groupVars]
 
     } else{
 
@@ -57,8 +57,8 @@ countMargTableF <- function(pred_diff, marg_list, counts, at, digits, ci, hdi_in
               start_val   = marg_list$start[[i]],
               end_val     = marg_list$end[[i]],
               centrality  = round(centralityF(diff), digits=digits),
-              lower       = round(hdi(diff, ci=ci)$CI_low, digits=digits),
-              upper       = round(hdi(diff, ci=ci)$CI_high, digits=digits)), by=countVar]
+              lower       = round(bayestestR::hdi(diff, ci=ci)$CI_low, digits=digits),
+              upper       = round(bayestestR::hdi(diff, ci=ci)$CI_high, digits=digits)), by=countVar]
 
     } else{
 
