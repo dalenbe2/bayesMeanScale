@@ -31,7 +31,7 @@ bayesPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, cent
     na.omit() %>%
     .[, !(colnames(.) %in% atVars), drop=F] %>%
     merge(atValues, all=T) %>%
-    setDT()
+    data.table::setDT()
 
   # do some checks for data integrity #
 
