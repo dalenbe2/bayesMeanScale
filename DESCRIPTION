@@ -9,12 +9,13 @@ BugReports: https://github.com/dalenbe2/bayesMeanScale/issues
 Description: Compute Bayesian posterior distributions of predictions, marginal effects, and differences of marginal effects.
 License: GPL (>= 3)
 Encoding: UTF-8
-Imports: bayestestR, data.table, rstanarm, magrittr
+Imports: bayestestR, data.table, magrittr
 Depends: R (>= 3.5.0)
 Suggests:
     flextable,
     knitr,
     rmarkdown,
+    rstanarm,
     tibble,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
