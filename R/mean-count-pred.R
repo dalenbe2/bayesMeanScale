@@ -13,7 +13,7 @@ meanCountPredF <- function(model, new_data, counts, at, draws, new_formula, at_m
 
   # get the draws from the joint posterior #
 
-  modelDrawsOrg <- as.data.table(model)
+  modelDrawsOrg <- data.table::as.data.table(model)
 
   # check that new model matrix doesn't have any columns that aren't in joint posterior #
 
@@ -32,7 +32,7 @@ meanCountPredF <- function(model, new_data, counts, at, draws, new_formula, at_m
   if(at_means==F){
 
     modelMatrixNew <- modelMatrix %>%
-      as.data.table() %>%
+      data.table::as.data.table() %>%
       .[, .SD, .SDcols = dimnames(betaDraws)[[2]]] %>%
       as.matrix()
 
@@ -43,24 +43,24 @@ meanCountPredF <- function(model, new_data, counts, at, draws, new_formula, at_m
     atVars <- names(expand.grid(at))
 
     atVarsNew <- paste0(atVars, "_new")
-    setnames(new_data, old=names(new_data[, ..atVars]), new=atVarsNew)
+    data.table::setnames(new_data, old=names(new_data[, ..atVars]), new=atVarsNew)
 
     modelMatrixNew <- modelMatrix %>%
-      as.data.table() %>%
+      data.table::as.data.table() %>%
       .[, .SD, .SDcols = dimnames(betaDraws)[[2]]] %>%
       cbind(new_data[, ..atVarsNew]) %>%
       .[, lapply(.SD, mean), by=atVarsNew] %>%
       .[, !..atVarsNew] %>%
       as.matrix()
 
-    setnames(new_data, old=names(new_data[, ..atVarsNew]), new=atVars)
+    data.table::setnames(new_data, old=names(new_data[, ..atVarsNew]), new=atVars)
 
   }
 
   if(at_means==T & is.null(at)){
 
     modelMatrixNew <- modelMatrix %>%
-      as.data.table() %>%
+      data.table::as.data.table() %>%
       .[, .SD, .SDcols = dimnames(betaDraws)[[2]]] %>%
       .[, lapply(.SD, mean)] %>%
       as.matrix()
