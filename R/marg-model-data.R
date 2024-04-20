@@ -22,7 +22,7 @@ margModelDataF <- function(model, new_formula, at, marg_list, i){
       na.omit() %>%
       .[, !(colnames(.) %in% atVars), drop=F] %>%
       merge(atValues, all=T) %>%
-      setDT()
+      data.table::setDT()
 
     startData  <- newValueF(data          = modelData,
                             marg_effect   = marg_list$marg[[i]],
