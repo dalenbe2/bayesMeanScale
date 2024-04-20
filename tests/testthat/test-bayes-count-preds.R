@@ -2,40 +2,40 @@
 
 test_that("make sure all configurations of bayesCountPredsF run without error", {
 
-  expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3))))
-  expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3))))
-  expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F))
-  expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), at_means=T))
-  expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, at_means=T))
+  expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, n_draws=500))
+  expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), at_means=T, n_draws=500))
+  expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, at_means=T, n_draws=500))
 
-  expect_no_error(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3))))
-  expect_no_error(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3))))
-  expect_no_error(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F))
-  expect_no_error(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), at_means=T))
-  expect_no_error(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, at_means=T))
+  expect_no_error(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_error(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_error(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, n_draws=500))
+  expect_no_error(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), at_means=T, n_draws=500))
+  expect_no_error(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, at_means=T, n_draws=500))
 
 })
 
 test_that("make sure all configurations of bayesCountPredsF run without warning", {
 
-  expect_no_warning(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3))))
-  expect_no_warning(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3))))
-  expect_no_warning(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F))
-  expect_no_warning(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), at_means=T))
-  expect_no_warning(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, at_means=T))
+  expect_no_warning(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_warning(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_warning(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, n_draws=500))
+  expect_no_warning(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), at_means=T, n_draws=500))
+  expect_no_warning(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, at_means=T, n_draws=500))
 
-  expect_no_warning(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3))))
-  expect_no_warning(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3))))
-  expect_no_warning(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F))
-  expect_no_warning(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), at_means=T))
-  expect_no_warning(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, at_means=T))
+  expect_no_warning(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_warning(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_warning(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, n_draws=500))
+  expect_no_warning(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), at_means=T, n_draws=500))
+  expect_no_warning(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, at_means=T, n_draws=500))
 
 })
 
-poissonPreds <- bayesCountPredsF(poissonModel2, counts=c(0,1), at=list(w=c(2,3)))$predTable %>%
+poissonPreds <- bayesCountPredsF(poissonModel2, counts=c(0,1), at=list(w=c(2,3)), n_draws=500)$predTable %>%
   subset(., select=c(mean))
 
-nbPreds <- bayesCountPredsF(negBinomModel2, counts=c(0,1), at=list(w=c(2,3)))$predTable %>%
+nbPreds <- bayesCountPredsF(negBinomModel2, counts=c(0,1), at=list(w=c(2,3)), n_draws=500)$predTable %>%
   subset(., select=c(mean))
 
 diffs <- abs(poissonPreds - nbPreds)
