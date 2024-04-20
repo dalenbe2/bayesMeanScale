@@ -3,7 +3,8 @@ m1AMEInteraction <- bayesMargEffF(logitModel,
                                   marginal_effect = 'dist',
                                   start_value     = 64.041,
                                   end_value       = 21.117,
-                                  at              = list(educ=c(0, 5, 8)))
+                                  at              = list(educ=c(0, 5, 8)),
+                                  n_draws         = 500)
 
 test_that("test that bayesMargCompareF runs without error", {
   
