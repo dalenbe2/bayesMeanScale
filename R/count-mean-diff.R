@@ -10,11 +10,11 @@ countMeanDiffF <- function(pred_start, pred_end, model_data, marg_list, counts, 
       as.data.frame()
 
     predDiff <- predDiffOrg %>%
-      setDT() %>%
+      data.table::setDT() %>%
       cbind(model_data[, ..atVars]) %>%
       cbind(pred_start["count"]) %>%
       .[, lapply(.SD, mean), by=groupVars, .SDcols=!groupVars] %>%
-      melt(id.vars       = groupVars,
+      data.table::melt(id.vars       = groupVars,
            variable.name = 'which_diff',
            value.name    = 'diff') %>%
       .[, !"which_diff"] %>%
@@ -31,10 +31,10 @@ countMeanDiffF <- function(pred_start, pred_end, model_data, marg_list, counts, 
     countVar <- "count"
     
     predDiff <- predDiffOrg %>%
-      setDT() %>%
+      data.table::setDT() %>%
       cbind(pred_start["count"]) %>%
       .[, lapply(.SD, mean), by=countVar, .SDcols=!countVar] %>%
-      melt(id.vars       = countVar,
+      data.table::melt(id.vars       = countVar,
            variable.name = 'which_diff',
            value.name    = 'diff') %>%
       .[, !"which_diff"] %>%
@@ -54,10 +54,10 @@ countMeanDiffF <- function(pred_start, pred_end, model_data, marg_list, counts, 
       as.data.frame()
     
     predDiff <- predDiffOrg %>%
-      setDT() %>%
+      data.table::setDT() %>%
       cbind(atValues) %>%
       cbind(pred_start["count"]) %>%
-      melt(id.vars       = groupVars,
+      data.table::melt(id.vars       = groupVars,
            variable.name = 'which_diff',
            value.name    = 'diff') %>%
       .[, !"which_diff"] %>%
@@ -74,9 +74,9 @@ countMeanDiffF <- function(pred_start, pred_end, model_data, marg_list, counts, 
     countVar <- "count"
     
     predDiff <- predDiffOrg %>%
-      setDT() %>%
+      data.table::setDT() %>%
       cbind(pred_start["count"]) %>%
-      melt(id.vars       = countVar,
+      data.table::melt(id.vars       = countVar,
            variable.name = 'which_diff',
            value.name    = 'diff') %>%
       .[, !"which_diff"] %>%
