@@ -15,10 +15,10 @@ countPredTableF <- function(preds, model_data, counts, at_vars, at_values, hdi_i
     # tack on the grouping values and get the means #
 
     predsNew <- preds %>%
-      as.data.table() %>%
+      data.table::as.data.table() %>%
       cbind(model_data[, ..at_vars]) %>%
       .[, lapply(.SD, mean), by=group_vars, .SDcols=!group_vars] %>%
-      melt(id.vars       = group_vars,
+      data.table::melt(id.vars       = group_vars,
            variable.name = 'which_pred',
            value.name    = 'pred')
 
@@ -28,8 +28,8 @@ countPredTableF <- function(preds, model_data, counts, at_vars, at_values, hdi_i
 
       predTable <- predsNew %>%
         .[, .(centrality = round(centralityF(pred), digits=digits),
-              lower      = round(hdi(pred, ci=ci)$CI_low, digits=digits),
-              upper      = round(hdi(pred, ci=ci)$CI_high, digits=digits)), by=group_vars]
+              lower      = round(bayestestR::hdi(pred, ci=ci)$CI_low, digits=digits),
+              upper      = round(bayestestR::hdi(pred, ci=ci)$CI_high, digits=digits)), by=group_vars]
 
     } else{
 
@@ -45,9 +45,9 @@ countPredTableF <- function(preds, model_data, counts, at_vars, at_values, hdi_i
     # tack on the grouping values and get the means #
 
     predsNew <- preds %>%
-      as.data.table() %>%
+      data.table::as.data.table() %>%
       cbind(at_values) %>%
-      melt(id.vars       = group_vars,
+      data.table::melt(id.vars       = group_vars,
            variable.name = 'which_pred',
            value.name    = 'pred')
 
@@ -57,8 +57,8 @@ countPredTableF <- function(preds, model_data, counts, at_vars, at_values, hdi_i
 
       predTable <- predsNew %>%
         .[, .(centrality = round(centralityF(pred), digits=digits),
-              lower      = round(hdi(pred, ci=ci)$CI_low, digits=digits),
-              upper      = round(hdi(pred, ci=ci)$CI_high, digits=digits)), by=group_vars]
+              lower      = round(bayestestR::hdi(pred, ci=ci)$CI_low, digits=digits),
+              upper      = round(bayestestR::hdi(pred, ci=ci)$CI_high, digits=digits)), by=group_vars]
 
     } else{
 
