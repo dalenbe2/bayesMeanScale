@@ -1,8 +1,8 @@
 
 bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4){
 
-  margCompareErrorCheckF(marg_list   = marg_list, 
-                         ci          = ci,
+  margCompareErrorCheckF(marg_list    = marg_list, 
+                         ci           = ci,
                          hdi_interval = hdi_interval,
                          centrality   = centrality)
 
@@ -55,16 +55,16 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='
         
           tempTable <- data.frame(
             centrality = round(centralityF(drawDiffs), digits=digits),
-            lower      = round(hdi(drawDiffs, ci=ci)$CI_low, digits=digits),
-            upper      = round(hdi(drawDiffs, ci=ci)$CI_high, digits=digits)
+            lower      = round(bayestestR::hdi(drawDiffs, ci=ci)$CI_low, digits=digits),
+            upper      = round(bayestestR::hdi(drawDiffs, ci=ci)$CI_high, digits=digits)
           )
         
         } else{
           
           tempTable <- data.frame(
             centrality = round(centralityF(drawDiffs), digits=digits),
-            lower      = round(hdi(drawDiffs, ci=ci)$CI_low, digits=digits),
-            upper      = round(hdi(drawDiffs, ci=ci)$CI_high, digits=digits)
+            lower      = round(quantile(drawDiffs, probs=(1-ci)/2), digits=digits),
+            upper      = round(quantile(drawDiffs, probs=1-(1-ci)/2), digits=digits)
           )
           
         }
