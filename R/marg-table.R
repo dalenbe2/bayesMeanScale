@@ -30,8 +30,8 @@ margTableF <- function(pred_diff, marg_list, at, digits, ci, hdi_interval, centr
             start_val   = marg_list$start[[i]],
             end_val     = marg_list$end[[i]],
             centrality  = round(centralityF(diff), digits=digits),
-            lower       = round(hdi(diff, ci=ci)$CI_low, digits=digits),
-            upper       = round(hdi(diff, ci=ci)$CI_high, digits=digits)), by=atVars]
+            lower       = round(bayestestR::hdi(diff, ci=ci)$CI_low, digits=digits),
+            upper       = round(bayestestR::hdi(diff, ci=ci)$CI_high, digits=digits)), by=atVars]
 
     } else{
 
@@ -49,16 +49,16 @@ margTableF <- function(pred_diff, marg_list, at, digits, ci, hdi_interval, centr
 
     if(hdi_interval==T){
 
-      diffTableTemp <- data.table(marg_effect = marg_list$marg[[i]],
+      diffTableTemp <- data.table::data.table(marg_effect = marg_list$marg[[i]],
                                   start_val   = marg_list$start[[i]],
                                   end_val     = marg_list$end[[i]],
                                   centrality  = round(centralityF(pred_diff$diff), digits=digits),
-                                  lower       = round(hdi(pred_diff$diff, ci=ci)$CI_low, digits=digits),
-                                  upper       = round(hdi(pred_diff$diff, ci=ci)$CI_high, digits=digits))
+                                  lower       = round(bayestestR::hdi(pred_diff$diff, ci=ci)$CI_low, digits=digits),
+                                  upper       = round(bayestestR::hdi(pred_diff$diff, ci=ci)$CI_high, digits=digits))
 
     } else{
 
-      diffTableTemp <- data.table(marg_effect = marg_list$marg[[i]],
+      diffTableTemp <- data.table::data.table(marg_effect = marg_list$marg[[i]],
                                   start_val   = marg_list$start[[i]],
                                   end_val     = marg_list$end[[i]],
                                   centrality  = round(centralityF(pred_diff$diff), digits=digits),
