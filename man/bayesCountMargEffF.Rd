@@ -84,33 +84,27 @@ Long, J. Scott and Jeremy Freese. 2001. "Predicted Probabilities for Count Model
 }
 \examples{
 
-library(rstanarm)
+\donttest{
 
 crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", 
                     header = TRUE)
 
-poissonModel  <- stan_glm(sat ~ weight + width, 
-                          data    = crabs, 
-                          family  = poisson, 
-                          refresh = 0)
-
-# marginal effect averaging over sample values of covariates #
-
-bayesCountMargEffF(poissonModel,
-                   counts          = c(0,1,2),
-                   marginal_effect = 'width',
-                   start_value     = 25,
-                   end_value       = 20,
-                   at              = list(weight=c(2,3,4)))
+poissonModel  <- rstanarm::stan_glm(sat ~ weight + width, 
+                                    data    = crabs, 
+                                    family  = poisson, 
+                                    refresh = 0,
+                                    iter    = 500)
 
 # marginal effect holding covariates at their means #
 
 bayesCountMargEffF(poissonModel,
-                   counts          = c(0,1,2),
+                   counts          = 1,
                    marginal_effect = 'width',
                    start_value     = 25,
                    end_value       = 20,
-                   at              = list(weight=c(2,3,4)),
-                   at_means        = TRUE)
+                   at_means        = TRUE,
+                   n_draws         = 500)
+                   
+}
 
 }
