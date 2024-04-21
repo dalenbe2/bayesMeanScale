@@ -54,25 +54,25 @@ Mize, Trenton D. 2019. "Best Practices for Estimating, Interpreting, and Present
 }
 \examples{
 
-library(rstanarm)
-
-data(wells)
+\donttest{
 
 ## Logit model ##
 
-m1 <- stan_glm(switch ~ dist + educ + arsenic + assoc, 
-               data    = wells, 
-               family  = binomial, 
-               refresh = 0)
+m1 <- rstanarm::stan_glm(switch ~ dist + educ + arsenic + assoc, 
+                         data    = rstanarm::wells, 
+                         family  = binomial, 
+                         refresh = 0,
+                         iter    = 500)
 
 m1Marg <- bayesMargEffF(m1, 
                         marginal_effect = 'arsenic', 
                         start_value     = 2.2, 
                         end_value       = .82, 
-                        at              = list(educ=c(0, 5, 10)))
-
-# compare marginal effects of 'a' between different values of 'b' #
+                        at              = list(educ=c(0, 5)),
+                        n_draws         = 500)
 
 bayesMargCompareF(m1Marg)
+
+}
 
 }

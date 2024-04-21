@@ -83,32 +83,24 @@ Mize, Trenton D. 2019. "Best Practices for Estimating, Interpreting, and Present
 }
 \examples{
 
-library(rstanarm)
-
-data(wells)
+\donttest{
 
 ## Logit model ##
 
-m1 <- stan_glm(switch ~ dist + educ + arsenic + assoc, 
-               data    = wells, 
-               family  = binomial, 
-               refresh = 0, 
-               iter    = 1000, 
-               chains  = 1)
+m1 <- rstanarm::stan_glm(switch ~ dist + educ + arsenic + assoc, 
+                         data    = rstanarm::wells, 
+                         family  = binomial, 
+                         refresh = 0, 
+                         iter    = 500)
 
 # marginal effect averaging over sample values of covariates #
 
 bayesMargEffF(m1, 
               marginal_effect = 'arsenic', 
               start_value     = 2.2, 
-              end_value       = .82)
-
-# marginal effect holding covariates at their means #
-
-bayesMargEffF(m1, 
-              marginal_effect = 'arsenic', 
-              start_value     = 2.2, 
-              end_value       = .82, 
-              at_means        = TRUE)
+              end_value       = .82,
+              n_draws         = 500)
+              
+}
 
 }
