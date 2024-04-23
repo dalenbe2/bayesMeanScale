@@ -69,8 +69,6 @@ meanPredF <- function(model, new_data, at, draws, new_formula, at_means){
   
   # get a sample from the joint posterior #
 
-  set.seed(500)
-
   betaSamples <- sample(1:nrow(betaDraws), size=draws, replace=T)
 
   # compute the linear predictor #
