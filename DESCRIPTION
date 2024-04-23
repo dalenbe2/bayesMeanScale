@@ -1,12 +1,14 @@
 Package: bayesMeanScale
 Type: Package
-Title: Bayesian Predictions, Marginal Effects, and Differences of Marginal Effects on the Mean Scale
+Title: Bayesian Post-Estimation on the Mean Scale
 Version: 0.1.0
-Author: David Dalenberg
-Maintainer: David Dalenberg <dalenbe2@gmail.com>
+Authors@R: c(person(given  = "David M.",
+                    family = "Dalenberg",
+                    role   = c("aut", "cre"),
+                    email  = "dalenbe2@gmail.com"))
 URL: https://github.com/dalenbe2/bayesMeanScale
 BugReports: https://github.com/dalenbe2/bayesMeanScale/issues
-Description: Compute Bayesian posterior distributions of predictions, marginal effects, and differences of marginal effects.
+Description: Computes Bayesian posterior distributions of predictions, marginal effects, and differences of marginal effects for various generalized linear models. Importantly, the posteriors are on the mean (response) scale, allowing for more natural interpretation than summaries on the link scale. Also, predictions and marginal effects of the count probabilities for Poisson and negative binomial models can be computed. 
 License: GPL (>= 3)
 Encoding: UTF-8
 Imports: bayestestR, data.table, magrittr
