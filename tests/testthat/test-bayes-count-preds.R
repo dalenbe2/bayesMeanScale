@@ -32,10 +32,12 @@ test_that("make sure all configurations of bayesCountPredsF run without warning"
 
 })
 
-poissonPreds <- bayesCountPredsF(poissonModel2, counts=c(0,1), at=list(w=c(2,3)), n_draws=500)$predTable %>%
+set.seed(500)
+
+poissonPreds <- bayesCountPredsF(poissonModel2, counts=c(0,1), at=list(w=c(2,3)))$predTable %>%
   subset(., select=c(mean))
 
-nbPreds <- bayesCountPredsF(negBinomModel2, counts=c(0,1), at=list(w=c(2,3)), n_draws=500)$predTable %>%
+nbPreds <- bayesCountPredsF(negBinomModel2, counts=c(0,1), at=list(w=c(2,3)))$predTable %>%
   subset(., select=c(mean))
 
 diffs <- abs(poissonPreds - nbPreds)

@@ -20,10 +20,12 @@ test_that("make sure all configurations of bayesMargEffF run without warning", {
   
 })
 
-ame <- bayesMargEffF(logitModel, marginal_effect='dist', start_value=50, end_value=20, at=list(educ=c(0, 12)), digits=6, n_draws=500)$diffTable %>%
+set.seed(500)
+
+ame <- bayesMargEffF(logitModel, marginal_effect='dist', start_value=50, end_value=20, at=list(educ=c(0, 12)), digits=6)$diffTable %>%
   subset(., select=c(mean))
 
-mem <- bayesMargEffF(logitModel, marginal_effect='dist', start_value=50, end_value=20, at=list(educ=c(0, 12)), digits=6, at_means=T, n_draws=500)$diffTable %>%
+mem <- bayesMargEffF(logitModel, marginal_effect='dist', start_value=50, end_value=20, at=list(educ=c(0, 12)), digits=6, at_means=T)$diffTable %>%
   subset(., select=c(mean))
 
 diffs <- abs(ame-mem)
