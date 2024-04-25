@@ -66,20 +66,16 @@ meanPredF <- function(model, new_data, at, draws, new_formula, at_means){
       as.matrix()
 
   }
-  
-  # get a sample from the joint posterior #
-
-  betaSamples <- sample(1:nrow(betaDraws), size=draws, replace=T)
 
   # compute the linear predictor #
 
   if(!is.null(model$offset)){
 
-    Z <- (modelMatrixNew %*% t(betaDraws[betaSamples,])) + modelOffset
+    Z <- (modelMatrixNew %*% t(betaDraws[draws,])) + modelOffset
 
   } else{
 
-    Z <- modelMatrixNew %*% t(betaDraws[betaSamples,])
+    Z <- modelMatrixNew %*% t(betaDraws[draws,])
 
   }
 

@@ -66,20 +66,16 @@ meanCountPredF <- function(model, new_data, counts, at, draws, new_formula, at_m
       as.matrix()
 
   }
-  
-  # get a sample from the joint posterior #
-
-  betaSamples <- sample(1:nrow(betaDraws), size=draws, replace=T)
 
   # compute the linear predictor #
 
   if(!is.null(model$offset)){
 
-    Z <- (modelMatrixNew %*% t(betaDraws[betaSamples,])) + modelOffset
+    Z <- (modelMatrixNew %*% t(betaDraws[draws,])) + modelOffset
 
   } else{
 
-    Z <- modelMatrixNew %*% t(betaDraws[betaSamples,])
+    Z <- modelMatrixNew %*% t(betaDraws[draws,])
 
   }
   
@@ -87,7 +83,7 @@ meanCountPredF <- function(model, new_data, counts, at, draws, new_formula, at_m
   
   if(model$family$family=="neg_binomial_2"){
     
-    dispersion       <- modelDrawsOrg[betaSamples,]$reciprocal_dispersion
+    dispersion       <- modelDrawsOrg[draws,]$reciprocal_dispersion
     dispersionMatrix <- as.matrix(t(replicate(nrow(modelMatrix), dispersion)))
     
   }
