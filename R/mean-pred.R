@@ -13,7 +13,8 @@ meanPredF <- function(model, new_data, at, draws, new_formula, at_means){
 
   # get the draws from the joint posterior #
 
-  modelDrawsOrg <- data.table::as.data.table(model)
+  modelDrawsOrg <- posterior::as_draws_df(model) %>%
+    data.table::as.data.table()
 
   # check that new model matrix doesn't have any columns that aren't in joint posterior #
 
