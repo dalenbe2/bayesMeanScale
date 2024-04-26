@@ -44,7 +44,7 @@ bayesPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, cent
 
   # get the draws #
   
-  draws <- sample(1:nrow(as.data.frame(model)), size=n_draws, replace=T)
+  draws <- sample(1:nrow(posterior::as_draws_df(model)), size=n_draws, replace=T)
   
   # get the predictions #
   

@@ -26,7 +26,7 @@ bayesCountMargEffF <- function(model, counts, marginal_effect, start_value, end_
   
   # get the draws #
   
-  draws <- sample(1:nrow(as.data.frame(model)), size=n_draws, replace=T)
+  draws <- sample(1:nrow(posterior::as_draws_df(model)), size=n_draws, replace=T)
 
   for(i in 1:length(marginal_effect)){
 
