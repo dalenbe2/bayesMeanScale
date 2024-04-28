@@ -1,6 +1,7 @@
 
 library(rstanarm)
 library(tibble)
+library(MASS)
 
 data(wells)
 
@@ -38,6 +39,10 @@ summary(poissonData$y)
 poissonModel2  <- stan_glm(y ~ x + w, data=poissonData, family=poisson, refresh=0)
 negBinomModel2 <- stan_glm(y ~ x + w, data=poissonData, family=neg_binomial_2, refresh=0)
 
+data(housing)
+
+ordinalModel <- stan_polr(Sat ~ Infl + Type, data=housing, prior=R2(0.2, 'mean'), refresh=0)
+
 ## save the data for internal use ##
 
-usethis::use_data(logitModel, logitModel2, poissonModel, negBinomModel, poissonModel2, negBinomModel2, internal=T, overwrite=T)
+usethis::use_data(logitModel, logitModel2, poissonModel, negBinomModel, poissonModel2, negBinomModel2, ordinalModel, internal=T, overwrite=T)
