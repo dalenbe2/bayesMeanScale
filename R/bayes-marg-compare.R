@@ -44,10 +44,6 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='
         names(comboTemp2) <- paste0(names(comboTemp2), "2")
 
         # make the table
-
-        if(centrality=='map'){
-          centrality <- "map_estimate"
-        }
         
         centralityF <- eval(parse(text=centrality))
         
