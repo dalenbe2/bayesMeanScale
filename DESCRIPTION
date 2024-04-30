@@ -21,6 +21,7 @@ Depends:
 Suggests:
     flextable (>= 0.9.5),
     knitr (>= 1.45),
+    MASS (>= 7.3-60.0.1),
     rmarkdown (>= 2.26),
     rstanarm (>= 2.32.1),
     tibble (>= 3.2.1),
