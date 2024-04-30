@@ -1,10 +1,6 @@
 
 
 countMargTableF <- function(pred_diff, marg_list, counts, at, digits, ci, hdi_interval, centrality, at_means, i){
-
-  if(centrality=='map'){
-    centrality <- "map_estimate"
-  }
   
   centralityF <- eval(parse(text=centrality))
   
