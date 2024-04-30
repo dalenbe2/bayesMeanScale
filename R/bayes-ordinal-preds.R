@@ -1,14 +1,27 @@
 
 bayesOrdinalPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at_means=FALSE){
 
-  predOrdinalErrorCheckF(model      = model,
-                         at         = at,
-                         centrality = centrality)
+  predsOrdinalErrorCheckF(model      = model,
+                          at         = at,
+                          centrality = centrality)
   
   # modify the model formula if there's an offset #
   
   formulaNoOffsets <- modifyFormulaF(model=model)
 
+  # get the model data #
+  
+  if(!is.null(model$offset)){
+    
+    modelDataOrg <- model$data %>%
+      cbind(offset=model$offset)
+    
+  } else{
+    
+    modelDataOrg <- model$data
+    
+  }
+  
   # tack on the grouping variables #
   
   atValues  <- expand.grid(at)
@@ -41,7 +54,7 @@ bayesOrdinalPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRU
   
   preds <- meanPredOrdinalF(model,
                             new_data    = newData,
-                            at          = at,
+                            at          = atValues,
                             draws       = draws,
                             y_outcomes  = yOutcomes,
                             new_formula = formulaNoOffsets,
@@ -53,6 +66,7 @@ bayesOrdinalPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRU
                                  model_data   = modelData,
                                  at_vars      = atVars,
                                  at_values    = atValues,
+                                 y_outcomes   = yOutcomes,
                                  hdi_interval = hdi_interval,
                                  centrality   = centrality,
                                  digits       = digits,
