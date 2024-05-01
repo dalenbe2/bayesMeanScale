@@ -1,7 +1,18 @@
 
+housingData <- MASS::housing
 
-ordinalModel        <- rstanarm::stan_polr(Sat ~ Infl + Type, data=MASS::housing, prior=rstanarm::R2(0.2, 'mean'), refresh=0, iter=500)
-ordinalModelCloglog <- rstanarm::stan_polr(Sat ~ Infl + Type, data=MASS::housing, prior=rstanarm::R2(0.2, 'mean'), refresh=0, method='cloglog', iter=500)
+rowMiss <- sample(1:nrow(housingData), size=10, replace=F)
+colMiss <- sample(1:ncol(housingData), size=10, replace=T)
+
+for(i in 1:10){
+  
+  housingData[rowMiss[[i]], colMiss[[i]]] <- NA
+  
+}
+  
+
+ordinalModel        <- rstanarm::stan_polr(Sat ~ Infl + Type, data=housingData, prior=rstanarm::R2(0.2, 'mean'), refresh=0, iter=1000)
+ordinalModelCloglog <- rstanarm::stan_polr(Sat ~ Infl + Type, data=housingData, prior=rstanarm::R2(0.2, 'mean'), refresh=0, method='cloglog', iter=1000)
 
 test_that("make sure all configurations of bayesOrdinalPredsF run without error", {
   

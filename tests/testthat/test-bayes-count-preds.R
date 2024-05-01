@@ -3,6 +3,15 @@ set.seed(500)
 
 crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", header=T)
 
+rowMiss <- sample(1:nrow(crabs), size=10, replace=F)
+colMiss <- sample(1:ncol(crabs), size=10, replace=T)
+
+for(i in 1:10){
+  
+  crabs[rowMiss[[i]], colMiss[[i]]] <- NA
+  
+}
+
 negBinomModel <- rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=rstanarm::neg_binomial_2, refresh=0, iter=1000)
 
 poissonData <- tibble::tibble(
@@ -12,7 +21,14 @@ poissonData <- tibble::tibble(
   y     = rpois(2000, lambda=exp(log_y))
 )
 
-summary(poissonData$y)
+rowMiss <- sample(1:nrow(poissonData), size=10, replace=F)
+colMiss <- sample(1:ncol(poissonData), size=10, replace=T)
+
+for(i in 1:10){
+  
+  poissonData[rowMiss[[i]], colMiss[[i]]] <- NA
+  
+}
 
 poissonModel2  <- rstanarm::stan_glm(y ~ x + w, data=poissonData, family=poisson, refresh=0, iter=1000)
 negBinomModel2 <- rstanarm::stan_glm(y ~ x + w, data=poissonData, family=rstanarm::neg_binomial_2, refresh=0, iter=1000)
