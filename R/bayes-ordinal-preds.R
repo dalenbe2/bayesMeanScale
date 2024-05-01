@@ -55,7 +55,7 @@ bayesOrdinalPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRU
   
   preds <- meanPredOrdinalF(model,
                             new_data    = newData,
-                            at          = atValues,
+                            at          = at,
                             draws       = draws,
                             y_outcomes  = yOutcomes,
                             new_formula = formulaNoOffsets,
@@ -78,8 +78,13 @@ bayesOrdinalPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRU
   
   predList <- structure(list(predDraws = preds,
                              predTable = as.data.frame(predTable)),
-                        class = c("bayes_mean_scale_pred", "list"),
-                        scale = "mean")
+                        class        = c("bayesmeanscale_pred", "list"),
+                        response     = "outcome_probability",
+                        at           = at,
+                        at_means     = at_means,
+                        n_draws      = n_draws,
+                        ci           = ci,
+                        hdi_interval = hdi_interval)
   
   
   return(predList)
