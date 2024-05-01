@@ -1,4 +1,5 @@
 
+set.seed(500)
 
 test_that("make sure all configurations of bayesPredsF run without error", {
   
