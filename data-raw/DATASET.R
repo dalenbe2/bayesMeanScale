@@ -10,10 +10,10 @@ data(wells)
 modelData <- wells %>%
   mutate(assoc = if_else(assoc==1, 'Y', 'N'))
 
-rowMiss <- sample(1:nrow(modelData), size=10, replace=F)
-colMiss <- sample(1:ncol(modelData), size=10, replace=T)
+rowMiss <- sample(1:nrow(modelData), size=200, replace=F)
+colMiss <- sample(1:ncol(modelData), size=200, replace=T)
 
-for(i in 1:10){
+for(i in 1:200){
   
   modelData[rowMiss[[i]], colMiss[[i]]] <- NA
   
