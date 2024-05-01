@@ -12,7 +12,7 @@ for(i in 1:10){
   
 }
 
-negBinomModel <- rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=rstanarm::neg_binomial_2, refresh=0, iter=1000)
+negBinomModel <- suppressWarnings(rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=rstanarm::neg_binomial_2, refresh=0, iter=200))
 
 poissonData <- tibble::tibble(
   x     = rnorm(2000, mean=3),
@@ -30,8 +30,8 @@ for(i in 1:10){
   
 }
 
-poissonModel2  <- rstanarm::stan_glm(y ~ x + w, data=poissonData, family=poisson, refresh=0, iter=1000)
-negBinomModel2 <- rstanarm::stan_glm(y ~ x + w, data=poissonData, family=rstanarm::neg_binomial_2, refresh=0, iter=1000)
+poissonModel2  <- suppressWarnings(rstanarm::stan_glm(y ~ x + w, data=poissonData, family=poisson, refresh=0, iter=200))
+negBinomModel2 <- suppressWarnings(rstanarm::stan_glm(y ~ x + w, data=poissonData, family=rstanarm::neg_binomial_2, refresh=0, iter=200))
 
 test_that("make sure all configurations of bayesCountPredsF run without error", {
 

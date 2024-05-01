@@ -1,4 +1,6 @@
 
+set.seed(500)
+
 housingData <- MASS::housing
 
 rowMiss <- sample(1:nrow(housingData), size=10, replace=F)
@@ -11,8 +13,8 @@ for(i in 1:10){
 }
   
 
-ordinalModel        <- rstanarm::stan_polr(Sat ~ Infl + Type, data=housingData, prior=rstanarm::R2(0.2, 'mean'), refresh=0, iter=1000)
-ordinalModelCloglog <- rstanarm::stan_polr(Sat ~ Infl + Type, data=housingData, prior=rstanarm::R2(0.2, 'mean'), refresh=0, method='cloglog', iter=1000)
+ordinalModel        <- suppressWarnings(rstanarm::stan_polr(Sat ~ Infl + Type, data=housingData, prior=rstanarm::R2(0.2, 'mean'), refresh=0, iter=200))
+ordinalModelCloglog <- suppressWarnings(rstanarm::stan_polr(Sat ~ Infl + Type, data=housingData, prior=rstanarm::R2(0.2, 'mean'), refresh=0, method='cloglog', iter=200))
 
 test_that("make sure all configurations of bayesOrdinalPredsF run without error", {
   

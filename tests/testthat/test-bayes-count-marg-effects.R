@@ -12,8 +12,8 @@ for(i in 1:10){
   
 }
 
-poissonModel  <- rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=poisson, refresh=0, iter=1000)
-negBinomModel <- rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=rstanarm::neg_binomial_2, refresh=0, iter=1000)
+poissonModel  <- suppressWarnings(rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=poisson, refresh=0, iter=200))
+negBinomModel <- suppressWarnings(rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=rstanarm::neg_binomial_2, refresh=0, iter=200))
 
 test_that("make sure all configurations of bayesCountMargEffF run without error", {
   
