@@ -5,17 +5,6 @@ margTableF <- function(pred_diff, marg_list, at, digits, ci, hdi_interval, centr
   centralityF <- eval(parse(text=centrality))
   
   if(!is.null(at)){
-    
-    atVars <- names(expand.grid(at))
-    tableNames <- c(atVars, 'marg_effect', 'start_val', 'end_val', centrality, 'lower', 'upper')
-    
-  } else{
-    
-    tableNames <- c('marg_effect', 'start_val', 'end_val', centrality, 'lower', 'upper')
-    
-  }
-  
-  if(!is.null(at)){
 
     atVars <- names(expand.grid(at))
 
@@ -65,7 +54,7 @@ margTableF <- function(pred_diff, marg_list, at, digits, ci, hdi_interval, centr
 
   }
   
-  names(diffTableTemp) <- tableNames
+  names(diffTableTemp)[names(diffTableTemp)=='centrality'] <- centrality
 
   return(diffTableTemp)
 
