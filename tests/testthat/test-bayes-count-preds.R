@@ -1,4 +1,21 @@
 
+set.seed(500)
+
+crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", header=T)
+
+negBinomModel <- rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=rstanarm::neg_binomial_2, refresh=0, iter=1000)
+
+poissonData <- tibble::tibble(
+  x     = rnorm(2000, mean=3),
+  w     = rnorm(2000, mean=2),
+  log_y = .5 + .2*x - .2*w,
+  y     = rpois(2000, lambda=exp(log_y))
+)
+
+summary(poissonData$y)
+
+poissonModel2  <- rstanarm::stan_glm(y ~ x + w, data=poissonData, family=poisson, refresh=0, iter=1000)
+negBinomModel2 <- rstanarm::stan_glm(y ~ x + w, data=poissonData, family=rstanarm::neg_binomial_2, refresh=0, iter=1000)
 
 test_that("make sure all configurations of bayesCountPredsF run without error", {
 
@@ -31,8 +48,6 @@ test_that("make sure all configurations of bayesCountPredsF run without warning"
   expect_no_warning(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, at_means=T, n_draws=500))
 
 })
-
-set.seed(500)
 
 poissonPreds <- bayesCountPredsF(poissonModel2, counts=c(0,1), at=list(w=c(2,3)))$predTable %>%
   subset(., select=c(mean))

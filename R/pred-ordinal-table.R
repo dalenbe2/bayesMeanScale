@@ -1,19 +1,20 @@
 
-predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, centrality, digits, ci, at_means){
+predOrdinalTableF <- function(preds, model_data, at_vars, at_values, y_outcomes, hdi_interval, centrality, digits, ci, at_means){
   
   centralityF <- eval(parse(text=centrality))
-  tableNames  <- c(at_vars, centrality, 'lower', 'upper')
+  tableNames  <- c(at_vars, 'outcome', centrality, 'lower', 'upper')
+  
+  groupVars <- c(at_vars, "draw")
+  tableVars <- c(at_vars, "outcome")
   
   if(at_means==F){
 
-    # tack on the grouping values, get the means by posterior draw, and shape to long format #
+    # get the means by posterior draw and shape to long format #
 
     predsNew <- preds %>%
-      data.table::as.data.table() %>%
-      cbind(model_data[, ..at_vars]) %>%
-      .[, lapply(.SD, mean), by=at_vars, .SDcols=!at_vars] %>%
-      data.table::melt(id.vars       = at_vars,
-                       variable.name = 'which_pred',
+      .[, lapply(.SD, mean), by=groupVars, .SDcols=!groupVars] %>%
+      data.table::melt(id.vars       = groupVars,
+                       variable.name = 'outcome',
                        value.name    = 'pred')
 
     # make the table #
@@ -23,26 +24,24 @@ predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, cent
       predTable <- predsNew %>%
         .[, .(centrality = round(centralityF(pred), digits=digits),
               lower      = round(bayestestR::hdi(pred, ci=ci)$CI_low, digits=digits),
-              upper      = round(bayestestR::hdi(pred, ci=ci)$CI_high, digits=digits)), by=at_vars]
+              upper      = round(bayestestR::hdi(pred, ci=ci)$CI_high, digits=digits)), by=tableVars]
 
     } else{
 
       predTable <- predsNew %>%
         .[, .(centrality = round(centralityF(pred), digits=digits),
               lower      = round(quantile(pred, probs=(1-ci)/2), digits=digits),
-              upper      = round(quantile(pred, probs=1-(1-ci)/2), digits=digits)), by=at_vars]
+              upper      = round(quantile(pred, probs=1-(1-ci)/2), digits=digits)), by=tableVars]
 
     }
 
   } else{
 
-    # tack on the grouping values and shape to long format #
+    # shape to long format #
 
     predsNew <- preds %>%
-      data.table::as.data.table() %>%
-      cbind(at_values) %>%
-      data.table::melt(id.vars       = at_vars,
-                       variable.name = 'which_pred',
+      data.table::melt(id.vars       = groupVars,
+                       variable.name = 'outcome',
                        value.name    = 'pred')
 
     # make the table #
@@ -52,14 +51,14 @@ predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, cent
       predTable <- predsNew %>%
         .[, .(centrality = round(centralityF(pred), digits=digits),
               lower      = round(bayestestR::hdi(pred, ci=ci)$CI_low, digits=digits),
-              upper      = round(bayestestR::hdi(pred, ci=ci)$CI_high, digits=digits)), by=at_vars]
+              upper      = round(bayestestR::hdi(pred, ci=ci)$CI_high, digits=digits)), by=tableVars]
 
     } else{
 
       predTable <- predsNew %>%
         .[, .(centrality = round(centralityF(pred), digits=digits),
               lower      = round(quantile(pred, probs=(1-ci)/2), digits=digits),
-              upper      = round(quantile(pred, probs=1-(1-ci)/2), digits=digits)), by=at_vars]
+              upper      = round(quantile(pred, probs=1-(1-ci)/2), digits=digits)), by=tableVars]
 
     }
 

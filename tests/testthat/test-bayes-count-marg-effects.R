@@ -1,4 +1,10 @@
 
+set.seed(500)
+
+crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", header=T)
+
+poissonModel  <- rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=poisson, refresh=0, iter=1000)
+negBinomModel <- rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=rstanarm::neg_binomial_2, refresh=0, iter=1000)
 
 test_that("make sure all configurations of bayesCountMargEffF run without error", {
   
