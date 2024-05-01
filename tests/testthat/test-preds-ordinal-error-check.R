@@ -1,5 +1,7 @@
 
-ordinalModel <- rstanarm::stan_polr(Sat ~ Infl + Type, data=MASS::housing, prior=rstanarm::R2(0.2, 'mean'), refresh=0, iter=500)
+set.seed(500)
+
+ordinalModel <- suppressWarnings(rstanarm::stan_polr(Sat ~ Infl + Type, data=MASS::housing, prior=rstanarm::R2(0.2, 'mean'), refresh=0, iter=200))
 
 testData <- data.frame(
   y = rnorm(10),
