@@ -2,7 +2,6 @@
 predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, centrality, digits, ci, at_means){
   
   centralityF <- eval(parse(text=centrality))
-  tableNames  <- c(at_vars, centrality, 'lower', 'upper')
   
   if(at_means==F){
 
@@ -65,7 +64,7 @@ predTableF <- function(preds, model_data, at_vars, at_values, hdi_interval, cent
 
   }
   
-  names(predTable) <- tableNames
+  names(predTable)[names(predTable)=='centrality'] <- centrality
 
   return(predTable)
 
