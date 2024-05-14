@@ -14,13 +14,11 @@ bayesPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, cent
   if(!is.null(model$offset)){
     
     modelDataOrg <- model$data %>%
-      .[row.names(model$model),] %>%
       cbind(offset=model$offset)
     
   } else{
     
-    modelDataOrg <- model$data %>%
-      .[row.names(model$model),]
+    modelDataOrg <- model$data
     
   }
 
@@ -30,6 +28,7 @@ bayesPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, cent
   atVars    <- names(atValues)
 
   modelData <- modelDataOrg %>%
+    na.omit() %>%
     .[, !(colnames(.) %in% atVars), drop=F] %>%
     merge(atValues, all=T) %>%
     data.table::setDT()
@@ -72,13 +71,8 @@ bayesPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, cent
 
   predList <- structure(list(predDraws = preds,
                              predTable = as.data.frame(predTable)),
-                        class        = c("bayesmeanscale_pred", "list"),
-                        response     = "mean",
-                        at           = at,
-                        at_means     = at_means,
-                        n_draws      = n_draws,
-                        ci           = ci,
-                        hdi_interval = hdi_interval)
+                        class = c("bayes_mean_scale_pred", "list"),
+                        scale = "mean")
   
   
   return(predList)

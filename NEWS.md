@@ -1,13 +1,3 @@
-# bayesMeanScale 0.2.0
-
-### Bug fixes
-
-* More robust handling of model data.
-
-### New features
-
-* Predictions and marginal effects for proportional odds models.
-
 # bayesMeanScale 0.1.1
 
 ### Bug fixes

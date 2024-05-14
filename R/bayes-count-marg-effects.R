@@ -91,13 +91,8 @@ bayesCountMargEffF <- function(model, counts, marginal_effect, start_value, end_
 
     diffList <- structure(list(diffDraws = diffDraws,
                                diffTable = as.data.frame(diffTable)),
-                          class        = c("bayesmeanscale_marg", "list"),
-                          response     = "count_probability",
-                          at           = at,
-                          at_means     = at_means,
-                          n_draws      = n_draws,
-                          ci           = ci,
-                          hdi_interval = hdi_interval)
+                          class = c("bayes_mean_scale_marg", "list"),
+                          scale = "count_probs")
 
 
     return(diffList)

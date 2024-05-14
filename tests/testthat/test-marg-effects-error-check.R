@@ -14,6 +14,5 @@ test_that("make sure margErrorCheckF is catching errors", {
   expect_error(margErrorCheckF(logitModel, marginal_effect='f', at=NULL, start_value=c(0), end_value=c(5)), regexp="The names of the marginal effects don't match up with the names in the model data!")
   expect_error(margErrorCheckF(logitModel, marginal_effect='educ', at=list(d=c(1,2)), start_value=c(0), end_value=c(5)), regexp="The names for the at values don't match up with the names in the model data!")
   expect_error(margErrorCheckF(logitModel, marginal_effect=c('educ', 'educ'), at=NULL, start_value=c(0, 5), end_value=c(5, 10)), regexp="When specifying multiple start values, they must be contained in a list to preserve data type!")
-  expect_error(margErrorCheckF(logitModel, marginal_effect=c('educ', 'educ'), at=NULL, start_value=list(0, 5), end_value=list(5, 10), centrality='sd'), regexp="Centrality options are 'mean' or 'median'!")
 
 })

@@ -9,7 +9,6 @@ freqModel <- lm(y ~ a, data=testData)
 test_that("make sure predsErrorCheckF is working correctly", {
 
   expect_error(predsErrorCheckF(freqModel, at=list(a=c(1,2,3)), centrality='mean'), regexp="The model must be a 'stanreg' object!")
-  expect_error(predsErrorCheckF(logitModel, at=list(f=c(1,2,3)), centrality='mean'), regexp="The names for the 'at' values don't match up with the names in the model data!")
-  expect_error(predsErrorCheckF(logitModel, centrality='mean'), regexp="You must supply at least 1 value for the 'at' argument!")
-  expect_error(predsErrorCheckF(logitModel, at=list(educ=c(0, 12)), centrality='sd'), regexp="Centrality options are 'mean' or 'median'!")
+  expect_error(predsErrorCheckF(logitModel, at=list(f=c(1,2,3)), centrality='mean'), regexp="The names for the at values don't match up with the names in the model data!")
+
 })

@@ -1,5 +1,4 @@
 
-set.seed(500)
 
 test_that("make sure all configurations of bayesMargEffF run without error", {
   
