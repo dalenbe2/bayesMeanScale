@@ -1,3 +1,9 @@
+# bayesMeanScale 0.1.2
+
+### Bug fixes
+
+* Fixed R CMD check issue for Linux distributions.
+
 # bayesMeanScale 0.1.1
 
 ### Bug fixes
