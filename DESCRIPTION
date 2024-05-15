@@ -22,7 +22,8 @@ Suggests:
     flextable (>= 0.9.5),
     knitr (>= 1.45),
     rmarkdown (>= 2.26),
-    rstanarm (>= 2.32.1),
+    rstan,
+    rstanarm,
     tibble (>= 3.2.1),
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
