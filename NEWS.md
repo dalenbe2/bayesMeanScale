@@ -1,12 +1,11 @@
 # bayesMeanScale 0.2.0
 
+# bayesMeanScale 0.1.2
+
 ### Bug fixes
 
+* Fixed R CMD check issue for Linux distributions.
 * More robust handling of model data.
-
-### New features
-
-* Predictions and marginal effects for proportional odds models.
 
 # bayesMeanScale 0.1.1
 
