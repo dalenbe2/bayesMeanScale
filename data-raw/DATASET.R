@@ -2,9 +2,7 @@
 
 if(require(rstanarm) & require(tibble)){
 
-data(wells)
-
-modelData <- wells %>%
+modelData <- rstanarm::wells %>%
   mutate(assoc = if_else(assoc==1, 'Y', 'N'))
 
 rowMiss <- sample(1:nrow(modelData), size=10, replace=F)
