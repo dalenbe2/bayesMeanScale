@@ -1,9 +1,12 @@
 
 
-margTestError   <- bayesMargEffF(logitModel, marginal_effect='educ', start_value=5, end_value=0, digits=4)
-margTestNoError <- bayesMargEffF(logitModel, marginal_effect='educ', start_value=5, end_value=0, digits=4, at=list(dist=c(20, 30)))
-
 test_that("make sure margCompareErrorCheckF is catching errors", {
+  
+  skip_on_cran()
+  skip_if_not_installed('rstanarm')
+  
+  margTestError   <- bayesMargEffF(logitModel, marginal_effect='educ', start_value=5, end_value=0, digits=4)
+  margTestNoError <- bayesMargEffF(logitModel, marginal_effect='educ', start_value=5, end_value=0, digits=4, at=list(dist=c(20, 30)))
   
   expect_error(margCompareErrorCheckF(marg_list=1, ci=.95, hdi_interval=T, centrality='mean'), regexp="The 'marg_list' argument must have class 'bayesmeanscale_marg'!")
   expect_error(margCompareErrorCheckF(margTestNoError, ci=1.1, hdi_interval=T, centrality='mean'), regexp="The credible interval level must be between 0 and 1!")
