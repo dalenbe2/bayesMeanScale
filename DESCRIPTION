@@ -23,7 +23,8 @@ Suggests:
     knitr (>= 1.45),
     MASS (>= 7.3-60.0.1),
     rmarkdown (>= 2.26),
-    rstanarm (>= 2.32.1),
+    rstan,
+    rstanarm,
     tibble (>= 3.2.1),
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
