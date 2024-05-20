@@ -74,6 +74,8 @@ Mize, Trenton D. 2019. "Best Practices for Estimating, Interpreting, and Present
 
 ## Proportional odds logistic regression ##
 
+if(require(rstanarm)){
+
 m1 <- rstanarm::stan_polr(Sat ~ Infl + Type, 
                           data    = MASS::housing, 
                           prior   = rstanarm::R2(0.2, 'mean'), 
@@ -86,7 +88,8 @@ bayesOrdinalPredsF(m1,
                    at       = list(Type = c("Tower", "Apartment")), 
                    at_means = TRUE,
                    n_draws  = 500)
-            
+ 
+}           
 }
 
 }
