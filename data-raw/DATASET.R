@@ -1,14 +1,10 @@
 
-library(rstanarm)
-library(tibble)
-library(MASS)
+if(require('rstanarm')){
 
 set.seed(500)
 
-data(wells)
-
-modelData <- wells %>%
-  mutate(assoc = if_else(assoc==1, 'Y', 'N'))
+modelData       <- rstanarm::wells
+modelData$assoc <- ifelse(modelData$assoc==1, 'Y', 'N')
 
 rowMiss <- sample(1:nrow(modelData), size=200, replace=F)
 colMiss <- sample(1:ncol(modelData), size=200, replace=T)
@@ -21,8 +17,8 @@ for(i in 1:200){
 
 summary(modelData)
 
-logitModel  <- suppressWarnings(stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc, data=modelData, family=binomial, refresh=0, iter=200))
-logitModel2 <- suppressWarnings(stan_glm(switch ~ log(dist) + educ + arsenic + I(arsenic^2) + as.factor(assoc), data=modelData, family=binomial, refresh=0, iter=200))
+logitModel  <- suppressWarnings(rstanarm::stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc, data=modelData, family=binomial, refresh=0, iter=200))
+logitModel2 <- suppressWarnings(rstanarm::stan_glm(switch ~ log(dist) + educ + arsenic + I(arsenic^2) + as.factor(assoc), data=modelData, family=binomial, refresh=0, iter=200))
 
 crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", header=T)
 
@@ -31,3 +27,5 @@ poissonModel <- suppressWarnings(rstanarm::stan_glm(sat ~ weight + width, data=c
 ## save the data for internal use ##
 
 usethis::use_data(logitModel, logitModel2, poissonModel, internal=T, overwrite=T)
+
+}
