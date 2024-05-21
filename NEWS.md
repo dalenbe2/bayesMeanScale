@@ -1,10 +1,15 @@
-# bayesMeanScale 0.2.0
+
+# bayesMeanScale 0.1.3
+
+### Bug fixes
+
+* Fixed R CMD check issue.
 
 # bayesMeanScale 0.1.2
 
 ### Bug fixes
 
-* Fixed R CMD check issue for Linux distributions.
+* Fixed R CMD check issue.
 * More robust handling of model data.
 
 # bayesMeanScale 0.1.1

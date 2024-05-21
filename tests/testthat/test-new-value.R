@@ -5,5 +5,6 @@ test_that('make sure that factor levels line up with original data', {
   skip_on_cran()
   skip_if_not_installed('rstanarm')
   
-   expect_identical(levels(newValueF(logitModel$model, marg_effect='assoc', new_value='Y')$assoc), sort(unique(logitModel$model$assoc)))
+  expect_identical(levels(newValueF(logitModel$model, marg_effect='assoc', new_value='Y')$assoc), sort(unique(logitModel$model$assoc)))
+  
 })

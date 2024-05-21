@@ -30,7 +30,7 @@ Vector of counts to get the predicted probabilities for.
 List of covariate values to estimate the predictions at.
 }
 \item{n_draws}{
-The number of draws to take from the joint posterior distribution.
+The number of draws to take from the posterior distribution of the expectation.
 }
 \item{ci}{
 The level for the credible intervals.
@@ -88,8 +88,9 @@ bayesCountPredsF(poissonModel,
                  counts  = c(0,1),
                  at      = list(weight=c(2,3)),
                  n_draws = 500)
-
-}            
+                 
+}
+                 
 }
 
 }

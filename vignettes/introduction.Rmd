@@ -204,8 +204,6 @@ bayesMargCompareF(countMarg)
 
 ```
 
-## Proportional odds models
-
 
 ## List of models currently supported
 
@@ -213,9 +211,9 @@ bayesMargCompareF(countMarg)
 
 ```{r, echo=F}
 
-data.frame(Class  = c(rep("stanreg", 6), "stanreg; polr"),
-           Family = c('beta', 'binomial', 'Gamma', 'gaussian', 'neg_binomial_2', 'poisson', 'binomial'),
-           Links  = c("logit; probit; cloglog", "logit; probit; cloglog", "inverse; log; identity", "identity", "identity; log; sqrt", "identity; log; sqrt", 'logit; probit; cloglog')) %>%
+data.frame(Class  = rep("stanreg", 6),
+           Family = c('beta', 'binomial', 'Gamma', 'gaussian', 'neg_binomial_2', 'poisson'),
+           Links  = c("logit; probit; cloglog", "logit; probit; cloglog", "inverse; log; identity", "identity", "identity; log; sqrt", "identity; log; sqrt")) %>%
   qflextable()
 
 ```
