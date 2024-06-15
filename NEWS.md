@@ -1,4 +1,10 @@
-# bayesMeanScale 0.2.0
+# bayesMeanScale 0.1.4
+
+* Fixed R CMD check issue having to do with internal data.
+
+# bayesMeanScale 0.1.3
+
+* Fixed R CMD check issue.
 
 # bayesMeanScale 0.1.2
 
