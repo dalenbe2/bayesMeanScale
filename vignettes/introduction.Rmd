@@ -41,7 +41,7 @@ For average marginal predictions, the goal is to get predictions at important se
 
 ```{r, results='hide', message=F}
 
-lapply(c('bayesMeanScale', 'dplyr', 'rstanarm', 'bayestestR', 'flextable'), function(x) base::library(x, character.only=T))
+lapply(c('bayesMeanScale', 'rstanarm', 'bayestestR', 'flextable'), function(x) base::library(x, character.only=T))
 
 ```
 
@@ -49,10 +49,8 @@ lapply(c('bayesMeanScale', 'dplyr', 'rstanarm', 'bayestestR', 'flextable'), func
 
 # Simulate the data #
 
-data(wells)
-
-modelData <- wells %>%
-  mutate(assoc = if_else(assoc==1, 'Y', 'N'))
+modelData       <- rstanarm::wells
+modelData$assoc <- ifelse(modelData$assoc==1, 'Y', 'N')
 
 binomialModel <- stan_glm(switch ~ dist*educ + arsenic + I(arsenic^2) + assoc, 
                           data    = modelData, 
