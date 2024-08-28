@@ -1,7 +1,7 @@
 Package: bayesMeanScale
 Type: Package
 Title: Bayesian Post-Estimation on the Mean Scale
-Version: 0.1.1
+Version: 0.1.4
 Authors@R: c(person(given  = "David M.",
                     family = "Dalenberg",
                     role   = c("aut", "cre"),
@@ -21,11 +21,8 @@ Depends:
 Suggests:
     flextable (>= 0.9.5),
     knitr (>= 1.45),
-    MASS (>= 7.3-60.0.1),
     rmarkdown (>= 2.26),
-    rstan,
-    rstanarm,
-    tibble (>= 3.2.1),
+    rstanarm (>= 2.32.1),
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
