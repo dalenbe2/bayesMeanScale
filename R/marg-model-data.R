@@ -8,6 +8,7 @@ margModelDataF <- function(model, new_formula, at, marg_list, i){
     atVars   <- names(atValues)
 
     modelDataOrg <- model$data %>%
+      .[, colnames(.) %in% all.vars(new_formula), drop=F] %>%
       .[row.names(model$model),] %>%
       {if(!is.null(model$offset)) cbind(., offset=model$offset) else .}
 
