@@ -1,5 +1,5 @@
 
-bayesPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at_means=FALSE){
+bayesPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at_means=FALSE, data_slice="full"){
 
   predsErrorCheckF(model      = model,
                    at         = at,
@@ -12,6 +12,7 @@ bayesPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, cent
   # get the model data #
   
   modelDataOrg <- model$data %>%
+    .[, colnames(.) %in% all.vars(formulaNoOffsets), drop=F] %>%
     .[row.names(model$model),] %>%
     {if(!is.null(model$offset)) cbind(., offset=model$offset) else .}
 
@@ -22,6 +23,7 @@ bayesPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, cent
 
   modelData <- modelDataOrg %>%
     .[, !(colnames(.) %in% atVars), drop=F] %>%
+    {if(data_slice=="full") . else .[sample(1:nrow(modelDataOrg), size=data_slice, replace=T), colnames(.), drop=F]} %>%
     merge(atValues, all=T) %>%
     data.table::setDT()
 
