@@ -74,13 +74,13 @@ Mize, Trenton D. 2019. "Best Practices for Estimating, Interpreting, and Present
 
 ## Proportional odds logistic regression ##
 
-if(require(rstanarm)){
+if(require(rstanarm) & require(MASS)){
 
-m1 <- rstanarm::stan_polr(Sat ~ Infl + Type, 
-                          data    = MASS::housing, 
-                          prior   = rstanarm::R2(0.2, 'mean'), 
-                          refresh = 0, 
-                          iter    = 500)
+m1 <- stan_polr(Sat ~ Infl + Type, 
+                data    = MASS::housing, 
+                prior   = rstanarm::R2(0.2, 'mean'), 
+                refresh = 0, 
+                iter    = 500)
 
 # marginal predictions holding covariates at means #
 
