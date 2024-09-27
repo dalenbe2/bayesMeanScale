@@ -5,6 +5,7 @@ test_that("make sure bayesOrdinalMargEffF is working properly", {
   
   skip_on_cran()
   skip_if_not_installed('rstanarm')
+  skip_if_not_installed('MASS')
   
   housingData <- MASS::housing
   

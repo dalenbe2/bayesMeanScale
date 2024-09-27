@@ -5,6 +5,7 @@ test_that("make sure all configurations of bayesOrdinalPredsF run without error"
   
   skip_on_cran()
   skip_if_not_installed('rstanarm')
+  skip_if_not_installed('MASS')
   
   housingData <- MASS::housing
   
