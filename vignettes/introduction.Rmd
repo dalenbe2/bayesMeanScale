@@ -41,7 +41,7 @@ For average marginal predictions, the goal is to get predictions at important se
 
 ```{r, results='hide', message=F}
 
-lapply(c('bayesMeanScale', 'rstanarm', 'bayestestR', 'flextable'), function(x) base::library(x, character.only=T))
+lapply(c('bayesMeanScale', 'rstanarm', 'flextable', 'magrittr'), function(x) base::library(x, character.only=T))
 
 ```
 
