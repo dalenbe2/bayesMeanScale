@@ -12,18 +12,9 @@ bayesCountPredsF <- function(model, counts, at, n_draws=2000, ci=.95, hdi_interv
 
   # get the model data #
   
-  if(!is.null(model$offset)){
-    
-    modelDataOrg <- model$data %>%
-      .[row.names(model$model),] %>%
-      cbind(offset=model$offset)
-    
-  } else{
-    
-    modelDataOrg <- model$data %>%
-      .[row.names(model$model),]
-    
-  }
+  modelDataOrg <- model$data %>%
+    .[row.names(model$model),] %>%
+    {if(!is.null(model$offset)) cbind(., offset=model$offset) else .}
 
   # tack on the grouping variables #
 

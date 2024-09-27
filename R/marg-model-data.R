@@ -7,18 +7,9 @@ margModelDataF <- function(model, new_formula, at, marg_list, i){
     atValues <- expand.grid(at)
     atVars   <- names(atValues)
 
-    if(!is.null(model$offset)){
-      
-      modelDataOrg <- model$data %>%
-        .[row.names(model$model),] %>%
-        cbind(offset=model$offset)
-      
-    } else{
-      
-      modelDataOrg <- model$data %>%
-        .[row.names(model$model),]
-      
-    }
+    modelDataOrg <- model$data %>%
+      .[row.names(model$model),] %>%
+      {if(!is.null(model$offset)) cbind(., offset=model$offset) else .}
 
     modelData <- modelDataOrg %>%
       .[, !(colnames(.) %in% atVars), drop=F] %>%
