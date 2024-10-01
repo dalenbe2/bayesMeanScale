@@ -16,10 +16,18 @@ bayesOrdinalPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRU
     .[row.names(model$model),] %>%
     {if(!is.null(model$offset)) cbind(., offset=model$offset) else .}
   
-  # tack on the grouping variables #
+  # prepare 'at' values and 'at' names #
   
   atValues  <- expand.grid(at)
   atVars    <- names(atValues)
+  
+  # check if there are any variables left to average over #
+  
+  if(ncol(modelDataOrg[, !(colnames(modelDataOrg) %in% c(atVars, "offset")), drop=F])==1){
+    data_slice <- 1
+  }
+  
+  # tack on the grouping variables #
   
   modelData <- modelDataOrg %>%
     .[, !(colnames(.) %in% atVars), drop=F] %>%

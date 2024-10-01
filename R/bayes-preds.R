@@ -16,11 +16,19 @@ bayesPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, cent
     .[row.names(model$model),] %>%
     {if(!is.null(model$offset)) cbind(., offset=model$offset) else .}
 
-  # tack on the grouping variables #
+  # prepare 'at' values and 'at' names #
 
   atValues  <- expand.grid(at)
   atVars    <- names(atValues)
-
+  
+  # check if there are any variables left to average over #
+  
+  if(ncol(modelDataOrg[, !(colnames(modelDataOrg) %in% c(atVars, "offset")), drop=F])==1){
+    data_slice <- 1
+  }
+  
+  # tack on the grouping variables #
+  
   modelData <- modelDataOrg %>%
     .[, !(colnames(.) %in% atVars), drop=F] %>%
     {if(data_slice=="full") . else .[sample(1:nrow(modelDataOrg), size=data_slice, replace=T), colnames(.), drop=F]} %>%
