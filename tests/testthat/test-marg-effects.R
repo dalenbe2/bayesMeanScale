@@ -26,6 +26,8 @@ test_that("make sure bayesMargEffF is working properly", {
   expect_no_error(bayesMargEffF(logitModel, marginal_effect='dist', start_value=50, end_value=20, at=list(educ=c(0, 12)), hdi_interval=F, n_draws=500))
   expect_no_error(bayesMargEffF(logitModel, marginal_effect='dist', start_value=50, end_value=20, at=list(educ=c(0, 12)), at_means=T, n_draws=500))
   expect_no_error(bayesMargEffF(logitModel, marginal_effect='dist', start_value=50, end_value=20, at=list(educ=c(0, 12)), at_means=T, hdi_interval=F, n_draws=500))
+  expect_no_error(bayesMargEffF(logitModel, marginal_effect='dist', start_value="instantaneous", end_value="instantaneous", at=list(educ=c(0, 12)), at_means=T, hdi_interval=F, n_draws=500))
+  expect_no_error(bayesMargEffF(logitModel, marginal_effect='dist', start_value="instantaneous", end_value=0, at=list(educ=c(0, 12)), at_means=T, hdi_interval=F, n_draws=500))
   
   
   expect_no_warning(bayesMargEffF(logitModel2, marginal_effect='log(dist)', start_value=4, end_value=3, at=list(educ=c(0, 12)), n_draws=500))
@@ -33,6 +35,8 @@ test_that("make sure bayesMargEffF is working properly", {
   expect_no_warning(bayesMargEffF(logitModel, marginal_effect='dist', start_value=50, end_value=20, at=list(educ=c(0, 12)), hdi_interval=F, n_draws=500))
   expect_no_warning(bayesMargEffF(logitModel, marginal_effect='dist', start_value=50, end_value=20, at=list(educ=c(0, 12)), at_means=T, n_draws=500))
   expect_no_warning(bayesMargEffF(logitModel, marginal_effect='dist', start_value=50, end_value=20, at=list(educ=c(0, 12)), at_means=T, hdi_interval=F, n_draws=500))
+  expect_no_warning(bayesMargEffF(logitModel, marginal_effect='dist', start_value="instantaneous", end_value="instantaneous", at=list(educ=c(0, 12)), at_means=T, hdi_interval=F, n_draws=500))
+  expect_no_warning(bayesMargEffF(logitModel, marginal_effect='dist', start_value="instantaneous", end_value=0, at=list(educ=c(0, 12)), at_means=T, hdi_interval=F, n_draws=500))
   
   
   ame <- bayesMargEffF(logitModel, marginal_effect='dist', start_value=50, end_value=20, at=list(educ=c(0, 12)), digits=6)$diffTable %>%
