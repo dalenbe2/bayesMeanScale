@@ -16,7 +16,14 @@ margModelDataF <- function(model, new_formula, at, marg_list, i){
       .[, !(colnames(.) %in% atVars), drop=F] %>%
       merge(atValues, all=T) %>%
       data.table::setDT()
+    
+    # drop any unused factor levels #
+    
+    modelData[]    <- lapply(modelData, function(x) if(is.factor(x)) droplevels(x) else x)
+    modelDataOrg[] <- lapply(modelDataOrg, function(x) if(is.factor(x)) droplevels(x) else x)
 
+    # get the start and end data #
+    
     startData  <- newValueF(data          = modelData,
                             marg_effect   = marg_list$marg[[i]],
                             new_value     = marg_list$start[[i]],
@@ -29,6 +36,8 @@ margModelDataF <- function(model, new_formula, at, marg_list, i){
                             at            = atValues,
                             original_data = modelDataOrg)
 
+    # check the data integrity #
+    
     dataCheckF(startData, modelDataOrg)
     dataCheckF(endData, modelDataOrg)
 
@@ -45,10 +54,23 @@ margModelDataF <- function(model, new_formula, at, marg_list, i){
       modelData <- model.frame(formula=new_formula, data=model$data)
 
     }
+    
+    # drop any unused factor levels #
+    
+    modelData[] <- lapply(modelData, function(x) if(is.factor(x)) droplevels(x) else x)
+    
+    # get the start and end data #
 
-    startData  <- newValueF(data=modelData, marg_effect=marg_list$marg[[i]], new_value=marg_list$start[[i]])
-    endData    <- newValueF(data=modelData, marg_effect=marg_list$marg[[i]], new_value=marg_list$end[[i]])
+    startData  <- newValueF(data        = modelData, 
+                            marg_effect = marg_list$marg[[i]], 
+                            new_value   = marg_list$start[[i]])
+    
+    endData    <- newValueF(data        = modelData, 
+                            marg_effect = marg_list$marg[[i]], 
+                            new_value   = marg_list$end[[i]])
 
+    # check the data integrity #
+    
     dataCheckF(startData, modelData)
     dataCheckF(endData, modelData)
 
