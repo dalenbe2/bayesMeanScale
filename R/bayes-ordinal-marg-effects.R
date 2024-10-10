@@ -1,7 +1,7 @@
 
-bayesOrdinalMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end_value, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE){
+bayesOrdinalMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end_value, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE, h=.0001){
 
-  margOrdinalErrorCheckF(model           = model,
+  ordinalMargErrorCheckF(model           = model,
                          marginal_effect = marginal_effect,
                          at              = at,
                          start_value     = start_value,
@@ -31,11 +31,24 @@ bayesOrdinalMargEffF <- function(model, n_draws=2000, marginal_effect, start_val
 
     # get the model data #
 
-    modData <- margModelDataF(model       = model,
-                              new_formula = formulaNoOffsets,
-                              at          = at,
-                              marg_list   = margList,
-                              i           = i)
+    if(start_value[i]=="instantaneous"){
+      
+      modData <- margModelDataContinuousF(model       = model,
+                                          new_formula = formulaNoOffsets,
+                                          at          = at,
+                                          marg_list   = margList,
+                                          i           = i,
+                                          h           = h)
+      
+    } else{
+      
+      modData <- margModelDataF(model       = model,
+                                new_formula = formulaNoOffsets,
+                                at          = at,
+                                marg_list   = margList,
+                                i           = i)
+      
+    }
 
     # get the ordered outcomes for the response variable #
     
@@ -43,7 +56,7 @@ bayesOrdinalMargEffF <- function(model, n_draws=2000, marginal_effect, start_val
     
     # get the predictions #
     
-    predStart <- meanPredOrdinalF(model,
+    predStart <- ordinalMeanPredF(model,
                                   new_data    = modData$startData,
                                   at          = at,
                                   draws       = draws,
@@ -51,7 +64,7 @@ bayesOrdinalMargEffF <- function(model, n_draws=2000, marginal_effect, start_val
                                   new_formula = formulaNoOffsets,
                                   at_means    = at_means)
 
-    predEnd   <- meanPredOrdinalF(model,
+    predEnd   <- ordinalMeanPredF(model,
                                   new_data    = modData$endData,
                                   at          = at,
                                   draws       = draws,
@@ -61,17 +74,32 @@ bayesOrdinalMargEffF <- function(model, n_draws=2000, marginal_effect, start_val
 
     # get the difference in predicted means #
 
-    predDiff <- meanOrdinalDiffF(pred_start = predStart,
-                                 pred_end   = predEnd,
-                                 model_data = modData$modelData,
-                                 marg_list  = margList,
-                                 at         = at,
-                                 at_means   = at_means,
-                                 i          = i)
+    if(start_value[i]=='instantaneous'){
+      
+      predDiff <- ordinalMeanDiffContinuousF(pred_start = predStart,
+                                             pred_end   = predEnd,
+                                             model_data = modData$modelData,
+                                             marg_list  = margList,
+                                             at         = at,
+                                             at_means   = at_means,
+                                             i          = i,
+                                             h          = h)
+      
+    } else{
+    
+      predDiff <- ordinalMeanDiffF(pred_start = predStart,
+                                   pred_end   = predEnd,
+                                   model_data = modData$modelData,
+                                   marg_list  = margList,
+                                   at         = at,
+                                   at_means   = at_means,
+                                   i          = i)
+    
+    }
 
     # make the marginal effects tables #
 
-    diffTableTemp <- margOrdinalTableF(pred_diff    = predDiff,
+    diffTableTemp <- ordinalMargTableF(pred_diff    = predDiff,
                                        marg_list    = margList,
                                        at           = at,
                                        digits       = digits,
