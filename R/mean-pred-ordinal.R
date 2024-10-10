@@ -1,5 +1,5 @@
 
-meanPredOrdinalF <- function(model, new_data, at, draws, y_outcomes, new_formula, at_means){
+ordinalMeanPredF <- function(model, new_data, at, draws, y_outcomes, new_formula, at_means){
 
   # make the new model matrix #
 
