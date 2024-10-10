@@ -54,7 +54,7 @@ bayesOrdinalPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRU
 
   # get the predictions #
   
-  preds <- meanPredOrdinalF(model,
+  preds <- ordinalMeanPredF(model,
                             new_data    = newData,
                             at          = at,
                             draws       = draws,
@@ -64,7 +64,7 @@ bayesOrdinalPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRU
   
   # get the results table #
   
-  predTable <- predOrdinalTableF(preds        = preds,
+  predTable <- ordinalPredTableF(preds        = preds,
                                  model_data   = modelData,
                                  at_vars      = atVars,
                                  at_values    = atValues,
