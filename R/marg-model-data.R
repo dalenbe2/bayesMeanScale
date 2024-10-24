@@ -5,7 +5,7 @@ margModelDataF <- function(model, new_formula, at, marg_list, i){
   if(!is.null(at)){
 
     atValues <- expand.grid(at)
-    atVars   <- names(atValues)
+    atVars   <- names(at)
 
     modelDataOrg <- model$data %>%
       .[, colnames(.) %in% all.vars(new_formula), drop=F] %>%

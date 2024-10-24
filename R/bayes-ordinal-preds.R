@@ -19,7 +19,7 @@ bayesOrdinalPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRU
   # prepare 'at' values and 'at' names #
   
   atValues  <- expand.grid(at)
-  atVars    <- names(atValues)
+  atVars    <- names(at)
   
   # check if there are any variables left to average over #
   

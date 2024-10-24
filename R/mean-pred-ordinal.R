@@ -53,7 +53,7 @@ ordinalMeanPredF <- function(model, new_data, at, draws, y_outcomes, new_formula
     
     if(at_means==T & !is.null(at)){
       
-      atVars <- names(expand.grid(at))
+      atVars <- names(at)
       
       atVarsNew <- paste0(atVars, "_new")
       data.table::setnames(new_data, old=names(new_data[, ..atVars]), new=atVarsNew)
@@ -109,7 +109,7 @@ ordinalMeanPredF <- function(model, new_data, at, draws, y_outcomes, new_formula
   # apply the inverse link function and join the threshold data #
   
   if(at_means==F & !is.null(at)){
-    bindData <- new_data[, .SD, .SDcols=names(expand.grid(at))]
+    bindData <- new_data[, .SD, .SDcols=names(at)]
   }
 
   if(at_means==T & !is.null(at)){
@@ -170,7 +170,7 @@ ordinalMeanPredF <- function(model, new_data, at, draws, y_outcomes, new_formula
 
   if(!is.null(at)){
     
-    probColumns <- c("draw", names(expand.grid(at)))
+    probColumns <- c("draw", names(at))
     
   } else{
     
