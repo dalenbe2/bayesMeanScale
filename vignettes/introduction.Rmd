@@ -33,13 +33,13 @@ The third workhorse function of the package compares marginal effects against ea
 
 ### Average marginal predictions
 
-The examples in this vignette use the `wells` data from the `rstanarm` package. Use `?rstanarm::wells` to view the documentation on this dataset. 
+The examples below use the `wells` data from the `rstanarm` package. Use `?rstanarm::wells` to view the documentation on this dataset. 
 
 For average marginal predictions, the goal is to get predictions at important settings of one or more of the model explanatory variables. These predictions are then averaged over the rows of the data. 
 
 ```{r, results='hide', message=F}
 
-lapply(c('bayesMeanScale', 'rstanarm', 'flextable', 'magrittr'), function(x) base::library(x, character.only=T))
+lapply(c('bayesMeanScale', 'rstanarm', 'flextable', 'magrittr', 'MASS'), function(x) base::library(x, character.only=T))
 
 ```
 
@@ -83,7 +83,7 @@ The results are slightly different than the average marginal predictions. From a
 
 ### Average marginal predictions for count probabilities
 
-You can also get the predictions for the count probabilities from a poisson or negative binomial model. Here, rather than looking at the rate, or mean, parameter, we investigate the probabilities of particular counts. This is an effective approach for summarizing count models in more depth. 
+You can also get the predictions for the count probabilities from a Poisson or negative binomial model. Here, rather than looking at the rate, or mean, parameter, we investigate the probabilities of particular counts. This is an effective approach for summarizing count models in more depth. 
 
 ```{r}
 
@@ -162,7 +162,7 @@ binomialAMEInteraction
 
 ### Average marginal effects for count probabilities
 
-You can also get the marginal effects for the count probabilities from a poisson or negative binomial model. 
+You can also get the marginal effects for the count probabilities from a Poisson or negative binomial model. 
 
 ```{r}
 
@@ -215,6 +215,34 @@ bayesMargCompareF(countMarg)
 ```
 
 ## Proportional odds models
+
+The examples below use the `housing` data from the `MASS` package. Use `?MASS::housing` to view the documentation on this dataset.
+
+We can also compute predictions, marginal effects, and comparisons of marginal effects for proportional odds models. Posterior means and credible intervals are computed with respect to each outcome of the response variable.
+
+```{r}
+
+propOddsModel <- stan_polr(Sat ~ Infl + Type, 
+                           data    = housing, 
+                           prior   = rstanarm::R2(0.2, 'mean'),
+                           refresh = 0)
+
+bayesOrdinalPredsF(propOddsModel, 
+                   at = list(Type=c("Tower", "Apartment")))
+
+
+propOddsMarg <- bayesOrdinalMargEffF(propOddsModel, 
+                                     marginal_effect = "Infl", 
+                                     start_value     = "Low", 
+                                     end_value       = "High",  
+                                     at              = list(Type=c("Tower", "Apartment")))
+
+propOddsMarg
+
+bayesMargCompareF(propOddsMarg)
+
+```
+
 
 
 ## List of models currently supported
