@@ -1,3 +1,9 @@
+
+# bayesMeanScale 0.2.0
+
+* Compute instantaneous rates of change
+* Functionality for proportional odds models
+
 # bayesMeanScale 0.1.4
 
 * Fixed R CMD check issue having to do with internal data.
