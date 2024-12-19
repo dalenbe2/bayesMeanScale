@@ -28,10 +28,28 @@ test_that("test that bayesMargCompareF runs without error and without warning", 
                                     at              = list(educ=c(0, 5, 8)),
                                     n_draws         = 500)
   
+  crabs <- read.table("https://users.stat.ufl.edu/~aa/cat/data/Crabs.dat", header=T)
+  
+  poissonModel  <- suppressWarnings(rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=poisson, refresh=0, chains=2, iter=500))
+  
+  poissonMarg <- bayesCountMargEffF(poissonModel, 
+                                    counts          = c(0,1), 
+                                    marginal_effect = 'width', 
+                                    start_value     = 20, 
+                                    end_value       = 25, 
+                                    at              = list(weight=c(2,3)), 
+                                    n_draws         = 500)
+  
   expect_no_error(bayesMargCompareF(m1AMEInteraction))
   expect_no_error(bayesMargCompareF(m1AMEInteraction, centrality='median'))
   
   expect_no_warning(bayesMargCompareF(m1AMEInteraction))
   expect_no_warning(bayesMargCompareF(m1AMEInteraction, centrality='median'))
+  
+  expect_no_error(bayesMargCompareF(poissonMarg))
+  expect_no_error(bayesMargCompareF(poissonMarg, centrality='median'))
+  
+  expect_no_warning(bayesMargCompareF(poissonMarg))
+  expect_no_warning(bayesMargCompareF(poissonMarg, centrality='median'))
   
 })
