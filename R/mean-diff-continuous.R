@@ -1,11 +1,11 @@
 
-meanDiffF <- function(pred_start, pred_end, model_data, marg_list, at, at_means, i){
+meanDiffContinuousF <- function(pred_start, pred_end, model_data, marg_list, at, at_means, i, h){
 
   if(!is.null(at) & at_means==F){
 
     atVars <- names(expand.grid(at))
 
-    predDiffOrg <- pred_start - pred_end %>%
+    predDiffOrg <- ((pred_end - pred_start)/h) %>%
       data.table::as.data.table()
 
     predDiff <- predDiffOrg %>%
@@ -15,16 +15,16 @@ meanDiffF <- function(pred_start, pred_end, model_data, marg_list, at, at_means,
            variable.name = 'which_diff',
            value.name    = 'diff') %>%
       .[, !"which_diff"] %>%
-      .[, `:=`(comparison  = paste0(marg_list$start[[i]], " vs. ", marg_list$end[[i]]),
+      .[, `:=`(comparison  = "Instantaneous rate of change",
                marg_effect = marg_list$marg[[i]])]
 
   }
   
   if(is.null(at) & at_means==F){
 
-    predDiff <- data.table::data.table(diff        = colMeans(pred_start - pred_end),
-                           comparison  = paste0(marg_list$start[[i]], " vs. ", marg_list$end[[i]]),
-                           marg_effect = marg_list$marg[[i]])
+    predDiff <- data.table::data.table(diff        = colMeans(((pred_end - pred_start)/h)),
+                                       comparison  = "Instantaneous rate of change",
+                                       marg_effect = marg_list$marg[[i]])
 
   }
   
@@ -33,7 +33,7 @@ meanDiffF <- function(pred_start, pred_end, model_data, marg_list, at, at_means,
     atVars   <- names(expand.grid(at))
     atValues <- expand.grid(at)
     
-    predDiffOrg <- pred_start - pred_end %>%
+    predDiffOrg <- ((pred_end - pred_start)/h) %>%
       data.table::as.data.table()
     
     predDiff <- predDiffOrg %>%
@@ -42,19 +42,19 @@ meanDiffF <- function(pred_start, pred_end, model_data, marg_list, at, at_means,
            variable.name = 'which_diff',
            value.name    = 'diff') %>%
       .[, !"which_diff"] %>%
-      .[, `:=`(comparison  = paste0(marg_list$start[[i]], " vs. ", marg_list$end[[i]]),
+      .[, `:=`(comparison  = "Instantaneous rate of change",
                marg_effect = marg_list$marg[[i]])]
     
   }
   
   if(is.null(at) & at_means==T){
     
-    predDiff <- data.table(diff        = colMeans(pred_start - pred_end),
-                           comparison  = paste0(marg_list$start[[i]], " vs. ", marg_list$end[[i]]),
+    predDiff <- data.table(diff        = colMeans(((pred_end - pred_start)/h)),
+                           comparison  = "Instantaneous rate of change",
                            marg_effect = marg_list$marg[[i]])
     
   }
-  
+
   return(predDiff)
 
 }

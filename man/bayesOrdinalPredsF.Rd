@@ -1,33 +1,33 @@
-\name{bayesPredsF}
-\alias{bayesPredsF}
+\name{bayesOrdinalPredsF}
+\alias{bayesOrdinalPredsF}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Bayesian predictions on the mean scale.
+Bayesian predictions for ordinal models on the mean scale.
 }
 \description{
-Computes Bayesian predictions on the mean scale for models fit using the package "rstanarm". Predictions can be averaged over the values of the covariates in the data (average marginal predictions), or the covariates can be held at their means (marginal predictions at the means). Also, "at" values must be specified to fix at least one covariate at particular values.
+Computes Bayesian outcome predictions for cumulative link models with a proportional odds structure fit using the package "rstanarm". Predictions can be averaged over the values of the covariates in the data (average marginal predictions), or the covariates can be held at their means (marginal predictions at the means). Also, "at" values must be specified to fix at least one covariate at particular values.
 }
 \usage{
-bayesPredsF(model,
-            at,
-            n_draws      = 2000,
-            ci           = .95,
-            hdi_interval = TRUE,
-            centrality   = 'mean',
-            digits       = 4,
-            at_means     = FALSE,
-            data_slice   = 'full')
+bayesOrdinalPredsF(model,
+                   at,
+                   n_draws      = 2000,
+                   ci           = .95,
+                   hdi_interval = TRUE,
+                   centrality   = 'mean',
+                   digits       = 4,
+                   at_means     = FALSE,
+                   data_slice   = 'full')
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{model}{
-A model object of class "stanreg."
+A model object of class "stanreg" and "polr."
 }
 \item{at}{
 List of covariate values to estimate the predictions at.
 }
 \item{n_draws}{
-The number of draws to take from the posterior distribution of the expectation.
+The number of draws to take from the joint posterior distribution.
 }
 \item{ci}{
 The level for the credible intervals.
@@ -60,7 +60,7 @@ posterior draws of the predictions
 
 }
 \details{
-Currently, the following families of fixed-effect models fit using "rstanarm" are supported: 'beta', 'binomial', 'Gamma', 'gaussian', 'neg_binomial_2', and 'poisson.' Future versions of the package will contain support for additional models.
+Currently, the following links for fixed-effect ordinal models fit using "rstanarm" are supported: logit, probit, and clogclog.
 }
 \author{
 David Dalenberg
@@ -76,25 +76,24 @@ Mize, Trenton D. 2019. "Best Practices for Estimating, Interpreting, and Present
 
 \donttest{
 
-## Logit model ##
+## Proportional odds logistic regression ##
 
-if(require(rstanarm)){
+if(require(rstanarm) & require(MASS)){
 
-m1 <- stan_glm(switch ~ dist + educ + arsenic + assoc, 
-               data    = rstanarm::wells, 
-               family  = binomial, 
-               refresh = 0, 
-               iter    = 500)
+m1 <- stan_polr(Sat ~ Infl + Type, 
+                data    = MASS::housing, 
+                prior   = rstanarm::R2(0.2, 'mean'), 
+                refresh = 0, 
+                iter    = 500)
 
 # marginal predictions holding covariates at means #
 
-bayesPredsF(m1, 
-            at       = list(arsenic = c(.82, 1.3)), 
-            at_means = TRUE,
-            n_draws  = 500)
-         
-}
-            
+bayesOrdinalPredsF(m1, 
+                   at       = list(Type = c("Tower", "Apartment")), 
+                   at_means = TRUE,
+                   n_draws  = 500)
+ 
+}           
 }
 
 }

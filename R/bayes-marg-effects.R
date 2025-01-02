@@ -1,5 +1,5 @@
 
-bayesMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end_value, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE){
+bayesMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end_value, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE, h=.0001){
 
   margErrorCheckF(model           = model,
                   marginal_effect = marginal_effect,
@@ -31,11 +31,24 @@ bayesMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end
 
     # get the model data #
 
-    modData <- margModelDataF(model       = model,
-                              new_formula = formulaNoOffsets,
-                              at          = at,
-                              marg_list   = margList,
-                              i           = i)
+    if(start_value[i]=="instantaneous"){
+      
+      modData <- margModelDataContinuousF(model       = model,
+                                          new_formula = formulaNoOffsets,
+                                          at          = at,
+                                          marg_list   = margList,
+                                          i           = i,
+                                          h           = h)
+      
+    } else{
+      
+      modData <- margModelDataF(model       = model,
+                                new_formula = formulaNoOffsets,
+                                at          = at,
+                                marg_list   = margList,
+                                i           = i)
+      
+    }
 
     # get the predictions #
 
@@ -55,13 +68,28 @@ bayesMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end
 
     # get the difference in predicted means #
 
-    predDiff <- meanDiffF(pred_start = predStart,
-                          pred_end   = predEnd,
-                          model_data = modData$modelData,
-                          marg_list  = margList,
-                          at         = at,
-                          at_means   = at_means,
-                          i          = i)
+    if(start_value[i]=='instantaneous'){
+      
+      predDiff <- meanDiffContinuousF(pred_start = predStart,
+                                      pred_end   = predEnd,
+                                      model_data = modData$modelData,
+                                      marg_list  = margList,
+                                      at         = at,
+                                      at_means   = at_means,
+                                      i          = i,
+                                      h          = h)
+      
+    } else{
+      
+      predDiff <- meanDiffF(pred_start = predStart,
+                            pred_end   = predEnd,
+                            model_data = modData$modelData,
+                            marg_list  = margList,
+                            at         = at,
+                            at_means   = at_means,
+                            i          = i)
+      
+    }
 
     # make the marginal effects tables #
 

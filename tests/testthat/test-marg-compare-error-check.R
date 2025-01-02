@@ -1,5 +1,6 @@
 
 
+
 test_that("make sure margCompareErrorCheckF is catching errors", {
   
   skip_on_cran()
@@ -31,3 +32,4 @@ test_that("make sure margCompareErrorCheckF is catching errors", {
   expect_error(margCompareErrorCheckF(margTestError, ci=.95, hdi_interval=T, centrality='mean'), regexp="There is only 1 marginal effect, so nothing to compare to!")
   
 })
+

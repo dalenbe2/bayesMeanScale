@@ -1,33 +1,33 @@
-\name{bayesMargEffF}
-\alias{bayesMargEffF}
+\name{bayesOrdinalMargEffF}
+\alias{bayesOrdinalMargEffF}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Bayesian marginal effects on the mean scale.
 }
 \description{
-Computes Bayesian marginal effects on the mean scale for models fit using the package "rstanarm". Marginal effects can be averaged over the values of the covariates in the data (average marginal effects), or the covariates can be held at their means (marginal effects at the means). Also, "at" values can be specified to fix covariates at particular values. The marginal effects must be specified in terms of discrete changes. When investigating continuous variables this might be specified as the change between the mean and 1 standard deviation above the mean, for example.
+Computes Bayesian marginal effects on the probability of outcomes for cumulative link models with a proportional odds structure fit using the package "rstanarm". Marginal effects can be averaged over the values of the covariates in the data (average marginal effects), or the covariates can be held at their means (marginal effects at the means). Also, "at" values can be specified to fix covariates at particular values. The marginal effects must be specified in terms of discrete changes. When investigating continuous variables this might be specified as the change between the mean and 1 standard deviation above the mean, for example.
 }
 \usage{
-bayesMargEffF(model,
-              n_draws         = 2000,
-              marginal_effect,
-              start_value,
-              end_value,
-              ci              = .95,
-              hdi_interval    = TRUE,
-              centrality      = 'mean',
-              digits          = 4,
-              at              = NULL,
-              at_means        = FALSE,
-              h               = .0001)
+bayesOrdinalMargEffF(model,
+                     n_draws         = 2000,
+                     marginal_effect,
+                     start_value,
+                     end_value,
+                     ci              = .95,
+                     hdi_interval    = TRUE,
+                     centrality      = 'mean',
+                     digits          = 4,
+                     at              = NULL,
+                     at_means        = FALSE,
+                     h               = .0001)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{model}{
-A model object of class "stanreg."
+A model object of class "stanreg" and "polr."
 }
 \item{n_draws}{
-The number of draws to take from the posterior distribution of the expectation.
+The number of draws to take from the joint posterior distribution.
 }
 \item{marginal_effect}{
 A character vector of terms that you want to estimate the marginal effect for.
@@ -73,7 +73,7 @@ posterior draws of the marginal effects
 
 }
 \details{
-Currently, the following families of fixed-effect models fit using "rstanarm" are supported: 'beta', 'binomial', 'Gamma', 'gaussian', 'neg_binomial_2', and 'poisson.' Future versions of the package will contain support for additional models.
+Currently, the following links for fixed-effect ordinal models fit using "rstanarm" are supported: logit, probit, and clogclog.
 }
 \author{
 David Dalenberg
@@ -89,26 +89,27 @@ Mize, Trenton D. 2019. "Best Practices for Estimating, Interpreting, and Present
 
 \donttest{
 
-## Logit model ##
+## Proportional odds logistic regression ##
 
-if(require(rstanarm)){
+if(require(rstanarm) & require(MASS)){
 
-m1 <- stan_glm(switch ~ dist + educ + arsenic + assoc, 
-               data    = rstanarm::wells, 
-               family  = binomial, 
-               refresh = 0, 
-               iter    = 500)
+m1 <- stan_polr(Sat ~ Infl + Type, 
+                data    = MASS::housing, 
+                prior   = rstanarm::R2(0.2, 'mean'), 
+                refresh = 0, 
+                iter    = 500)
 
-# marginal effect averaging over sample values of covariates #
+# marginal effects holding covariates at means #
 
-bayesMargEffF(m1, 
-              marginal_effect = 'arsenic', 
-              start_value     = 2.2, 
-              end_value       = .82,
-              n_draws         = 500)
-              
+bayesOrdinalMargEffF(m1,
+                     marginal_effect = "Infl",
+                     start_value     = "Low",
+                     end_value       = "High",
+                     at              = list(Type = c("Tower", "Apartment")), 
+                     at_means        = TRUE,
+                     n_draws         = 500)
+                     
 }
-              
 }
 
 }
