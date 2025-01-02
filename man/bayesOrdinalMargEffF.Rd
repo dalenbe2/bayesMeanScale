@@ -62,7 +62,7 @@ Step size for calculating the approximate instantaneous rate of change.
 }
 }
 \value{
-A list of class "bayes_mean_scale_marg" with the following components: 
+A list of class "bayesmeanscale_marg" with the following components: 
 
 \item{diffTable}{
 summary table of the marginal effects
