@@ -40,7 +40,7 @@ The start value(s) for the marginal effect(s). Must be a list when specifying mu
 The end value(s) for the marginal effect(s). Must be a list when specifying multiple values. Specify "instantaneous" when you want to calculate an approximate instantaneous rate of change.
 }
 \item{n_draws}{
-The number of draws to take from the joint posterior distribution.
+The number of draws to take from the posterior distribution of the expectation.
 }
 \item{ci}{
 The level for the credible intervals.
@@ -110,8 +110,9 @@ bayesCountMargEffF(poissonModel,
                    end_value       = 20,
                    at_means        = TRUE,
                    n_draws         = 500)
-
-}                
+                   
+}
+                   
 }
 
 }

@@ -46,6 +46,10 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='
         names(comboTemp2) <- paste0(names(comboTemp2), "2")
 
         # make the table
+
+        if(centrality=='map'){
+          centrality <- "map_estimate"
+        }
         
         centralityF <- eval(parse(text=centrality))
         
@@ -91,9 +95,7 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='
 
   drawDiff <- structure(list(diffDraws = drawDistribution,
                              diffTable = as.data.frame(drawDiffTableBig)),
-                        class        = c("bayesmeanscale_margcompare", "list"),
-                        ci           = ci,
-                        hdi_interval = hdi_interval)
+                        class = c("bayes_mean_scale_marg_compare", "list"))
   
   return(drawDiff)
 

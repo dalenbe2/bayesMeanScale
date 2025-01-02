@@ -27,7 +27,7 @@ bayesMargEffF(model,
 A model object of class "stanreg."
 }
 \item{n_draws}{
-The number of draws to take from the joint posterior distribution.
+The number of draws to take from the posterior distribution of the expectation.
 }
 \item{marginal_effect}{
 A character vector of terms that you want to estimate the marginal effect for.
@@ -106,8 +106,9 @@ bayesMargEffF(m1,
               start_value     = 2.2, 
               end_value       = .82,
               n_draws         = 500)
-
-}       
+              
+}
+              
 }
 
 }

@@ -27,7 +27,7 @@ A model object of class "stanreg."
 List of covariate values to estimate the predictions at.
 }
 \item{n_draws}{
-The number of draws to take from the joint posterior distribution.
+The number of draws to take from the posterior distribution of the expectation.
 }
 \item{ci}{
 The level for the credible intervals.
@@ -92,7 +92,7 @@ bayesPredsF(m1,
             at       = list(arsenic = c(.82, 1.3)), 
             at_means = TRUE,
             n_draws  = 500)
-            
+         
 }
             
 }

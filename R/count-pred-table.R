@@ -1,7 +1,12 @@
 
 countPredTableF <- function(preds, model_data, counts, at_vars, at_values, hdi_interval, centrality, digits, ci, at_means){
+
+  if(centrality=='map'){
+    centrality <- "map_estimate"
+  }
   
   centralityF <- eval(parse(text=centrality))
+  tableNames  <- c(at_vars, "count", centrality, 'lower', 'upper')
   
   group_vars <- c(at_vars, "count")
   
@@ -66,7 +71,7 @@ countPredTableF <- function(preds, model_data, counts, at_vars, at_values, hdi_i
 
   }
   
-  names(predTable)[names(predTable)=='centrality'] <- centrality
+  names(predTable) <- tableNames
 
   return(predTable)
 
