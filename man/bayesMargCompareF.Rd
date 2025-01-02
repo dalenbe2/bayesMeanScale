@@ -33,7 +33,7 @@ The number of digits to report in the summary table.
 }
 }
 \value{
-A list of class "bayes_mean_scale_marg_compare" with the following components: 
+A list of class "bayesmeanscale_margcompare" with the following components: 
 
 \item{diffTable}{
 summary table of the differences of the marginal effects
