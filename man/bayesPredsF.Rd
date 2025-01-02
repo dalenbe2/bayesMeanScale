@@ -27,7 +27,7 @@ A model object of class "stanreg."
 List of covariate values to estimate the predictions at.
 }
 \item{n_draws}{
-The number of draws to take from the posterior distribution of the expectation.
+The number of draws to take from the joint posterior distribution.
 }
 \item{ci}{
 The level for the credible intervals.

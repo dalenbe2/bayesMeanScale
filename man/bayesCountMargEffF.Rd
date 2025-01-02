@@ -40,7 +40,7 @@ The start value(s) for the marginal effect(s). Must be a list when specifying mu
 The end value(s) for the marginal effect(s). Must be a list when specifying multiple values. Specify "instantaneous" when you want to calculate an approximate instantaneous rate of change.
 }
 \item{n_draws}{
-The number of draws to take from the posterior distribution of the expectation.
+The number of draws to take from the joint posterior distribution.
 }
 \item{ci}{
 The level for the credible intervals.
