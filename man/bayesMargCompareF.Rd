@@ -5,7 +5,7 @@
 Comparison of Bayesian marginal effects 
 }
 \description{
-Tests the differences between all marginal effects in the "bayes_mean_scale_marg" object that is passed to it. This is particularly useful for testing non-linear interaction effects.
+Tests the differences between all marginal effects in the "bayesmeanscale_marg" object that is passed to it. This is particularly useful for testing non-linear interaction effects.
 }
 \usage{
 bayesMargCompareF(marg_list,
@@ -17,7 +17,7 @@ bayesMargCompareF(marg_list,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{marg_list}{
-An object of class "bayes_mean_scale_marg."
+An object of class "bayesmeanscale_marg."
 }
   \item{ci}{
 The level of the credible interval.
@@ -44,7 +44,7 @@ posterior draws of the differences of the marginal effects
 
 }
 \details{
-All possible differences of marginal effects contained in the "bayes_mean_scale_marg" object are computed.
+Differences of marginal effects contained in the "bayesmeanscale_marg" object are computed.
 }
 \author{
 David Dalenberg
