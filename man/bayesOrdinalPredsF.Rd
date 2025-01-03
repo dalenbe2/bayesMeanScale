@@ -60,7 +60,7 @@ posterior draws of the predictions
 
 }
 \details{
-Currently, the following links for fixed-effect ordinal models fit using "rstanarm" are supported: logit, probit, and clogclog.
+The following links for fixed-effect ordinal models fit using "rstanarm" are supported: logit, probit, and clogclog.
 }
 \author{
 David Dalenberg
