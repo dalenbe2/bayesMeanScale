@@ -23,11 +23,7 @@ countPredsErrorCheckF <- function(model, counts, at, centrality){
     stop("This model is not currently supported!")
   }
   
-  # make sure model is a stanreg object and of a supported exponential family #
-
-  if(!('stanreg' %in% class(model))){
-    stop("The model must be a 'stanreg' object!")
-  }
+  # make sure model is of a supported exponential family #
 
   if(!(model$family$family %in% c('poisson', 'neg_binomial_2'))){
     stop("The model must be poisson or negative binomial!")

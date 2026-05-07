@@ -7,11 +7,7 @@ margErrorCheckF <- function(model, marginal_effect, at, start_value, end_value, 
     stop("This model is not currently supported!")
   }
   
-  # make sure model is a stanreg object and of a supported exponential family #
-
-  if(!('stanreg' %in% class(model))){
-    stop("The model must be a 'stanreg' object!")
-  }
+  # make sure model is of a supported exponential family #
 
   if(!(model$family$family %in% c('beta', 'binomial', 'gaussian', 'Gamma', 'poisson', 'neg_binomial_2'))){
     stop("The model must be in a supported exponential family!")
