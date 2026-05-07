@@ -1,7 +1,11 @@
 
-bayesOrdinalMargEffF <- function(model, n_draws=2000, marginal_effect, start_value, end_value, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE, h=.0001){
+bayesOrdinalMargEffF <- function(x, ...){
+  UseMethod("bayesOrdinalMargEffF")
+}
 
-  ordinalMargErrorCheckF(model           = model,
+bayesOrdinalMargEffF.stanreg <- function(x, n_draws=2000, marginal_effect, start_value, end_value, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE, h=.0001, ...){
+
+  ordinalMargErrorCheckF(model           = x,
                          marginal_effect = marginal_effect,
                          at              = at,
                          start_value     = start_value,
@@ -21,11 +25,11 @@ bayesOrdinalMargEffF <- function(model, n_draws=2000, marginal_effect, start_val
 
   # modify the model formula if there's an offset #
 
-  formulaNoOffsets <- modifyFormulaF(model = model)
+  formulaNoOffsets <- modifyFormulaF(model = x)
 
   # get the draws #
   
-  draws <- sample(1:nrow(posterior::as_draws_df(model)), size=n_draws, replace=T)
+  draws <- sample(1:nrow(posterior::as_draws_df(x)), size=n_draws, replace=T)
   
   for(i in 1:length(marginal_effect)){
 
@@ -33,7 +37,7 @@ bayesOrdinalMargEffF <- function(model, n_draws=2000, marginal_effect, start_val
 
     if(start_value[i]=="instantaneous"){
       
-      modData <- margModelDataContinuousF(model       = model,
+      modData <- margModelDataContinuousF(model       = x,
                                           new_formula = formulaNoOffsets,
                                           at          = at,
                                           marg_list   = margList,
@@ -42,7 +46,7 @@ bayesOrdinalMargEffF <- function(model, n_draws=2000, marginal_effect, start_val
       
     } else{
       
-      modData <- margModelDataF(model       = model,
+      modData <- margModelDataF(model       = x,
                                 new_formula = formulaNoOffsets,
                                 at          = at,
                                 marg_list   = margList,
@@ -52,11 +56,11 @@ bayesOrdinalMargEffF <- function(model, n_draws=2000, marginal_effect, start_val
 
     # get the ordered outcomes for the response variable #
     
-    yOutcomes <- levels(model$y)
+    yOutcomes <- levels(x$y)
     
     # get the predictions #
     
-    predStart <- ordinalMeanPredF(model,
+    predStart <- ordinalMeanPredF(x,
                                   new_data    = modData$startData,
                                   at          = at,
                                   draws       = draws,
@@ -64,7 +68,7 @@ bayesOrdinalMargEffF <- function(model, n_draws=2000, marginal_effect, start_val
                                   new_formula = formulaNoOffsets,
                                   at_means    = at_means)
 
-    predEnd   <- ordinalMeanPredF(model,
+    predEnd   <- ordinalMeanPredF(x,
                                   new_data    = modData$endData,
                                   at          = at,
                                   draws       = draws,

@@ -1,20 +1,24 @@
 
-bayesOrdinalPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at_means=FALSE, data_slice='full'){
+bayesOrdinalPredsF <- function(x, ...){
+  UseMethod("bayesOrdinalPredsF")
+}
 
-  predsOrdinalErrorCheckF(model      = model,
+bayesOrdinalPredsF.stanreg <- function(x, at, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at_means=FALSE, data_slice='full', ...){
+
+  predsOrdinalErrorCheckF(model      = x,
                           at         = at,
                           centrality = centrality)
   
   # modify the model formula if there's an offset #
   
-  formulaNoOffsets <- modifyFormulaF(model=model)
+  formulaNoOffsets <- modifyFormulaF(model=x)
 
   # get the model data #
   
-  modelDataOrg <- model$data %>%
+  modelDataOrg <- x$data %>%
     .[, colnames(.) %in% all.vars(formulaNoOffsets), drop=F] %>%
-    .[row.names(model$model),] %>%
-    {if(!is.null(model$offset)) cbind(., offset=model$offset) else .}
+    .[row.names(x$model),] %>%
+    {if(!is.null(x$offset)) cbind(., offset=x$offset) else .}
   
   # prepare 'at' values and 'at' names #
   
@@ -46,15 +50,15 @@ bayesOrdinalPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRU
 
   # get the ordered outcomes for the response variable #
 
-  yOutcomes <- levels(model$y)
+  yOutcomes <- levels(x$y)
   
   # get the draws #
   
-  draws <- sample(1:nrow(posterior::as_draws_df(model)), size=n_draws, replace=T)
+  draws <- sample(1:nrow(posterior::as_draws_df(x)), size=n_draws, replace=T)
 
   # get the predictions #
   
-  preds <- ordinalMeanPredF(model,
+  preds <- ordinalMeanPredF(x,
                             new_data    = newData,
                             at          = at,
                             draws       = draws,
@@ -91,4 +95,3 @@ bayesOrdinalPredsF <- function(model, at, n_draws=2000, ci=.95, hdi_interval=TRU
   return(predList)
 
 }
-
