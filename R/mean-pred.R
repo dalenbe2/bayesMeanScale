@@ -72,7 +72,7 @@ meanPredF <- function(model, new_data, at, draws, new_formula, at_means){
 
   if(!is.null(model$offset)){
 
-    Z <- (modelMatrixNew %*% t(betaDraws[draws,])) + modelOffset
+    Z <- (modelMatrixNew %*% t(betaDraws[draws,])) + rep(unique(modelOffset), nrow(modelMatrixNew))
 
   } else{
 
@@ -118,7 +118,7 @@ meanPredF <- function(model, new_data, at, draws, new_formula, at_means){
 
 
 
-meanPredDFMethodF <- function(new_data, at, draws, link_function, new_formula, at_means){
+meanPredDFMethodF <- function(x, new_data, at, draws, link_function, new_formula, model_offset, at_means){
   
   # make the new model matrix #
   
@@ -127,7 +127,7 @@ meanPredDFMethodF <- function(new_data, at, draws, link_function, new_formula, a
   
   # get the draws from the joint posterior #
   
-  modelDrawsOrg <- data.table::as.data.table(draws)
+  modelDrawsOrg <- data.table::as.data.table(x)
   
   # check that new model matrix doesn't have any columns that aren't in joint posterior #
   
@@ -183,7 +183,15 @@ meanPredDFMethodF <- function(new_data, at, draws, link_function, new_formula, a
   
   # compute the linear predictor #
   
-  Z <- modelMatrixNew %*% t(betaDraws)
+  if(!is.null(model_offset)){
+    
+    Z <- (modelMatrixNew %*% t(betaDraws[draws,])) + rep(model_offset, nrow(modelMatrixNew))
+    
+  } else{
+    
+    Z <- modelMatrixNew %*% t(betaDraws[draws,])
+    
+  }
   
   # apply the inverse link function #
   

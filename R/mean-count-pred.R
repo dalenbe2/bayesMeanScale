@@ -71,13 +71,13 @@ meanCountPredF <- function(model, new_data, counts, at, draws, new_formula, at_m
   # compute the linear predictor #
 
   if(!is.null(model$offset)){
-
-    Z <- (modelMatrixNew %*% t(betaDraws[draws,])) + modelOffset
-
+    
+    Z <- (modelMatrixNew %*% t(betaDraws[draws,])) + rep(unique(modelOffset), nrow(modelMatrixNew))
+    
   } else{
-
+    
     Z <- modelMatrixNew %*% t(betaDraws[draws,])
-
+    
   }
   
   # get the draws for the reciprocal dispersion parameter for negative binomial #
@@ -133,4 +133,133 @@ meanCountPredF <- function(model, new_data, counts, at, draws, new_formula, at_m
 
   return(meanCountPreds)
 
+}
+
+meanCountPredDFMethodF <- function(x, new_data, model_family, link_function, counts, at, draws, new_formula, model_offset, at_means){
+  
+  # make the new model matrix #
+  
+  modelMatrix   <- model.matrix(new_formula, data=new_data)
+  
+  # get the draws from the joint posterior #
+  
+  modelDrawsOrg <- data.table::as.data.table(x)
+  
+  # check that new model matrix doesn't have any columns that aren't in joint posterior #
+  
+  if(!all(dimnames(modelMatrix)[[2]] %in% names(modelDrawsOrg))){
+    stop("Something is wrong with the model matrix!")
+  }
+  
+  # make sure to only get joint posterior columns that match up with model matrix #
+  
+  betaDraws <- modelDrawsOrg %>%
+    .[, .SD, .SDcols = dimnames(modelMatrix)[[2]]] %>%
+    as.matrix()
+  
+  # make sure model matrix lines up with draws matrix #
+  
+  if(at_means==F){
+    
+    modelMatrixNew <- modelMatrix %>%
+      data.table::as.data.table() %>%
+      .[, .SD, .SDcols = dimnames(betaDraws)[[2]]] %>%
+      as.matrix()
+    
+  }
+  
+  if(at_means==T & !is.null(at)){
+    
+    atVars <- names(at)
+    
+    atVarsNew <- paste0(atVars, "_new")
+    data.table::setnames(new_data, old=names(new_data[, ..atVars]), new=atVarsNew)
+    
+    modelMatrixNew <- modelMatrix %>%
+      data.table::as.data.table() %>%
+      .[, .SD, .SDcols = dimnames(betaDraws)[[2]]] %>%
+      cbind(new_data[, ..atVarsNew]) %>%
+      .[, lapply(.SD, mean), by=atVarsNew] %>%
+      .[, !..atVarsNew] %>%
+      as.matrix()
+    
+    data.table::setnames(new_data, old=names(new_data[, ..atVarsNew]), new=atVars)
+    
+  }
+  
+  if(at_means==T & is.null(at)){
+    
+    modelMatrixNew <- modelMatrix %>%
+      data.table::as.data.table() %>%
+      .[, .SD, .SDcols = dimnames(betaDraws)[[2]]] %>%
+      .[, lapply(.SD, mean)] %>%
+      as.matrix()
+    
+  }
+  
+  # compute the linear predictor #
+    
+  if(!is.null(model_offset)){
+    
+    Z <- (modelMatrixNew %*% t(betaDraws[draws,])) + rep(model_offset, nrow(modelMatrixNew))
+    
+  } else{
+    
+    Z <- modelMatrixNew %*% t(betaDraws[draws,])
+    
+  }
+  
+  # get the draws for the reciprocal dispersion parameter for negative binomial #
+  
+  if(model_family=="neg_binomial_2"){
+    
+    dispersion       <- modelDrawsOrg$reciprocal_dispersion
+    dispersionMatrix <- as.matrix(t(replicate(nrow(modelMatrix), dispersion)))
+    
+  }
+  
+  # apply the inverse link function #
+  
+  if(link_function=="log"){
+    meanPreds <- exp(Z)
+  }
+  
+  if(link_function=='identity'){
+    meanPreds <- Z
+  }
+  
+  if(link_function=='sqrt'){
+    meanPreds <- Z^2
+  }
+  
+  # get probabilities for counts #
+  
+  meanCountPreds <- data.frame()
+  
+  if(model_family=="poisson"){
+    
+    for(i in 1:length(counts)){
+      
+      tempPreds      <- dpois(counts[[i]], lambda=meanPreds)
+      meanCountPreds <- rbind(meanCountPreds, data.frame(tempPreds, count=counts[[i]]))
+      
+    }
+    
+  } 
+  
+  if(model_family=="neg_binomial_2"){
+    
+    for(i in 1:length(counts)){
+      
+      tempPreds      <- dnbinom(counts[[i]], size=dispersionMatrix, mu=meanPreds)
+      meanCountPreds <- rbind(meanCountPreds, data.frame(tempPreds, count=counts[[i]]))
+      
+    }
+    
+  }
+  
+  # output #
+  
+  return(meanCountPreds)
+  
 }
