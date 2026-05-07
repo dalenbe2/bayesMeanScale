@@ -1,14 +1,18 @@
 
-bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4){
+bayesMargCompareF <- function(x, ...){
+  UseMethod("bayesMargCompareF")
+}
 
-  margCompareErrorCheckF(marg_list    = marg_list, 
+bayesMargCompareF.bayesmeanscale_marg <- function(x, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, ...){
+
+  margCompareErrorCheckF(marg_list    = x, 
                          ci           = ci,
                          hdi_interval = hdi_interval,
                          centrality   = centrality)
 
   # get the MCMC draws #
 
-  drawData <- marg_list$diffDraws
+  drawData <- x$diffDraws
 
   # get the unique combos of marg effects and comparisons #
 
@@ -26,7 +30,7 @@ bayesMargCompareF <- function(marg_list, ci=.95, hdi_interval=TRUE, centrality='
         break
       }
 
-      if(comboCheckF(i, j, comboData, marg_list)==T){
+      if(comboCheckF(i, j, comboData, x)==T){
 
       # specify the first and second comparisons #
 
