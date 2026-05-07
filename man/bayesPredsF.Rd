@@ -1,5 +1,7 @@
 \name{bayesPredsF}
 \alias{bayesPredsF}
+\alias{bayesPredsF.stanreg}
+\alias{bayesPredsF.data.frame}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Bayesian predictions on the mean scale.
@@ -8,7 +10,10 @@ Bayesian predictions on the mean scale.
 Computes Bayesian predictions on the mean scale for models fit using the package "rstanarm". Predictions can be averaged over the values of the covariates in the data (average marginal predictions), or the covariates can be held at their means (marginal predictions at the means). Also, "at" values must be specified to fix at least one covariate at particular values.
 }
 \usage{
-bayesPredsF(model,
+
+bayesPredsF(x, ...)
+
+\method{bayesPredsF}{stanreg}(x,
             at,
             n_draws      = 2000,
             ci           = .95,
@@ -16,15 +21,44 @@ bayesPredsF(model,
             centrality   = 'mean',
             digits       = 4,
             at_means     = FALSE,
-            data_slice   = 'full')
+            data_slice   = 'full',
+            ...)
+            
+\method{bayesPredsF}{data.frame}(x,
+            model_data,
+            model_formula,
+            link_function,
+            at,
+            model_offset = NULL,
+            n_draws      = 2000,
+            ci           = .95,
+            hdi_interval = TRUE,
+            centrality   = 'mean',
+            digits       = 4,
+            at_means     = FALSE,
+            data_slice   = 'full',
+            ...)            
+            
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{model}{
-A model object of class "stanreg."
+\item{x}{
+A model object of class "stanreg" or an object of class "data.frame" that contains the joint posterior.
+}
+\item{model_data}{
+Object of class "data.frame" that contains the data used to fit the model. 
+}
+\item{model_formula}{
+Object of class "formula". The formula must not contain an offset; instead, include any offsets in the "model_offset" argument.
+}
+\item{link_function}{
+The link function used to fit the model. Current options are "logit", "probit", "cloglog", "log", "inverse", "sqrt", or "identity".
 }
 \item{at}{
 List of covariate values to estimate the predictions at.
+}
+\item{model_offset}{
+Offset used in the model. Must be a scalar value.
 }
 \item{n_draws}{
 The number of draws to take from the joint posterior distribution.
@@ -46,6 +80,9 @@ If FALSE, the default, the predictions are averaged across the rows of the model
 }
 \item{data_slice}{
 The number of rows of data to average over for the predictions. Defaults to all rows. This can be useful for very large data sets. 
+}
+\item{...}{
+Arguments passed to method.
 }
 }
 \value{

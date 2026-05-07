@@ -1,5 +1,6 @@
 \name{bayesMargCompareF}
 \alias{bayesMargCompareF}
+\alias{bayesMargCompareF.bayesmeanscale_marg}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Comparison of Bayesian marginal effects 
@@ -8,15 +9,19 @@ Comparison of Bayesian marginal effects
 Tests the differences between all marginal effects in the "bayesmeanscale_marg" object that is passed to it. This is particularly useful for testing non-linear interaction effects.
 }
 \usage{
-bayesMargCompareF(marg_list,
+
+bayesMargCompareF(x, ...)
+
+\method{bayesMargCompareF}{bayesmeanscale_marg}(x,
                   ci           = 0.95,
                   hdi_interval = TRUE,
                   centrality   = 'mean',
-                  digits       = 4)
+                  digits       = 4,
+                  ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{marg_list}{
+  \item{x}{
 An object of class "bayesmeanscale_marg."
 }
   \item{ci}{
@@ -30,6 +35,9 @@ Centrality measure for the posterior distribution. Options are "mean" or "median
   }
   \item{digits}{
 The number of digits to report in the summary table.
+}
+\item{...}{
+Arguments passed to method.
 }
 }
 \value{

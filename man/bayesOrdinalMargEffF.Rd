@@ -1,5 +1,6 @@
 \name{bayesOrdinalMargEffF}
 \alias{bayesOrdinalMargEffF}
+\alias{bayesOrdinalMargEffF.stanreg}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Bayesian marginal effects on the mean scale.
@@ -8,7 +9,10 @@ Bayesian marginal effects on the mean scale.
 Computes Bayesian marginal effects on the probability of outcomes for cumulative link models with a proportional odds structure fit using the package "rstanarm". Marginal effects can be averaged over the values of the covariates in the data (average marginal effects), or the covariates can be held at their means (marginal effects at the means). Also, "at" values can be specified to fix covariates at particular values. The marginal effects can be specified in terms of discrete changes or instantaneous rates of change.
 }
 \usage{
-bayesOrdinalMargEffF(model,
+
+bayesOrdinalMargEffF(x, ...)
+
+\method{bayesOrdinalMargEffF}{stanreg}(x,
                      n_draws         = 2000,
                      marginal_effect,
                      start_value,
@@ -19,11 +23,12 @@ bayesOrdinalMargEffF(model,
                      digits          = 4,
                      at              = NULL,
                      at_means        = FALSE,
-                     h               = .0001)
+                     h               = .0001,
+                     ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{model}{
+  \item{x}{
 A model object of class "stanreg" and "polr."
 }
 \item{n_draws}{
@@ -59,6 +64,9 @@ If FALSE, the default, the marginal effects are averaged across the rows of the 
 }
 \item{h}{
 Step size for calculating the approximate instantaneous rate of change.
+}
+\item{...}{
+Arguments passed to method.
 }
 }
 \value{

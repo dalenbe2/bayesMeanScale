@@ -1,5 +1,7 @@
 \name{bayesCountMargEffF}
 \alias{bayesCountMargEffF}
+\alias{bayesCountMargEffF.stanreg}
+\alias{bayesCountMargEffF.data.frame}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Bayesian marginal effects on count probabilities.
@@ -8,7 +10,10 @@ Bayesian marginal effects on count probabilities.
 Computes Bayesian marginal effects on count probabilities. Models must have a family of "poisson"" or "neg_binomial_2" and be fit using the "rstanarm" package. Marginal effects can be averaged over the values of the covariates in the data (average marginal effects), or the covariates can be held at their means (marginal effects at the means). Also, "at" values can be specified to fix covariates at particular values. The marginal effects can be specified in terms of discrete changes or instantaneous rates of change.
 }
 \usage{
-bayesCountMargEffF(model,
+
+bayesCountMargEffF(x, ...)
+
+\method{bayesCountMargEffF}{stanreg}(x,
                    counts,
                    marginal_effect,
                    start_value,
@@ -20,12 +25,46 @@ bayesCountMargEffF(model,
                    digits          = 4,
                    at              = NULL,
                    at_means        = FALSE,
-                   h               = .0001)
+                   h               = .0001,
+                   ...)
+                   
+\method{bayesCountMargEffF}{data.frame}(x,
+                   model_data,
+                   model_formula,
+                   link_function,
+                   model_family,
+                   counts,
+                   marginal_effect,
+                   start_value,
+                   end_value,
+                   model_offset    = NULL,
+                   n_draws         = 2000,
+                   ci              = .95,
+                   hdi_interval    = TRUE,
+                   centrality      = 'mean',
+                   digits          = 4,
+                   at              = NULL,
+                   at_means        = FALSE,
+                   h               = .0001,
+                   ...)
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{model}{
-A model object of class "stanreg."
+\item{x}{
+A model object of class "stanreg" or an object of class "data.frame" that contains the joint posterior.
+}
+\item{model_data}{
+Object of class "data.frame" that contains the data used to fit the model. 
+}
+\item{model_formula}{
+Object of class "formula". The formula must not contain an offset; instead, include any offsets in the "model_offset" argument.
+}
+\item{link_function}{
+The link function used to fit the model. Current options are "logit", "probit", "cloglog", "log", "inverse", "sqrt", or "identity".
+}
+\item{model_family}{
+The model family used to fit the model. Current options are "poisson" or "neg_binomial_2".
 }
 \item{counts}{
 Vector of counts to get the predicted probabilities for.
@@ -38,6 +77,9 @@ The start value(s) for the marginal effect(s). Must be a list when specifying mu
 }
 \item{end_value}{
 The end value(s) for the marginal effect(s). Must be a list when specifying multiple values. Specify "instantaneous" when you want to calculate an approximate instantaneous rate of change.
+}
+\item{model_offset}{
+Offset used in the model. Must be a scalar value.
 }
 \item{n_draws}{
 The number of draws to take from the joint posterior distribution.
@@ -62,6 +104,9 @@ If FALSE, the default, the marginal effects are averaged across the rows of the 
 }
 \item{h}{
 Step size for calculating the approximate instantaneous rate of change.
+}
+\item{...}{
+Arguments passed to method.
 }
 }
 \value{

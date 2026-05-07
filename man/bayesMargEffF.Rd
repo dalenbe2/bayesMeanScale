@@ -11,13 +11,13 @@ Computes Bayesian marginal effects on the mean scale for models fit using the pa
 }
 \usage{
 
-bayesMargEffF(model, ...)
+bayesMargEffF(x, ...)
 
-\method{bayesMargEffF}{stanreg}(model,
-              n_draws         = 2000,
+\method{bayesMargEffF}{stanreg}(x,
               marginal_effect,
               start_value,
               end_value,
+              n_draws         = 2000,
               ci              = .95,
               hdi_interval    = TRUE,
               centrality      = 'mean',
@@ -27,14 +27,15 @@ bayesMargEffF(model, ...)
               h               = .0001,
               ...)
 
-\method{bayesMargEffF}{data.frame}(model,
+\method{bayesMargEffF}{data.frame}(x,
               model_data,
               model_formula,
               link_function,
-              n_draws         = 2000,
               marginal_effect,
               start_value,
               end_value,
+              model_offset    = NULL,
+              n_draws         = 2000,
               ci              = .95,
               hdi_interval    = TRUE,
               centrality      = 'mean',
@@ -47,20 +48,17 @@ bayesMargEffF(model, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-\item{model}{
+\item{x}{
 A model object of class "stanreg" or an object of class "data.frame" that contains the joint posterior.
 }
 \item{model_data}{
 Object of class "data.frame" that contains the data used to fit the model. 
 }
 \item{model_formula}{
-Object of class "formula".
+Object of class "formula". The formula must not contain an offset; instead, include any offsets in the "model_offset" argument.
 }
 \item{link_function}{
 The link function used to fit the model. Current options are "logit", "probit", "cloglog", "log", "inverse", "sqrt", or "identity".
-}
-\item{n_draws}{
-The number of draws to take from the joint posterior distribution.
 }
 \item{marginal_effect}{
 A character vector of terms that you want to estimate the marginal effect for.
@@ -71,6 +69,12 @@ The start value(s) for the marginal effect(s). Must be a list when specifying mu
 
 \item{end_value}{
 The end value(s) for the marginal effect(s). Must be a list when specifying multiple values. Specify "instantaneous" when you want to calculate an approximate instantaneous rate of change.
+}
+\item{model_offset}{
+Offset used in the model. Must be a scalar value.
+}
+\item{n_draws}{
+The number of draws to take from the joint posterior distribution.
 }
 \item{ci}{
 The level for the credible intervals.

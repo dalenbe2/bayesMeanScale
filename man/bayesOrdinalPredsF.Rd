@@ -1,5 +1,6 @@
 \name{bayesOrdinalPredsF}
 \alias{bayesOrdinalPredsF}
+\alias{bayesOrdinalPredsF.stanreg}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Bayesian predictions for ordinal models on the mean scale.
@@ -8,7 +9,10 @@ Bayesian predictions for ordinal models on the mean scale.
 Computes Bayesian outcome predictions for cumulative link models with a proportional odds structure fit using the package "rstanarm". Predictions can be averaged over the values of the covariates in the data (average marginal predictions), or the covariates can be held at their means (marginal predictions at the means). Also, "at" values must be specified to fix at least one covariate at particular values.
 }
 \usage{
-bayesOrdinalPredsF(model,
+
+bayesOrdinalPredsF(x, ...)
+
+\method{bayesOrdinalPredsF}{stanreg}(x,
                    at,
                    n_draws      = 2000,
                    ci           = .95,
@@ -16,11 +20,12 @@ bayesOrdinalPredsF(model,
                    centrality   = 'mean',
                    digits       = 4,
                    at_means     = FALSE,
-                   data_slice   = 'full')
+                   data_slice   = 'full',
+                   ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{model}{
+  \item{x}{
 A model object of class "stanreg" and "polr."
 }
 \item{at}{
@@ -47,7 +52,11 @@ If FALSE, the default, the predictions are averaged across the rows of the model
 \item{data_slice}{
 The number of rows of data to average over for the predictions. Defaults to all rows. This can be useful for very large data sets. 
 }
+\item{...}{
+Arguments passed to method.
 }
+}
+
 \value{
 A list of class "bayesmeanscale_pred" with the following components: 
 

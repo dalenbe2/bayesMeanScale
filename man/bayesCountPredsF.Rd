@@ -1,5 +1,7 @@
 \name{bayesCountPredsF}
 \alias{bayesCountPredsF}
+\alias{bayesCountPredsF.stanreg}
+\alias{bayesCountPredsF.data.frame}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Bayesian predictions of count probabilities.
@@ -8,7 +10,10 @@ Bayesian predictions of count probabilities.
 Computes Bayesian predictions for count probabilities. Models must have a family of "poisson"" or "neg_binomial_2" and be fit using the "rstanarm" package. Predictions can be averaged over the values of the covariates in the data (average marginal predictions), or the covariates can be held at their means (marginal predictions at the means). Also, "at" values must be specified to fix at least one covariate at particular values.
 }
 \usage{
-bayesCountPredsF(model,
+
+bayesCountPredsF(x, ...)
+
+\method{bayesCountPredsF}{stanreg}(x,
                  counts,
                  at,
                  n_draws      = 2000,
@@ -17,18 +22,51 @@ bayesCountPredsF(model,
                  centrality   = 'mean',
                  digits       = 4,
                  at_means     = FALSE,
-                 data_slice   = 'full')
+                 data_slice   = 'full',
+                 ...)
+                 
+\method{bayesCountPredsF}{data.frame}(x,
+                 model_data,
+                 model_formula,
+                 link_function,
+                 model_family,
+                 counts,
+                 at,
+                 model_offset = NULL,
+                 n_draws      = 2000,
+                 ci           = .95,
+                 hdi_interval = TRUE,
+                 centrality   = 'mean',
+                 digits       = 4,
+                 at_means     = FALSE,
+                 data_slice   = 'full',
+                 ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{model}{
-A model object of class "stanreg."
+\item{x}{
+A model object of class "stanreg" or an object of class "data.frame" that contains the joint posterior.
+}
+\item{model_data}{
+Object of class "data.frame" that contains the data used to fit the model. 
+}
+\item{model_formula}{
+Object of class "formula". The formula must not contain an offset; instead, include any offsets in the "model_offset" argument.
+}
+\item{link_function}{
+The link function used to fit the model. Current options are "log", "identity", or "sqrt".
+}
+\item{model_family}{
+The model family used to fit the model. Current options are "poisson" or "neg_binomial_2".
 }
 \item{counts}{
 Vector of counts to get the predicted probabilities for.
 }
 \item{at}{
 List of covariate values to estimate the predictions at.
+}
+\item{model_offset}{
+Offset used in the model. Must be a scalar value.
 }
 \item{n_draws}{
 The number of draws to take from the joint posterior distribution.
@@ -50,6 +88,9 @@ If FALSE, the default, the predictions are averaged across the rows of the model
 }
 \item{data_slice}{
 The number of rows of data to average over for the predictions. Defaults to all rows. This can be useful for very large data sets. 
+}
+\item{...}{
+Arguments passed to method.
 }
 }
 \value{
