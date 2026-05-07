@@ -9,7 +9,7 @@ test_that("make sure bayesCountPredsF is working properly", {
   
   crabs <- read.table("https://stat4ds.rwth-aachen.de/data/Crabs.dat", header=T)
   
-  poissonModel  <- suppressWarnings(rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=poisson, refresh=0, chains=2, iter=500))
+  poissonModel  <- suppressWarnings(rstanarm::stan_glm(sat ~ weight + width, offset=rep(.1, nrow(crabs)), data=crabs, family=poisson, refresh=0, chains=2, iter=500))
   negBinomModel <- suppressWarnings(rstanarm::stan_glm(sat ~ weight + width, data=crabs, family=rstanarm::neg_binomial_2, refresh=0, chains=2, iter=500))
   
   x     <- rnorm(2000, mean=3)
@@ -21,6 +21,14 @@ test_that("make sure bayesCountPredsF is working properly", {
   
   poissonModel2  <- suppressWarnings(rstanarm::stan_glm(y ~ x + w, data=poissonData, family=poisson, refresh=0, chains=2, iter=500))
   negBinomModel2 <- suppressWarnings(rstanarm::stan_glm(y ~ x + w, data=poissonData, family=rstanarm::neg_binomial_2, refresh=0, chains=2, iter=500))
+  
+  poissonJointPost  <- as.data.frame(poissonModel)
+  negBinomJointPost <- as.data.frame(negBinomModel)
+  
+  poissonFormula    <- formula(poissonModel)
+  negBinomFormula   <- formula(negBinomModel)
+  
+  poissonOffset     <- .1
   
   expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
   expect_no_error(bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
@@ -46,6 +54,30 @@ test_that("make sure bayesCountPredsF is working properly", {
   expect_no_warning(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), at_means=T, n_draws=500))
   expect_no_warning(bayesCountPredsF(negBinomModel, counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, at_means=T, n_draws=500, data_slice=100))
   
+  expect_no_error(bayesCountPredsF(poissonJointPost, model_data=crabs, model_formula=poissonFormula, link_function='log', model_offset=poissonOffset, model_family='poisson', counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_error(bayesCountPredsF(poissonJointPost, model_data=crabs, model_formula=poissonFormula, link_function='log', model_offset=poissonOffset, model_family='poisson', counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_error(bayesCountPredsF(poissonJointPost, model_data=crabs, model_formula=poissonFormula, link_function='log', model_offset=poissonOffset, model_family='poisson', counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, n_draws=500))
+  expect_no_error(bayesCountPredsF(poissonJointPost, model_data=crabs, model_formula=poissonFormula, link_function='log', model_offset=poissonOffset, model_family='poisson', counts=c(0,1), at=list(weight=c(2,3)), at_means=T, n_draws=500))
+  expect_no_error(bayesCountPredsF(poissonJointPost, model_data=crabs, model_formula=poissonFormula, link_function='log', model_offset=poissonOffset, model_family='poisson', counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, at_means=T, n_draws=500, data_slice=100))
+  
+  expect_no_error(bayesCountPredsF(negBinomJointPost, model_data=crabs, model_formula=negBinomFormula, link_function='log', model_family='neg_binomial_2', counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_error(bayesCountPredsF(negBinomJointPost, model_data=crabs, model_formula=negBinomFormula, link_function='log', model_family='neg_binomial_2', counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_error(bayesCountPredsF(negBinomJointPost, model_data=crabs, model_formula=negBinomFormula, link_function='log', model_family='neg_binomial_2', counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, n_draws=500))
+  expect_no_error(bayesCountPredsF(negBinomJointPost, model_data=crabs, model_formula=negBinomFormula, link_function='log', model_family='neg_binomial_2', counts=c(0,1), at=list(weight=c(2,3)), at_means=T, n_draws=500))
+  expect_no_error(bayesCountPredsF(negBinomJointPost, model_data=crabs, model_formula=negBinomFormula, link_function='log', model_family='neg_binomial_2', counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, at_means=T, n_draws=500, data_slice=100))
+  
+  expect_no_warning(bayesCountPredsF(poissonJointPost, model_data=crabs, model_formula=poissonFormula, link_function='log', model_offset=poissonOffset, model_family='poisson', counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_warning(bayesCountPredsF(poissonJointPost, model_data=crabs, model_formula=poissonFormula, link_function='log', model_offset=poissonOffset, model_family='poisson', counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_warning(bayesCountPredsF(poissonJointPost, model_data=crabs, model_formula=poissonFormula, link_function='log', model_offset=poissonOffset, model_family='poisson', counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, n_draws=500))
+  expect_no_warning(bayesCountPredsF(poissonJointPost, model_data=crabs, model_formula=poissonFormula, link_function='log', model_offset=poissonOffset, model_family='poisson', counts=c(0,1), at=list(weight=c(2,3)), at_means=T, n_draws=500))
+  expect_no_warning(bayesCountPredsF(poissonJointPost, model_data=crabs, model_formula=poissonFormula, link_function='log', model_offset=poissonOffset, model_family='poisson', counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, at_means=T, n_draws=500, data_slice=100))
+  
+  expect_no_warning(bayesCountPredsF(negBinomJointPost, model_data=crabs, model_formula=negBinomFormula, link_function='log', model_family='neg_binomial_2', counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_warning(bayesCountPredsF(negBinomJointPost, model_data=crabs, model_formula=negBinomFormula, link_function='log', model_family='neg_binomial_2', counts=c(0,1), at=list(weight=c(2,3)), n_draws=500))
+  expect_no_warning(bayesCountPredsF(negBinomJointPost, model_data=crabs, model_formula=negBinomFormula, link_function='log', model_family='neg_binomial_2', counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, n_draws=500))
+  expect_no_warning(bayesCountPredsF(negBinomJointPost, model_data=crabs, model_formula=negBinomFormula, link_function='log', model_family='neg_binomial_2', counts=c(0,1), at=list(weight=c(2,3)), at_means=T, n_draws=500))
+  expect_no_warning(bayesCountPredsF(negBinomJointPost, model_data=crabs, model_formula=negBinomFormula, link_function='log', model_family='neg_binomial_2', counts=c(0,1), at=list(weight=c(2,3)), hdi_interval=F, at_means=T, n_draws=500, data_slice=100))
+  
   poissonPreds <- bayesCountPredsF(poissonModel2, counts=c(0,1), at=list(w=c(2,3)))$predTable %>%
     subset(., select=c(mean))
   
@@ -63,5 +95,21 @@ test_that("make sure bayesCountPredsF is working properly", {
   expect_lt(diffs[2,], poissonPreds[2,]*1.15 - poissonPreds[2,])
   expect_lt(diffs[3,], poissonPreds[3,]*1.15 - poissonPreds[3,])
   expect_lt(diffs[4,], poissonPreds[4,]*1.15 - poissonPreds[4,])
+  
+  set.seed(500)
+  
+  predStanReg <- bayesCountPredsF(poissonModel, counts=c(0,1), at=list(weight=c(2,3)), n_draws=2000)$predTable %>%
+    subset(., select=c(mean, lower, upper))
+  
+  set.seed(500)
+  
+  predDF      <- bayesCountPredsF(poissonJointPost, model_data=crabs, model_formula=poissonFormula, link_function='log', model_offset=poissonOffset, model_family='poisson', counts=c(0,1), at=list(weight=c(2,3)), n_draws=2000)$predTable %>%
+    subset(., select=c(mean, lower, upper))
+  
+  maxDiff <- max(abs(predStanReg - predDF))
+  
+  expect_lt(maxDiff, .001)
+  
+  
   
 })
