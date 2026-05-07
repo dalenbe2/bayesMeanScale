@@ -1,11 +1,11 @@
 
-bayesMargEffF <- function(model, ...){
+bayesMargEffF <- function(x, ...){
   UseMethod("bayesMargEffF")
 }
 
-bayesMargEffF.stanreg <- function(model, n_draws=2000, marginal_effect, start_value, end_value, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE, h=.0001, ...){
+bayesMargEffF.stanreg <- function(x, marginal_effect, start_value, end_value, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE, h=.0001, ...){
 
-  margErrorCheckF(model           = model,
+  margErrorCheckF(model           = x,
                   marginal_effect = marginal_effect,
                   at              = at,
                   start_value     = start_value,
@@ -25,11 +25,11 @@ bayesMargEffF.stanreg <- function(model, n_draws=2000, marginal_effect, start_va
 
   # modify the model formula if there's an offset #
 
-  formulaNoOffsets <- modifyFormulaF(model = model)
+  formulaNoOffsets <- modifyFormulaF(model = x)
 
   # get the draws #
   
-  draws <- sample(1:nrow(posterior::as_draws_df(model)), size=n_draws, replace=T)
+  draws <- sample(1:nrow(posterior::as_draws_df(x)), size=n_draws, replace=T)
   
   for(i in 1:length(marginal_effect)){
 
@@ -37,7 +37,7 @@ bayesMargEffF.stanreg <- function(model, n_draws=2000, marginal_effect, start_va
 
     if(start_value[i]=="instantaneous"){
       
-      modData <- margModelDataContinuousF(model       = model,
+      modData <- margModelDataContinuousF(model       = x,
                                           new_formula = formulaNoOffsets,
                                           at          = at,
                                           marg_list   = margList,
@@ -46,7 +46,7 @@ bayesMargEffF.stanreg <- function(model, n_draws=2000, marginal_effect, start_va
       
     } else{
       
-      modData <- margModelDataF(model       = model,
+      modData <- margModelDataF(model       = x,
                                 new_formula = formulaNoOffsets,
                                 at          = at,
                                 marg_list   = margList,
@@ -56,14 +56,14 @@ bayesMargEffF.stanreg <- function(model, n_draws=2000, marginal_effect, start_va
 
     # get the predictions #
 
-    predStart <- meanPredF(model       = model,
+    predStart <- meanPredF(model       = x,
                            new_data    = modData$startData,
                            draws       = draws,
                            new_formula = formulaNoOffsets,
                            at_means    = at_means,
                            at          = at)
 
-    predEnd   <- meanPredF(model       = model,
+    predEnd   <- meanPredF(model       = x,
                            new_data    = modData$endData,
                            draws       = draws,
                            new_formula = formulaNoOffsets,
@@ -132,7 +132,7 @@ bayesMargEffF.stanreg <- function(model, n_draws=2000, marginal_effect, start_va
 
 }
 
-bayesMargEffF.data.frame <- function(model, model_data, model_formula, link_function, n_draws=2000, marginal_effect, start_value, end_value, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE, h=.0001, ...){
+bayesMargEffF.data.frame <- function(x, model_data, model_formula, link_function, marginal_effect, start_value, end_value, model_offset=NULL, n_draws=2000, ci=.95, hdi_interval=TRUE, centrality='mean', digits=4, at=NULL, at_means=FALSE, h=.0001, ...){
   
   # initialize the model table and diff matrices list #
   
@@ -144,6 +144,10 @@ bayesMargEffF.data.frame <- function(model, model_data, model_formula, link_func
   margList <- list(marg  = marginal_effect,
                    start = start_value,
                    end   = end_value)
+  
+  # get the draws #
+  
+  draws <- sample(1:nrow(x), size=n_draws, replace=T)
   
   for(i in 1:length(marginal_effect)){
     
@@ -170,16 +174,20 @@ bayesMargEffF.data.frame <- function(model, model_data, model_formula, link_func
     
     # get the predictions #
     
-    predStart <- meanPredDFMethodF(new_data      = modData$startData,
-                                   draws         = model,
+    predStart <- meanPredDFMethodF(x             = x,
+                                   new_data      = modData$startData,
+                                   draws         = draws,
                                    link_function = link_function,
                                    new_formula   = model_formula,
+                                   model_offset  = model_offset,
                                    at_means      = at_means,
                                    at            = at)
     
-    predEnd   <- meanPredDFMethodF(new_data      = modData$endData,
-                                   draws         = model,
+    predEnd   <- meanPredDFMethodF(x             = x,
+                                   new_data      = modData$endData,
+                                   draws         = draws,
                                    link_function = link_function,
+                                   model_offset  = model_offset,
                                    new_formula   = model_formula,
                                    at_means      = at_means,
                                    at            = at)
